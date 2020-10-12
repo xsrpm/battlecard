@@ -1,15 +1,61 @@
-
-.pantalla{
+.bienvenida{
   display:flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: end;
+  align-items: center;
   height:100vh;
-	background-color: yellow;
+  background-color: yellow;
 }
-.ocultar{
+
+.recepcion{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height:100vh;
+  background-color: blue;
+}
+
+.sala{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height:100vh;
+  background-color: green;
+}
+
+.sala h1{
+  position: absolute;
+  top: 10vh;
+  background-color: greenyellow;
+  opacity: 0.5;
+}
+
+.sala div{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50vw;
+  height: 100vh;
+}
+
+.sala :nth-child(2){
+  background-color: red;
+}
+.sala :nth-child(3){
+  background-color: pink;
+}
+
+.sala button{
+  position: absolute;
+  bottom: 10vh;
+}
+
+.oculto{
   display:none;
 }
-button {
-  margin-bottom: 20vh;
-	color: red;
-}
+
+
+

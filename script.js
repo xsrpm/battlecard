@@ -1,10 +1,15 @@
-const bienvenida=document.getElementById("bienvenida")
-const sala=document.getElementById("sala")
+const bienvenida=document.querySelector(".bienvenida")
+const recepcion=document.querySelector(".recepcion")
+const sala=document.querySelector(".sala")
 function cambiarPantalla(nueva,actual){
-  nueva.classList.toggle("ocultar")
-  actual.classList.toggle("ocultar")
+  actual.classList.toggle("oculto")
+  nueva.classList.toggle("oculto")
 }
 const btnJugar = document.getElementById("btnJugar")
 btnJugar.addEventListener("click",()=>{
-  cambiarPantalla(bienvenida,sala)
+  cambiarPantalla(recepcion,bienvenida)
+})
+const btnUnirASala=document.getElementById("btnUnirASala")
+btnUnirASala.addEventListener("click",()=>{
+  cambiarPantalla(sala,recepcion)
 })
