@@ -11,6 +11,27 @@ btnJugar.addEventListener("click",()=>{
   cambiarPantalla(recepcion,bienvenida)
 })
 
+
+const socket = new WebSocket("wss://battlecard-api.cemp2703.repl.co/ws");
+socket.onopen = e=>{
+  console.log("Conexión abierta")
+  socket.send("Conexión abierta");
+};
+socket.onerror= e=>{
+  if(!recepcion.disabled){
+    btnUnirASala.innerText="Unirse a la Sala"
+    btnUnirASala.setAttribute("disabled","false")
+  }
+  console.log("Error: "+e)
+}
+socket.onmessage = e=> {
+  if(!recepcion.disabled){
+    console.log(e.data);
+    cambiarPantalla(sala,recepcion)
+  }
+}
+socket.onclose=e=>{}
+
 function status(response) {
   if (response.status >= 200 && response.status < 300) {
     return Promise.resolve(response)
@@ -19,22 +40,17 @@ function status(response) {
   }
 }
 
-
 const btnUnirASala=document.getElementById("btnUnirASala")
 const nombreJugador=document.getElementById("nombreJugador")
 btnUnirASala.addEventListener("click",()=>{
-  btnUnirASala.innerText="Cargango..."
-  btnUnirASala.setAttribute("disabled","true")
+  //btnUnirASala.innerText="Cargango..."
+  //btnUnirASala.setAttribute("disabled","true")
+   /*
   fetch('https://battlecard-api.cemp2703.repl.co/api/sala/unirse', {
     mode: 'cors',
     method: 'post',
     body:{'nombreJugador':nombreJugador}
   }).then(status)
-  /*
-  .then(()=>{
-    return fetch('https://battlecard-api.cemp2703.repl.co/api/')
-  })
-  */
   .then(response=> response.json())
   .then(data=>{
     console.log(data)
@@ -48,4 +64,8 @@ btnUnirASala.addEventListener("click",()=>{
     btnUnirASala.innerText="Unirse a la Sala"
     btnUnirASala.setAttribute("disabled","false")
   })
+  */
+ socket.send(JSON.stringify({'nombreJugador':nombreJugador}));
+ 
 })
+
