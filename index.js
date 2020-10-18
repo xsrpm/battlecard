@@ -1,43 +1,67 @@
-const express = require('express')
-var bodyParser = require('body-parser')
+
+const WebSocket = require('ws');
 const { v4: uuidv4 } = require('uuid');
-const app = express()
-const port = 3000
+const Juego = require('./juego.js');
+/**
+ * @type {Juego}
+ */
+let juego = new Juego()
 
-let jugadores=[]
+const wss = new WebSocket.Server({ port: 8080 });
 
-app.use(bodyParser.json())
+/**
+ * @param {WebSocket} wsorigen 
+ * @param {Object} data 
+ */
+function broadcast(wsorigen,data){
+  wss.clients.forEach(ws=> {
+    if (ws !== wsorigen && ws.readyState === WebSocket.OPEN) {
+      ws.send(data);
+    }
+  });
+}
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  next();
+function echo(wsorigen,data){
+  wsorigen.send("Desde el server: "+data)
+}
+
+function procesarAccion(wsorigen,data){
+  let objData = JSON.parse(data)
+  console.log("accion: "+objData.accion)
+  console.log("Pantalla: "+juego.pantalla)
+  
+  if(juego.pantalla === Juego.Pantalla.EN_SALA_DE_ESPERA){
+    if(objData.accion === 'Unir A Sala'){
+      let jug=juego.añadirJugador(objData.nombreJugador,uuidv4())
+      wsorigen.jugador = jug
+      let jugadorNombre = []
+      juego.jugador.forEach(j=>{
+        jugadorNombre.push(j.nombre)
+      })
+      wss.clients.forEach(ws=> {
+        if (ws === wsorigen && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({pantalla:juego.pantalla,momento:juego.momento,uuid:jug.uuid,jugadorNombre:jugadorNombre}));
+        }
+        else if(ws.readyState === WebSocket.OPEN){
+          if(typeof ws.jugador !== 'undefined')
+            ws.send(JSON.stringify({pantalla:juego.pantalla,momento:juego.momento,jugadorNombre:jugadorNombre}));
+        }
+      });
+    }
+  }
+
+}
+
+wss.on('connection', ws => {
+  ws.on('message', data =>  {
+    console.log('received: '+data)
+    procesarAccion(ws,data)
+  });
 });
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
 
-app.post('/api/sala/unirse', (req, res) => {
-  console.log(req.body.nombreJugador)
-  let uuidGen = uuidv4()
-  if(jugadores.length<2){
-    jugadores.push({id:uuidGen,nombre:req.body.nombreJugador})
-    res.status(201).json({idJugador:uuidGen,message:"Usuarío ingresó a sala"})
-  }
-  else{
-    res.status(403).json({mensaje:"La sala está llena"})
-  }
-})
-
-app.get('/api/sala/jugadores/', (req, res) => {
-  res.json(jugadores)
-})
-
-app.put('/api/sala/reabrir', (req, res) => {
-  jugadores=[]
-  res.json({message:"Sala reabierta"})
-})
-
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+/**
+ * Se podría quitar el atributo jugador de ws y en su lugar agregar un atributo uuid al registrar un jugador a la sala,
+ *  de manera que uuid haga una referencia al dispositivo cliente, pero no tenga relación con las clases backend (por no ser necesario)
+ * Al mismo tiempo quitar el atributo uuid de la clase jugador.
+ */
