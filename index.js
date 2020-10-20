@@ -32,21 +32,27 @@ function procesarAccion(wsorigen,data){
   
   if(juego.pantalla === Juego.Pantalla.EN_SALA_DE_ESPERA){
     if(objData.accion === 'Unir A Sala'){
-      let jug=juego.añadirJugador(objData.nombreJugador,uuidv4())
-      wsorigen.jugador = jug
-      let jugadorNombre = []
-      juego.jugador.forEach(j=>{
-        jugadorNombre.push(j.nombre)
-      })
-      wss.clients.forEach(ws=> {
-        if (ws === wsorigen && ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({pantalla:juego.pantalla,momento:juego.momento,uuid:jug.uuid,jugadorNombre:jugadorNombre}));
-        }
-        else if(ws.readyState === WebSocket.OPEN){
-          if(typeof ws.jugador !== 'undefined')
-            ws.send(JSON.stringify({pantalla:juego.pantalla,momento:juego.momento,jugadorNombre:jugadorNombre}));
-        }
-      });
+      if(juego.jugador.length<2){
+        let jug=juego.añadirJugador(objData.nombreJugador)
+        wsorigen.jugador = jug
+        wsorigen.uuid=uuidv4()
+        let jugadorNombre = []
+        juego.jugador.forEach(j=>{
+          jugadorNombre.push(j.nombre)
+        })
+        wss.clients.forEach(ws=> {
+          if (ws === wsorigen && ws.readyState === WebSocket.OPEN) {
+              ws.send(JSON.stringify({pantalla:juego.pantalla,momento:juego.momento,uuid:wsorigen.uuid,jugadorNombre:jugadorNombre}));
+          }
+          else if(ws.readyState === WebSocket.OPEN){
+            if(typeof ws.jugador !== 'undefined')
+              ws.send(JSON.stringify({pantalla:juego.pantalla,momento:juego.momento,jugadorNombre:jugadorNombre}));
+          }
+        });
+      }
+      else{
+        wsorigen.send(JSON.stringify({"error":"Sala llena, no pueden entrar jugadores"}))
+      }
     }
   }
 
@@ -59,9 +65,3 @@ wss.on('connection', ws => {
   });
 });
 
-
-/**
- * Se podría quitar el atributo jugador de ws y en su lugar agregar un atributo uuid al registrar un jugador a la sala,
- *  de manera que uuid haga una referencia al dispositivo cliente, pero no tenga relación con las clases backend (por no ser necesario)
- * Al mismo tiempo quitar el atributo uuid de la clase jugador.
- */

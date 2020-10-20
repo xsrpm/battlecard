@@ -69,8 +69,8 @@ class Juego{
         this.momento = Momento.EN_SALA_DE_ESPERA
     }
 
-    añadirJugador(nombre,uuid){
-        let jug= new Jugador(nombre,uuid)
+    añadirJugador(nombre){
+        let jug= new Jugador(nombre)
         this.jugador.push(jug)
         return jug
     }

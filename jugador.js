@@ -60,7 +60,7 @@ class Jugador {
     static get DispCambio() { return DispCambio; };
     static get VeredictoAtaque() { return VeredictoAtaque; };
     static get EstadoCarta() { return EstadoCarta; };
-    constructor(nombre,uuid) {
+    constructor(nombre) {
         this.cartaColocada=false
         this.nAtaquesDisponibles = 0;
         this.nCambiosPosicionesDisponibles = 0;
@@ -74,7 +74,6 @@ class Jugador {
         this.deck=[];
         this.nTurnos=0;
         this.nombre=nombre;
-        this.uuid=uuid;
         this.puedeColocarCartaEnZB=true;
         this.nCartasEnZB=0; // revisa codigo por esto
     }
