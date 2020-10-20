@@ -46,11 +46,12 @@ btnUnirASala.addEventListener("click",()=>{
   socket.send(JSON.stringify({"accion":"Unir A Sala","nombreJugador":nombreJugador.value}));
 })
 
-let url = location.host == 'localhost' ?
+//'localhost'
+let url = location.host == '' ?
   'ws://localhost:8080/ws' : 'ws://battlecard-api.cemp2703.repl.co/ws'
 
 
-const socket = new WebSocket(url);
+let socket = new WebSocket(url);
 socket.onopen = e=>{
   socket.send(JSON.stringify({mensaje:"Abriendo socket"}));
 };
@@ -62,16 +63,21 @@ socket.onerror= e=>{
   console.log("Error: "+e)
 }
 socket.onmessage = e=> {
+
   let objData = JSON.parse(e.data)
   console.log(objData)
   if(objData.pantalla === Pantalla.EN_SALA_DE_ESPERA){
-    for(let i=0;i<objData.jugadorNombre.length;i++){
-      h2[i].innerText= objData.jugadorNombre[i]
-    }
-    if(typeof objData.uuid !== 'undefined'){
-      uuid = objData.uuid
-      console.log(uuid)
-      cambiarPantalla(sala)  
+    if(typeof objData.error !== 'undefined')
+      console.log(objData.error)
+    else{
+      for(let i=0;i<objData.jugadorNombre.length;i++){
+        h2[i].innerText= objData.jugadorNombre[i]
+      }
+      if(typeof objData.uuid !== 'undefined'){
+        uuid = objData.uuid
+        console.log(uuid)
+        cambiarPantalla(sala)  
+      }
     }
   }
 }
@@ -82,3 +88,4 @@ socket.onclose=e=>{
 
 
 /*Se podría abrir la conexión con el socket server al hacer click en el boton unir a la sala*/
+/* se cerraba el socket al colocarlo dentro del evento click */
