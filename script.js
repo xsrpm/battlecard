@@ -29,14 +29,16 @@ const h2 = sala.getElementsByTagName("h2")
 const nombreJugador=document.getElementById("nombreJugador")
 const btnUnirASala=document.getElementById("btnUnirASala")
 const btnJugar = document.getElementById("btnJugar")
+const btnIniciarJuego = document.getElementById("btnIniciarJuego")
+const resultadoAtaque = document.querySelector(".resultadoAtaque")
 
 let uuid
 
 function cambiarPantalla(pantalla){
   Array.from(pantallas).forEach(p=>{
-    p.style.zIndex=0
+    p.classList.remove("mostrarPantalla")
   })
-  pantalla.style.zIndex=1
+  pantalla.classList.add("mostrarPantalla")
 }
 
 btnJugar.addEventListener("click",()=>{
@@ -44,6 +46,12 @@ btnJugar.addEventListener("click",()=>{
 })
 btnUnirASala.addEventListener("click",()=>{
   socket.send(JSON.stringify({"accion":"Unir A Sala","nombreJugador":nombreJugador.value}));
+})
+btnIniciarJuego.addEventListener("click",()=>{
+  socket.send(JSON.stringify({"accion":"Iniciar Juego"}))
+})
+resultadoAtaque.addEventListener("click",()=>{
+  resultadoAtaque.classList.remove("mostrarResultado")
 })
 
 //'localhost'
