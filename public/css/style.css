@@ -60,9 +60,16 @@
 }
 
 .juego{
+  /*
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
+  */
+  display: grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-areas:"jugadores tablero botonera";
+  justify-items: center;
   align-items: center;
   width:100vw;
   height:100vh;
@@ -71,12 +78,12 @@
 }
 
 .juego .jugadores{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-area: jugadores;
+  justify-self:right;
   background-color: rgb(236, 236, 192);
   text-align: center;
+  word-wrap: break-word;
 }
 
 .jugadores > div{
@@ -101,10 +108,9 @@
 
 
 .juego .botonera{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-area: botonera;
+  justify-self:left;
   background-color: rgb(236, 236, 192);
 }
 
@@ -171,6 +177,7 @@
 }
 
 .juego .tablero{
+  grid-area: tablero;
   display: flex;
   flex-direction: column;
   justify-content: center;

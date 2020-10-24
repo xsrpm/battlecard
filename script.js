@@ -30,9 +30,15 @@ const nombreJugador=document.getElementById("nombreJugador")
 const btnUnirASala=document.getElementById("btnUnirASala")
 const btnJugar = document.getElementById("btnJugar")
 const btnIniciarJuego = document.getElementById("btnIniciarJuego")
+const btnColocarEnAtaque = document.getElementById("btnColocarEnAtaque")
+const btnColocarEnDefensa = document.getElementById("btnColocarEnDefensa")
+const btnAtacarCarta = document.getElementById("btnAtacarCarta")
+const btnCambiarPosicion = document.getElementById("btnCambiarPosicion")
+const btnTerminarTurno = document.getElementById("btnTerminarTurno")
 const resultadoAtaque = document.querySelector(".resultadoAtaque")
-
-let uuid
+const manoYo = document.getElementById("manoYo")
+const zonaBatallaYo = document.getElementById("zonaBatallaYo")
+const zonaBatallaEnemiga = document.getElementById("zonaBatallaEnemiga")
 
 function cambiarPantalla(pantalla){
   Array.from(pantallas).forEach(p=>{
@@ -53,25 +59,54 @@ btnIniciarJuego.addEventListener("click",()=>{
 resultadoAtaque.addEventListener("click",()=>{
   resultadoAtaque.classList.remove("mostrarResultado")
 })
+btnColocarEnAtaque.addEventListener("click",()=>{
+
+})
+btnColocarEnDefensa.addEventListener("click",()=>{
+
+})
+btnAtacarCarta.addEventListener("click",()=>{
+
+})
+btnCambiarPosicion.addEventListener("click",()=>{
+
+})
+btnTerminarTurno.addEventListener("click",()=>{
+
+})
+manoYo.addEventListener("click",(e)=>{
+  let target = e.target
+  while(!target.classList.contains("slot")) target=target.parentElement
+  console.log(target)
+})
+zonaBatallaYo.addEventListener("click",(e)=>{
+  let target = e.target
+  while(!target.classList.contains("slot")) target=target.parentElement
+  console.log(target)
+})
+zonaBatallaEnemiga.addEventListener("click",(e)=>{
+  let target = e.target
+  while(!target.classList.contains("slot")) target=target.parentElement
+  console.log(target)
+})
 
 //'localhost'
 let url = location.host == '' ?
   'ws://localhost:8080/ws' : 'ws://battlecard-api.cemp2703.repl.co/ws'
 
-
+let uuid
 let socket = new WebSocket(url);
 socket.onopen = e=>{
   socket.send(JSON.stringify({mensaje:"Abriendo socket"}));
 };
 socket.onerror= e=>{
-  if(!recepcion.disabled){
+  if(recepcion.classList.contains("mostrarPantalla")){
     btnUnirASala.innerText="Unirse a la Sala"
     btnUnirASala.setAttribute("disabled","false")
   }
   console.log("Error: "+e)
 }
 socket.onmessage = e=> {
-
   let objData = JSON.parse(e.data)
   console.log(objData)
   if(objData.pantalla === Pantalla.EN_SALA_DE_ESPERA){
