@@ -40,6 +40,8 @@ const manoYo = document.getElementById("manoYo")
 const zonaBatallaYo = document.getElementById("zonaBatallaYo")
 const zonaBatallaEnemiga = document.getElementById("zonaBatallaEnemiga")
 
+let uuid =""
+
 function cambiarPantalla(pantalla){
   Array.from(pantallas).forEach(p=>{
     p.classList.remove("mostrarPantalla")
@@ -54,7 +56,7 @@ btnUnirASala.addEventListener("click",()=>{
   socket.send(JSON.stringify({"accion":"Unir A Sala","nombreJugador":nombreJugador.value}));
 })
 btnIniciarJuego.addEventListener("click",()=>{
-  socket.send(JSON.stringify({"accion":"Iniciar Juego"}))
+  socket.send(JSON.stringify({"accion":"Iniciar Juego","uuid":uuid}))
 })
 resultadoAtaque.addEventListener("click",()=>{
   resultadoAtaque.classList.remove("mostrarResultado")
@@ -94,7 +96,6 @@ zonaBatallaEnemiga.addEventListener("click",(e)=>{
 let url = location.host == '' ?
   'ws://localhost:8080/ws' : 'ws://battlecard-api.cemp2703.repl.co/ws'
 
-let uuid
 let socket = new WebSocket(url);
 socket.onopen = e=>{
   socket.send(JSON.stringify({mensaje:"Abriendo socket"}));
@@ -110,16 +111,18 @@ socket.onmessage = e=> {
   let objData = JSON.parse(e.data)
   console.log(objData)
   if(objData.pantalla === Pantalla.EN_SALA_DE_ESPERA){
-    if(typeof objData.error !== 'undefined')
+    if(typeof objData.error !== "undefined")
       console.log(objData.error)
     else{
       for(let i=0;i<objData.jugadorNombre.length;i++){
         h2[i].innerText= objData.jugadorNombre[i]
       }
-      if(typeof objData.uuid !== 'undefined'){
+      if(objData.start === true)
+        btnIniciarJuego.disabled = false
+      if(typeof objData.uuid !== "undefined"){
         uuid = objData.uuid
         console.log(uuid)
-        cambiarPantalla(sala)  
+        cambiarPantalla(sala)
       }
     }
   }
