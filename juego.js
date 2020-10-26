@@ -1,60 +1,61 @@
 const Jugador = require('./jugador.js');
 
-const Pantalla = { EN_SALA_DE_ESPERA: "EN SALA DE ESPERA", JUEGO: "JUEGO", FIN_DE_JUEGO: "FIN DE JUEGO"}
+const Pantalla = { EN_SALA_DE_ESPERA: "EN SALA DE ESPERA", JUEGO: "JUEGO", FIN_DE_JUEGO: "FIN DE JUEGO" }
 Object.freeze(Pantalla)
 const DialogoJuego = {
+    RECEPCION: "RECEPCION",
     EN_SALA_DE_ESPERA: "EN SALA DE ESPERA",
     JUEGO: "JUEGO",
     FIN_DE_JUEGO: "FIN DE JUEGO",
-    OPCIONES_EN_TURNO:"OPCIONES EN TURNO",
+    OPCIONES_EN_TURNO: "OPCIONES EN TURNO",
 
-    SELECCIONAR_MANO:"SELECCIONAR_MANO",
-    SELECCIONAR_ZONABATALLA:"SELECCIONAR_ZONABATALLA",
-    SELECCIONAR_POSICIONBATALLA:"SELECCIONAR_POSICIONBATALLA",
-    SELECCIONAR_POSICIONBATALLAE:"SELECCIONAR_POSICIONBATALLAE",
+    SELECCIONAR_MANO: "SELECCIONAR_MANO",
+    SELECCIONAR_ZONABATALLA: "SELECCIONAR_ZONABATALLA",
+    SELECCIONAR_POSICIONBATALLA: "SELECCIONAR_POSICIONBATALLA",
+    SELECCIONAR_POSICIONBATALLAE: "SELECCIONAR_POSICIONBATALLAE",
 
-    CARTA_COLOCADA:"CARTA_COLOCADA",
-    ATAQUE_CARTA_REALIZADO:"ATAQUE_CARTA_REALIZADO",
-    ATAQUE_BARRERA_REALIZADO:"ATAQUE_BARRERA_REALIZADO",
-    CAMBIODEPOSICION_REALIZADO:"CAMBIODEPOSICION_REALIZADO",
+    CARTA_COLOCADA: "CARTA_COLOCADA",
+    ATAQUE_CARTA_REALIZADO: "ATAQUE_CARTA_REALIZADO",
+    ATAQUE_BARRERA_REALIZADO: "ATAQUE_BARRERA_REALIZADO",
+    CAMBIODEPOSICION_REALIZADO: "CAMBIODEPOSICION_REALIZADO",
     //FINALES
-    JUGADORSINCARTASBARRERA:"JUGADORSINCARTASBARRERA",
-    JUGADORSINCARTASMAZO:"JUGADORSINCARTASMAZO",
+    JUGADORSINCARTASBARRERA: "JUGADORSINCARTASBARRERA",
+    JUGADORSINCARTASMAZO: "JUGADORSINCARTASMAZO",
 }
 Object.freeze(DialogoJuego)
 const Momento = {
-    EN_SALA_DE_ESPERA:"EN SALA DE ESPERA",
-    OPCIONES_EN_TURNO:"OPCIONES EN TURNO",//Opciones ofrecidas al jugador en su turno
+    EN_SALA_DE_ESPERA: "EN SALA DE ESPERA",
+    OPCIONES_EN_TURNO: "OPCIONES EN TURNO",//Opciones ofrecidas al jugador en su turno
     //ColocarCarta
-    COLOCAR_SELECCIONARMANO:"COLOCAR_SELECCIONARMANO",//Seleccionar Carta en Mano
-    COLOCAR_SELECCIONARZONABATALLA:"COLOCAR_SELECCIONARZONABATALLA",//Selecionar posicion en zona de batalla para colocar carta
-    COLOCAR_SELECCIONARPOSICIONBATALLA:"COLOCAR_SELECCIONARPOSICIONBATALLA",//Elegir posicion de batalla
-    COLOCAR_CARTACOLOCADA:"COLOCAR_CARTACOLOCADA",
+    COLOCAR_SELECCIONARMANO: "COLOCAR_SELECCIONARMANO",//Seleccionar Carta en Mano
+    COLOCAR_SELECCIONARZONABATALLA: "COLOCAR_SELECCIONARZONABATALLA",//Selecionar posicion en zona de batalla para colocar carta
+    COLOCAR_SELECCIONARPOSICIONBATALLA: "COLOCAR_SELECCIONARPOSICIONBATALLA",//Elegir posicion de batalla
+    COLOCAR_CARTACOLOCADA: "COLOCAR_CARTACOLOCADA",
     //AtacarCarta
-    ATACARCARTA_SELECCIONARZONABATALLA:"ATACARCARTA_SELECCIONARZONABATALLA",//Seleccionar Carta en zona de batalla
-    ATACARCARTA_SELECCIONARZONABATALLAE:"ATACARCARTA_SELECCIONARZONABATALLAE",//Seleccionar Carta en zona de batalla enemiga
-    ATACARCARTA_ATAQUEREALIZADO:"ATACARCARTA_ATAQUEREALIZADO",//Ataque realizado
+    ATACARCARTA_SELECCIONARZONABATALLA: "ATACARCARTA_SELECCIONARZONABATALLA",//Seleccionar Carta en zona de batalla
+    ATACARCARTA_SELECCIONARZONABATALLAE: "ATACARCARTA_SELECCIONARZONABATALLAE",//Seleccionar Carta en zona de batalla enemiga
+    ATACARCARTA_ATAQUEREALIZADO: "ATACARCARTA_ATAQUEREALIZADO",//Ataque realizado
     //AtacarBarrera
-    ATACARBARRERA_SELECCIONARZONABATALLA:"ATACARBARRERA_SELECCIONARZONABATALLA",
-    ATACARBARRERA_ATAQUEREALIZADO:"ATACARBARRERA_ATAQUEREALIZADO",
+    ATACARBARRERA_SELECCIONARZONABATALLA: "ATACARBARRERA_SELECCIONARZONABATALLA",
+    ATACARBARRERA_ATAQUEREALIZADO: "ATACARBARRERA_ATAQUEREALIZADO",
     //CambioDePosicionDeBatalla
-    CAMBIARPOSICIONBATALLA_SELECCIONARZONABATALLA:"CAMBIARPOSICIONBATALLA_SELECCIONARZONABATALLA",
-    CAMBIARPOSICIONBATALLA_REALIZADO:"CAMBIARPOSICIONBATALLA_REALIZADO",
+    CAMBIARPOSICIONBATALLA_SELECCIONARZONABATALLA: "CAMBIARPOSICIONBATALLA_SELECCIONARZONABATALLA",
+    CAMBIARPOSICIONBATALLA_REALIZADO: "CAMBIARPOSICIONBATALLA_REALIZADO",
 
 
     //FINALES
-    JUGADORSINCARTASBARRERA:"JUGADORSINCARTASBARRERA",
-    JUGADORSINCARTASMAZO:"JUGADORSINCARTASMAZO",
+    JUGADORSINCARTASBARRERA: "JUGADORSINCARTASBARRERA",
+    JUGADORSINCARTASMAZO: "JUGADORSINCARTASMAZO",
 
-    FINDEJUEGO:"FINDEJUEGO" //Pantalla Final
+    FINDEJUEGO: "FINDEJUEGO" //Pantalla Final
 }
 Object.freeze(Momento)
 
-class Juego{
+class Juego {
     static get Pantalla() { return Pantalla };
     static get DialogoJuego() { return DialogoJuego };
     static get Momento() { return Momento };
-    constructor(){
+    constructor() {
         /**
          * @type {Jugador[]}
          */
@@ -65,18 +66,34 @@ class Juego{
         this.idCartaZonaBSel = 0
         this.idCartaZonaBSelEnemigo = 0
         this.idCartaManoSel = 0
-        this.pantalla = Pantalla.EN_SALA_DE_ESPERA
+        this.pantalla = Pantalla.RECEPCION
         this.momento = Momento.EN_SALA_DE_ESPERA
     }
 
-    añadirJugador(nombre){
-        let jug= new Jugador(nombre)
+    añadirJugador(nombre) {
+        let jug = new Jugador(nombre)
         this.jugador.push(jug)
         return jug
     }
 
-    iniciarJuegoNuevo(){
-        if(this.jugador.length===2){
+    unirASala(objData) {
+        if (this.jugador.length < 2) {
+            let jug = this.añadirJugador(objData.nombreJugador)
+            let jugadorNombre = []
+            this.jugador.forEach(j => {
+                jugadorNombre.push(j.nombre)
+            })
+            let start = this.jugador.length === 2;
+            this.pantalla = Juego.Pantalla.EN_SALA_DE_ESPERA
+            return { pantalla: this.pantalla, momento: this.momento, jugadorNombre: jugadorNombre,jugador: jug , start: start }
+        }
+        else {
+            return { error: "Sala llena, no pueden entrar jugadores" }
+        }
+    }
+
+    iniciarJuegoNuevo() {
+        if (this.jugador.length === 2) {
             this.jugador[0].repartirCartas()
             this.jugador[1].repartirCartas()
             this.jugadorActual = this.jugador[0]
@@ -86,29 +103,29 @@ class Juego{
             return {
                 pantalla: this.pantalla,
                 momento: this.momento,
-                jugador:this.jugador,
-                jugadorActual:this.jugadorActual    
+                jugador: this.jugador,
+                jugadorActual: this.jugadorActual
             }
         }
-        else{
+        else {
             return "Error: No se tienen 2 jugadores para empezar"
         }
     }
 
-    cambioDeJugadorActual(){
+    cambioDeJugadorActual() {
         let jugadorTmp = this.jugadorActual
         this.jugadorActual = this.jugadorAnterior
         this.jugadorAnterior = jugadorTmp
         return this.jugadorActual
     }
-    
-    iniciarColocarCarta(){
-        if(this.jugadorActual.puedeColocarCartaEnZB()){
+
+    iniciarColocarCarta() {
+        if (this.jugadorActual.puedeColocarCartaEnZB()) {
             this.momento = Momento.COLOCAR_SELECCIONARMANO
             return {
                 pantalla: this.pantalla,
                 momento: this.momento,
-                jugador:jugador    
+                jugador: jugador
             }
         }
     }
