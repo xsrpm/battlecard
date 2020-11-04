@@ -2,29 +2,7 @@ const Jugador = require('./jugador.js');
 
 const Pantalla = { EN_SALA_DE_ESPERA: "EN SALA DE ESPERA", JUEGO: "JUEGO", FIN_DE_JUEGO: "FIN DE JUEGO" }
 Object.freeze(Pantalla)
-const DialogoJuego = {
-    RECEPCION: "RECEPCION",
-    EN_SALA_DE_ESPERA: "EN SALA DE ESPERA",
-    JUEGO: "JUEGO",
-    FIN_DE_JUEGO: "FIN DE JUEGO",
-    OPCIONES_EN_TURNO: "OPCIONES EN TURNO",
-
-    SELECCIONAR_MANO: "SELECCIONAR_MANO",
-    SELECCIONAR_ZONABATALLA: "SELECCIONAR_ZONABATALLA",
-    SELECCIONAR_POSICIONBATALLA: "SELECCIONAR_POSICIONBATALLA",
-    SELECCIONAR_POSICIONBATALLAE: "SELECCIONAR_POSICIONBATALLAE",
-
-    CARTA_COLOCADA: "CARTA_COLOCADA",
-    ATAQUE_CARTA_REALIZADO: "ATAQUE_CARTA_REALIZADO",
-    ATAQUE_BARRERA_REALIZADO: "ATAQUE_BARRERA_REALIZADO",
-    CAMBIODEPOSICION_REALIZADO: "CAMBIODEPOSICION_REALIZADO",
-    //FINALES
-    JUGADORSINCARTASBARRERA: "JUGADORSINCARTASBARRERA",
-    JUGADORSINCARTASMAZO: "JUGADORSINCARTASMAZO",
-}
-Object.freeze(DialogoJuego)
 const Momento = {
-    EN_SALA_DE_ESPERA: "EN SALA DE ESPERA",
     OPCIONES_EN_TURNO: "OPCIONES EN TURNO",//Opciones ofrecidas al jugador en su turno
     //ColocarCarta
     COLOCAR_SELECCIONARMANO: "COLOCAR_SELECCIONARMANO",//Seleccionar Carta en Mano
@@ -45,23 +23,29 @@ const Momento = {
 
     //FINALES
     JUGADORSINCARTASBARRERA: "JUGADORSINCARTASBARRERA",
-    JUGADORSINCARTASMAZO: "JUGADORSINCARTASMAZO",
-
-    FINDEJUEGO: "FINDEJUEGO" //Pantalla Final
+    JUGADORSINCARTASMAZO: "JUGADORSINCARTASMAZO"
 }
 Object.freeze(Momento)
 
 class Juego {
-    static get Pantalla() { return Pantalla };
-    static get DialogoJuego() { return DialogoJuego };
-    static get Momento() { return Momento };
+    static get Pantalla() { return Pantalla }
+    static get Momento() { return Momento }
     constructor() {
         /**
-         * @type {Jugador[]}
+         * @type {Array<Jugador>}
          */
         this.jugador = []
+        /**
+         * @type {Jugador}
+         */
         this.jugadorActual = []
+        /**
+         * @type {Jugador}
+         */
         this.jugadorAnterior = []
+        /**
+         * @type {Jugador}
+         */
         this.jugadorVictorioso = []
         this.idCartaZonaBSel = 0
         this.idCartaZonaBSelEnemigo = 0
@@ -76,23 +60,23 @@ class Juego {
         return jug
     }
 
-    unirASala(objData) {
+    unirASala(nombreJugador) {
         if (this.jugador.length < 2) {
-            let jug = this.añadirJugador(objData.nombreJugador)
+            let jug = this.añadirJugador(nombreJugador)
             let jugadorNombre = []
             this.jugador.forEach(j => {
                 jugadorNombre.push(j.nombre)
             })
             let start = this.jugador.length === 2;
             this.pantalla = Juego.Pantalla.EN_SALA_DE_ESPERA
-            return { pantalla: this.pantalla, momento: this.momento, jugadorNombre: jugadorNombre,jugador: jug , start: start }
+            return { pantalla: this.pantalla, jugadorNombre: jugadorNombre,jugador: jug , start: start }
         }
         else {
             return { error: "Sala llena, no pueden entrar jugadores" }
         }
     }
 
-    iniciarJuegoNuevo() {
+    iniciarJuego() {
         if (this.jugador.length === 2) {
             this.jugador[0].repartirCartas()
             this.jugador[1].repartirCartas()
@@ -100,15 +84,10 @@ class Juego {
             this.jugadorAnterior = this.jugador[1]
             this.pantalla = Pantalla.Juego
             this.momento = Momento.OPCIONESENTURNO
-            return {
-                pantalla: this.pantalla,
-                momento: this.momento,
-                jugador: this.jugador,
-                jugadorActual: this.jugadorActual
-            }
+            return {exito:true}
         }
         else {
-            return "Error: No se tienen 2 jugadores para empezar"
+            return {error:"No se tienen 2 jugadores para empezar"}
         }
     }
 
