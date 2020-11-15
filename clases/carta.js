@@ -2,9 +2,9 @@ const Elemento = { CORAZON: "\u2665", COCO: "\u2666", TREBOL: "\u2663" , ESPADA:
 Object.freeze(Elemento);
 
 class Carta {
-  static get MAXVALORCARTA() { return 13 }
-  static get MINVALORCARTA() { return 1 }
-  static get NUMEROELEMENTOSCARTAS() {
+  static get MAX_VALOR_CARTA() { return 13 }
+  static get MIN_VALOR_CARTA() { return 1 }
+  static get NUMERO_ELEMENTOS_CARTAS() {
     return Object.keys(Carta.Elemento).length;
   }
   static get Elemento() { return Elemento; }

@@ -9,11 +9,14 @@
 	"scripts": {
 		"start": "node index.js",
 		"lint": "./node_modules/.bin/eslint",
-		"test": "jest"
+		"test": "jest",
+		"test:coverage": "jest --coverage",
+		"test:watch":"jest --watch"
 	},
 	"devDependencies": {
 		"eslint": "^7.12.0",
-		"jest": "^22.4.3"
+		"jest": "^22.4.3",
+		"handlebars": "~4.5.3"
 	},
 	"jest": {
 		"verbose": true,
