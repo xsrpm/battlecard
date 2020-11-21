@@ -11,7 +11,7 @@
 		"lint": "./node_modules/.bin/eslint",
 		"test": "jest",
 		"test:coverage": "jest --coverage",
-		"test:watch":"jest --watch"
+		"test:watch": "jest --watch"
 	},
 	"devDependencies": {
 		"eslint": "^7.12.0",
