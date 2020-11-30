@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const Jugador = require("../clases/jugador");
+const {Jugador,ResultadoAtaque} = require("../clases/jugador");
 const Carta = require("../clases/carta");
 const CeldaBatalla = require("../clases/celdaBatalla/");
 
@@ -16,10 +16,6 @@ describe("Jugador clase", () => {
     expect(Jugador.VeredictoAtaque.EMPATE).toBe("EMPATE");
     expect(Jugador.VeredictoAtaque.GANA_ATACANTE).toBe("GANA ATACANTE");
     expect(Jugador.VeredictoAtaque.PIERDE_ATACANTE).toBe("PIERDE ATACANTE");
-    expect(Jugador.VeredictoAtaque.BARRERA_DESTRUIDA).toBe("BARRERA DESTRUIDA");
-    expect(Jugador.VeredictoAtaque.ENEMIGO_SIN_BARRERA).toBe(
-      "ENEMIGO SIN BARRERA"
-    );
     expect(Jugador.EstadoCarta.ACTIVA).toBe("ACTIVA");
     expect(Jugador.EstadoCarta.DESTRUIDA).toBe("DESTRUIDA");
   });
@@ -37,26 +33,28 @@ describe("Jugador objeto", () => {
     jugador = new Jugador(nombreJugador);
   });
 
-  test("crear un objeto válido ", () => {
-    let zonaBatalla = [];
-    for (let i = 0; i < 3; i++) {
-      zonaBatalla[i] = new CeldaBatalla();
-      zonaBatalla[i].carta = null;
-    }
-    expect(jugador.cartaColocada).toBe(false);
-    expect(jugador.nAtaquesDisponibles).toBe(0);
-    expect(jugador.nCambiosPosicionesDisponibles).toBe(0);
-    /**
-     * @type {Array<CeldaBatalla>}
-     */
-    expect(jugador.zonaBatalla).toEqual(zonaBatalla);
-    expect(jugador.barrera).toEqual([]);
-    expect(jugador.mano).toEqual([]);
-    expect(jugador.deck).toEqual([]);
-    expect(jugador.nTurnos).toBe(0);
-    expect(jugador.nombre).toBe(nombreJugador);
-    expect(jugador.puedeColocarCartaEnZB).toBe(true);
-    expect(jugador.nCartasEnZB).toBe(0);
+  describe('crear un objeto válido', () => {
+    test("exitoso", () => {
+      let zonaBatalla = [];
+      for (let i = 0; i < 3; i++) {
+        zonaBatalla[i] = new CeldaBatalla();
+        zonaBatalla[i].carta = null;
+      }
+      expect(jugador.cartaColocada).toBe(false);
+      expect(jugador.nAtaquesDisponibles).toBe(0);
+      expect(jugador.nCambiosPosicionesDisponibles).toBe(0);
+      /**
+       * @type {Array<CeldaBatalla>}
+       */
+      expect(jugador.zonaBatalla).toEqual(zonaBatalla);
+      expect(jugador.barrera).toEqual([]);
+      expect(jugador.mano).toEqual([]);
+      expect(jugador.deck).toEqual([]);
+      expect(jugador.nTurnos).toBe(0);
+      expect(jugador.nombre).toBe(nombreJugador);
+      expect(jugador.puedeColocarCartaEnZB).toBe(true);
+      expect(jugador.nCartasEnZB).toBe(0);
+    });
   });
 
   test("inicia turno válido", () => {
@@ -95,7 +93,7 @@ describe("Jugador objeto", () => {
       expect(jugador.mano[0]).toEqual(carta);
     });
   });
-
+  
   describe("posibilidad colocar carta en posicion", () => {
     test("no está habilitado para colocar carta", () => {
       jugador.puedeColocarCartaEnZB = false;
@@ -123,20 +121,19 @@ describe("Jugador objeto", () => {
       expect(jugador.posibilidadColocarCartaEnPosicion(0, 0)).toBe("Posible");
     });
   });
-
   describe("accion Colocar Carta", () => {
-    test("posible, en posición de ataque", () => {
+    test("carta colocada, en posición de ataque", () => {
       jugador.mano.push(carta);
       jugador.nAtaquesDisponibles = 0;
       jugador.nCartasEnZB = 0;
       expect(
         jugador.accionColocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
-      ).toBe("Posible");
+      ).toBe("Carta colocada");
       expect(jugador.puedeColocarCartaEnZB).toBe(false);
       expect(jugador.nCartasEnZB).toBe(1);
       expect(jugador.nAtaquesDisponibles).toBe(1);
     });
-    test("posible, en otras posiciones", () => {
+    test("carta colocada, en otras posiciones", () => {
       jugador.mano.push(carta);
       jugador.nAtaquesDisponibles = 0;
       jugador.nCartasEnZB = 0;
@@ -146,7 +143,7 @@ describe("Jugador objeto", () => {
           0,
           CeldaBatalla.Estado.POS_BATALLA_DEF_ABAJO
         )
-      ).toBe("Posible");
+      ).toBe("Carta colocada");
       expect(jugador.puedeColocarCartaEnZB).toBe(false);
       expect(jugador.nCartasEnZB).toBe(1);
       expect(jugador.nAtaquesDisponibles).toBe(0);
@@ -154,7 +151,7 @@ describe("Jugador objeto", () => {
     test("no posible", () => {
       expect(
         jugador.accionColocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
-      ).not.toBe("Posible");
+      ).not.toBe("Carta colocada");
     });
   });
 
@@ -180,14 +177,6 @@ describe("Jugador objeto", () => {
       jugador.nAtaquesDisponibles = 0;
       expect(jugador.puedeAtacarBarreras(jugadorEnemigo)).toBe(
         "No le quedan ataques disponibles"
-      );
-    });
-    test("no, en primer turno no se puede atacar barreras", () => {
-      jugador.nCartasEnZB = 1;
-      jugador.nAtaquesDisponibles = 1;
-      jugador.nTurnos = 1;
-      expect(jugador.puedeAtacarBarreras(jugadorEnemigo)).toBe(
-        "En primer turno no se puede atacar"
       );
     });
     test("posible", () => {
@@ -247,10 +236,12 @@ describe("Jugador objeto", () => {
     });
   });
 
-  test("ataque ha sido realizado", () => {
-    jugador.nAtaquesDisponibles = 1;
-    jugador.ataqueRealizado(0);
-    expect(jugador.nAtaquesDisponibles).toBe(0);
+  describe('ataque ha sido realizado', () => {
+    test("exitoso", () => {
+      jugador.nAtaquesDisponibles = 1;
+      jugador.ataqueRealizado(0);
+      expect(jugador.nAtaquesDisponibles).toBe(0);
+    });
   });
 
   describe("accion atacar barrera", () => {
@@ -263,30 +254,19 @@ describe("Jugador objeto", () => {
       expect(jugador.accionAtacarBarrera(jugadorEnemigo)).not.toBe("Posible");
     });
 
-    test("Posible, barrera destruida", () => {
+    test("barrera destruida", () => {
       jugador.mano.push(carta);
       jugador.accionColocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE);
       jugador.nAtaquesDisponibles = 1;
       jugadorEnemigo.barrera.push(carta);
       jugadorEnemigo.barrera.push(carta);
       expect(jugador.accionAtacarBarrera(jugadorEnemigo, 0)).toBe(
-        "BARRERA DESTRUIDA"
+        "Barrera destruida"
       );
       expect(jugadorEnemigo.barrera.length).toBe(1);
     });
-
-    test("Posible, enemigo sin barreras", () => {
-      jugador.mano.push(carta);
-      jugador.accionColocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE);
-      jugador.nAtaquesDisponibles = 1;
-      jugadorEnemigo.barrera.push(carta);
-      expect(jugador.accionAtacarBarrera(jugadorEnemigo, 0)).toBe(
-        "ENEMIGO SIN BARRERA"
-      );
-      expect(jugadorEnemigo.barrera.length).toBe(0);
-    });
   });
-
+  
   describe("puede atacar cartas", () => {
     let jugadorEnemigo;
     beforeEach(() => {
@@ -310,15 +290,6 @@ describe("Jugador objeto", () => {
       jugadorEnemigo.nCartasEnZB = 1;
       expect(jugador.puedeAtacarCartas(jugadorEnemigo)).toBe(
         "No le quedan ataques disponibles"
-      );
-    });
-    test("no, en primer turno no se puede atacar barreras", () => {
-      jugador.nCartasEnZB = 1;
-      jugador.nAtaquesDisponibles = 1;
-      jugador.nTurnos = 1;
-      jugadorEnemigo.nCartasEnZB = 1;
-      expect(jugador.puedeAtacarCartas(jugadorEnemigo)).toBe(
-        "En primer turno no se puede atacar"
       );
     });
     test("no, enemigo no tiene barreras", () => {
@@ -591,7 +562,7 @@ describe("Jugador objeto", () => {
     });
     test("no posible", () => {
       let resultadoAtaque = jugador.accionAtacarCarta(jugadorEnemigo, 0, 0);
-      expect(resultadoAtaque.veredicto).not.toBe("Posible");
+      expect(resultadoAtaque.veredicto).not.toBe("Ataque realizado");
     });
     test("posible, jugador atacado en posición de ataque - gana atacante", () => {
       cartaAtacante = new Carta(13, Carta.Elemento.COCO);
@@ -607,6 +578,7 @@ describe("Jugador objeto", () => {
         CeldaBatalla.Estado.POS_BATALLA_ATAQUE
       );
       let resultadoAtaque = jugador.accionAtacarCarta(jugadorEnemigo, 0, 0);
+      expect(resultadoAtaque.estadoAtaque).toBe("Ataque realizado")
       expect(resultadoAtaque.veredicto).toBe(
         Jugador.VeredictoAtaque.GANA_ATACANTE
       );
@@ -637,6 +609,7 @@ describe("Jugador objeto", () => {
         CeldaBatalla.Estado.POS_BATALLA_ATAQUE
       );
       let resultadoAtaque = jugador.accionAtacarCarta(jugadorEnemigo, 0, 0);
+      expect(resultadoAtaque.estadoAtaque).toBe("Ataque realizado")
       expect(resultadoAtaque.veredicto).toBe(
         Jugador.VeredictoAtaque.PIERDE_ATACANTE
       );
@@ -667,6 +640,7 @@ describe("Jugador objeto", () => {
         CeldaBatalla.Estado.POS_BATALLA_ATAQUE
       );
       let resultadoAtaque = jugador.accionAtacarCarta(jugadorEnemigo, 0, 0);
+      expect(resultadoAtaque.estadoAtaque).toBe("Ataque realizado")
       expect(resultadoAtaque.veredicto).toBe(Jugador.VeredictoAtaque.EMPATE);
       expect(resultadoAtaque.cartaAtacante).toEqual(cartaAtacante);
       expect(jugador.nAtaquesDisponibles).toBe(0);
@@ -695,6 +669,7 @@ describe("Jugador objeto", () => {
         CeldaBatalla.Estado.POS_BATALLA_DEF_ABAJO
       );
       let resultadoAtaque = jugador.accionAtacarCarta(jugadorEnemigo, 0, 0);
+      expect(resultadoAtaque.estadoAtaque).toBe("Ataque realizado")
       expect(resultadoAtaque.veredicto).toBe(
         Jugador.VeredictoAtaque.GANA_ATACANTE
       );
@@ -725,6 +700,7 @@ describe("Jugador objeto", () => {
         CeldaBatalla.Estado.POS_BATALLA_DEF_ARRIBA
       );
       let resultadoAtaque = jugador.accionAtacarCarta(jugadorEnemigo, 0, 0);
+      expect(resultadoAtaque.estadoAtaque).toBe("Ataque realizado")
       expect(resultadoAtaque.veredicto).toBe(
         Jugador.VeredictoAtaque.PIERDE_ATACANTE
       );
@@ -755,6 +731,7 @@ describe("Jugador objeto", () => {
         CeldaBatalla.Estado.POS_BATALLA_DEF_ABAJO
       );
       let resultadoAtaque = jugador.accionAtacarCarta(jugadorEnemigo, 0, 0);
+      expect(resultadoAtaque.estadoAtaque).toBe("Ataque realizado")
       expect(resultadoAtaque.veredicto).toBe(Jugador.VeredictoAtaque.EMPATE);
       expect(resultadoAtaque.cartaAtacante).toEqual(cartaAtacante);
       expect(jugador.nAtaquesDisponibles).toBe(0);
@@ -828,7 +805,7 @@ describe("Jugador objeto", () => {
     test("no posible", () => {
       expect(jugador.puedeCambiarPosicion()).not.toBe("Posible");
     });
-    test("posible, a posición de ataque", () => {
+    test("posicion cambiada, a posición de ataque", () => {
       jugador.nCambiosPosicionesDisponibles = 1;
       jugador.mano.push(carta);
       jugador.accionColocarCarta(
@@ -838,7 +815,7 @@ describe("Jugador objeto", () => {
       );
       jugador.zonaBatalla[0].dispCambio =
         CeldaBatalla.Estado.CAMBIO_POS_DISPONIBLE;
-      expect(jugador.cambiarPosicionBatalla(0)).toBe("Posible");
+      expect(jugador.cambiarPosicionBatalla(0)).toBe("Posicion cambiada");
       expect(jugador.zonaBatalla[0].posBatalla).toBe(
         CeldaBatalla.Estado.POS_BATALLA_ATAQUE
       );
@@ -850,13 +827,13 @@ describe("Jugador objeto", () => {
       );
       expect(jugador.nCambiosPosicionesDisponibles).toBe(0);
     });
-    test("posible, a posición de defensa", () => {
+    test("posicion cambiada, a posición de defensa", () => {
       jugador.nCambiosPosicionesDisponibles = 1;
       jugador.mano.push(carta);
       jugador.accionColocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE);
       jugador.zonaBatalla[0].dispCambio =
         CeldaBatalla.Estado.CAMBIO_POS_DISPONIBLE;
-      expect(jugador.cambiarPosicionBatalla(0)).toBe("Posible");
+      expect(jugador.cambiarPosicionBatalla(0)).toBe("Posicion cambiada");
       expect(jugador.zonaBatalla[0].posBatalla).toBe(
         CeldaBatalla.Estado.POS_BATALLA_DEF_ARRIBA
       );

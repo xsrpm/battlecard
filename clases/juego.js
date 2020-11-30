@@ -1,42 +1,15 @@
-const Jugador = require("./jugador.js");
+const {Jugador} = require("./jugador.js");
 
 const Pantalla = {
   EN_SALA_DE_ESPERA: "EN SALA DE ESPERA",
-  JUEGO: "JUEGO",
+  EN_JUEGO: "EN JUEGO",
   FIN_DE_JUEGO: "FIN DE JUEGO",
 };
 Object.freeze(Pantalla);
-const Momento = {
-  OPCIONES_EN_TURNO: "OPCIONES EN TURNO", //Opciones ofrecidas al jugador en su turno
-  //ColocarCarta
-  COLOCAR_SELECCIONARMANO: "COLOCAR_SELECCIONARMANO", //Seleccionar Carta en Mano
-  COLOCAR_SELECCIONARZONABATALLA: "COLOCAR_SELECCIONARZONABATALLA", //Selecionar posicion en zona de batalla para colocar carta
-  COLOCAR_SELECCIONARPOSICIONBATALLA: "COLOCAR_SELECCIONARPOSICIONBATALLA", //Elegir posicion de batalla
-  COLOCAR_CARTACOLOCADA: "COLOCAR_CARTACOLOCADA",
-  //AtacarCarta
-  ATACARCARTA_SELECCIONARZONABATALLA: "ATACARCARTA_SELECCIONARZONABATALLA", //Seleccionar Carta en zona de batalla
-  ATACARCARTA_SELECCIONARZONABATALLAE: "ATACARCARTA_SELECCIONARZONABATALLAE", //Seleccionar Carta en zona de batalla enemiga
-  ATACARCARTA_ATAQUEREALIZADO: "ATACARCARTA_ATAQUEREALIZADO", //Ataque realizado
-  //AtacarBarrera
-  ATACARBARRERA_SELECCIONARZONABATALLA: "ATACARBARRERA_SELECCIONARZONABATALLA",
-  ATACARBARRERA_ATAQUEREALIZADO: "ATACARBARRERA_ATAQUEREALIZADO",
-  //CambioDePosicionDeBatalla
-  CAMBIARPOSICIONBATALLA_SELECCIONARZONABATALLA:
-    "CAMBIARPOSICIONBATALLA_SELECCIONARZONABATALLA",
-  CAMBIARPOSICIONBATALLA_REALIZADO: "CAMBIARPOSICIONBATALLA_REALIZADO",
-
-  //FINALES
-  JUGADORSINCARTASBARRERA: "JUGADORSINCARTASBARRERA",
-  JUGADORSINCARTASMAZO: "JUGADORSINCARTASMAZO",
-};
-Object.freeze(Momento);
 
 class Juego {
   static get Pantalla() {
     return Pantalla;
-  }
-  static get Momento() {
-    return Momento;
   }
   constructor() {
     /**
@@ -46,59 +19,52 @@ class Juego {
     /**
      * @type {Jugador}
      */
-    this.jugadorActual = [];
+    this.jugadorActual = null;
     /**
      * @type {Jugador}
      */
-    this.jugadorAnterior = [];
+    this.jugadorAnterior = null;
     /**
      * @type {Jugador}
      */
-    this.jugadorVictorioso = [];
+    this.jugadorVictorioso = null;
     this.idCartaZonaBSel = 0;
     this.idCartaZonaBSelEnemigo = 0;
     this.idCartaManoSel = 0;
-    this.pantalla = Pantalla.RECEPCION;
-    this.momento = Momento.EN_SALA_DE_ESPERA;
+    this.pantalla = null;
+    this.momento = null;
   }
 
-  añadirJugador(nombre) {
-    let jug = new Jugador(nombre);
-    this.jugador.push(jug);
-    return jug;
+  obtenerEstadoSala() {
+    return this.jugador.length < 2 ? "SALA ABIERTA" : "SALA CERRADA";
   }
-
+  /**
+   *
+   * @param {string} nombreJugador
+   */
   unirASala(nombreJugador) {
-    if (this.jugador.length < 2) {
-      let jug = this.añadirJugador(nombreJugador);
-      let jugadorNombre = [];
-      this.jugador.forEach((j) => {
-        jugadorNombre.push(j.nombre);
-      });
-      let start = this.jugador.length === 2;
+    if (this.obtenerEstadoSala() === "SALA ABIERTA") {
+      let jug = new Jugador(nombreJugador);
+      this.jugador.push(jug);
       this.pantalla = Juego.Pantalla.EN_SALA_DE_ESPERA;
-      return {
-        pantalla: this.pantalla,
-        jugadorNombre: jugadorNombre,
-        jugador: jug,
-        start: start,
-      };
+      return jug;
     } else {
-      return { error: "Sala llena, no pueden entrar jugadores" };
+      return "Sala llena, no pueden entrar jugadores";
     }
   }
 
   iniciarJuego() {
-    if (this.jugador.length === 2) {
+    if (this.obtenerEstadoSala() === "SALA CERRADA") {
       this.jugador[0].repartirCartas();
       this.jugador[1].repartirCartas();
+      this.jugador[0].iniciarTurno();
+      this.jugador[1].iniciarTurno();
       this.jugadorActual = this.jugador[0];
       this.jugadorAnterior = this.jugador[1];
-      this.pantalla = Pantalla.Juego;
-      this.momento = Momento.OPCIONESENTURNO;
-      return { exito: true };
+      this.pantalla = Pantalla.EN_JUEGO;
+      return "JUEGO INICIADO";
     } else {
-      return { error: "No se tienen 2 jugadores para empezar" };
+      return "No se tienen 2 jugadores para empezar";
     }
   }
 
@@ -106,13 +72,73 @@ class Juego {
     let jugadorTmp = this.jugadorActual;
     this.jugadorActual = this.jugadorAnterior;
     this.jugadorAnterior = jugadorTmp;
-    return this.jugadorActual;
+    this.jugadorActual.iniciarTurno()
+    let res = this.jugadorActual.cogerUnaCartaDelDeck()
+    if(res === "EXITO"){
+      if(this.jugadorActual.sinCartasEnDeck()){
+        this.pantalla = Pantalla.FIN_DE_JUEGO
+        return "Jugador sin cartas en deck"     //FIN DEL JUEGO AL QUEDARSE SIN CARTAS EN EL DECK
+      }
+    }
+    return res
+  }
+/**
+ * 
+ * @param {number} idPosZB 
+ * @param {number} idCartaMano 
+ */
+  colocarCartaEnAtaque(idPosZB, idCartaMano) {
+    let respuesta = this.jugadorActual.accionColocarCartaEnAtaque(
+      idPosZB,
+      idCartaMano
+    );
+    return respuesta;
+  }
+/**
+ * 
+ * @param {number} idPosZB 
+ * @param {number} idCartaMano 
+ */
+  colocarCartaEnDefensa(idPosZB, idCartaMano) {
+    let respuesta = this.jugadorActual.accionColocarCartaEnDefensa(
+      idPosZB,
+      idCartaMano
+    );
+    return respuesta;
   }
 
-  iniciarColocarCarta() {
-    if (this.jugadorActual.puedeColocarCartaEnZB()) {
-      this.momento = Momento.COLOCAR_SELECCIONARMANO;
+  /**
+   * 
+   * @param {number} idCartaAtacante 
+   */
+  atacarBarrera(idCartaAtacante) {
+    let res= this.jugadorActual.accionAtacarBarrera(this.jugadorAnterior,idCartaAtacante)
+    if(res === "Barrera destruida"){
+      if(this.jugadorAnterior.sinBarreras()){
+        this.pantalla = Pantalla.FIN_DE_JUEGO
+        return "Jugador sin barreras" //FIN DEL JUEGO COMPROBAR QUE TODAVIA TENGA CARTAS DE BARRERA
+      }
     }
+    return res
+  }
+/**
+ * 
+ * @param {number} idCartaAtacante 
+ * @param {number} idCartaAtacada 
+ */
+  atacarCarta(idCartaAtacante,idCartaAtacada) {
+    let res = this.jugadorActual.accionAtacarCarta(this.jugadorAnterior,idCartaAtacante,idCartaAtacada)
+    if(res.estadoBarrera === "DESTRUIDA"){
+      if(this.jugadorAnterior.sinBarreras()){
+        this.pantalla = Pantalla.FIN_DE_JUEGO
+        return "Jugador sin barreras" //FIN DEL JUEGO COMPROBAR QUE TODAVIA TENGA CARTAS DE BARRERA
+      }
+    }
+    return res 
+  }
+
+  cambiarPosicionBatalla(idCarta) {
+    return this.jugadorActual.cambiarPosicionBatalla(idCarta)
   }
 }
 
