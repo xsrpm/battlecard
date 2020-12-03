@@ -1,126 +1,117 @@
-
-const WebSocket = require('ws');
-const { v4: uuidv4 } = require('uuid');
-const Juego = require('./clases/juego.js');
+const WebSocket = require("ws");
+const Juego = require("./clases/juego.js");
 /**
  * @type {Juego}
  */
-let juego = new Juego()
+let juego = new Juego();
 
 const wss = new WebSocket.Server({ port: 8080 });
 
-
-function broadcast(wsorigen, data) {
-  wss.clients.forEach(ws => {
-    if (ws !== wsorigen && ws.readyState === WebSocket.OPEN) {
-      ws.send(data);
+/**
+ *
+ * @param {WebSocket} wsorigen
+ * @param {*} data
+ * @param {boolean} excludingItself
+ */
+function broadcast(wsorigen, data, excludingItself) {
+  wss.clients.forEach((ws) => {
+    if (ws.readyState === WebSocket.OPEN) {
+      if (excludingItself) {
+        if (ws !== wsorigen) {
+          ws.send(data);
+        }
+      } else {
+        ws.send(data);
+      }
     }
   });
 }
-
-function echo(wsorigen, data) {
-  wsorigen.send("Desde el server: " + data)
-}
 /**
- * 
- * @param {WebSocket} wsorigen 
- * @param {{accion:string,nombreJugador: string}} objData 
+ *
+ * @param {WebSocket} wsorigen
+ * @param {*} data
  */
-function unirASala(wsorigen, objData){
-  const resp = juego.unirASala(objData.nombreJugador)
-  if (typeof resp.error !== "undefined")
-    wsorigen.send(JSON.stringify(resp))
-  else {
-    wsorigen.jugador = objData.jugador
-    delete objData.jugador
-    wsorigen.uuid = uuidv4()
-    wss.clients.forEach(ws => {
-      if (ws.readyState === WebSocket.OPEN) {
-        if (ws === wsorigen) {
-          resp.uuid = wsorigen.uuid
-          ws.send(JSON.stringify(resp));
-        }
-        else {
-          if (typeof ws.uuid !== 'undefined')
-            ws.send(JSON.stringify(resp));
-        }
-      }
-    });
+function unirASala(wsorigen, data) {
+  let nombreJugador = data.payload.nombreJugador;
+  if (typeof nombreJugador === "undefined") {
+    wsorigen.send(JSON.stringify({ event:"Unir a sala",error: "nombreJugador is undefined" }));
+    wsorigen.close();
+    return;
   }
+  const resp = juego.unirASala(nombreJugador);
+  if(resp === 'Sala llena, no pueden entrar jugadores'){
+    wsorigen.send(JSON.stringify({ error: resp }));
+    wsorigen.close();
+    return;
+  }
+  wsorigen.jugador = resp;
+  let res = {
+    event: "Unir a sala",
+    payload: {
+      jugadores: juego.obtenerNombreJugadores(),
+      iniciar:false
+    },
+  };
+  juego.obtenerEstadoSala() === "SALA CERRADA" ? res.payload.iniciar = true: ""
+  broadcast(wsorigen, JSON.stringify(res), false);
 }
 
 /**
- * 
- * @param {WebSocket} wsorigen 
+ *
+ * @param {WebSocket} wsorigen
  */
-function iniciarJuego(wsorigen){
-  const resp = juego.iniciarJuego()
-  if (typeof resp.error !== "undefined")
-    wsorigen.send(JSON.stringify(resp))
-  else {
-    wss.clients.forEach(ws => {
-      if (ws.readyState === WebSocket.OPEN) {
-        if (ws.jugador === juego.jugadorActual) {
-          ws.send(JSON.stringify({
-            pantalla:juego.pantalla,
-            momento:juego.momento,
-            jugador:{
-              barrera:juego.jugadorActual.barrera,
-              nDeck:juego.jugadorActual.deck.length,
-              mano:juego.jugadorActual.mano
-            },
-            jugadorEnemigo:{
-              barrera:juego.jugadorAnterior.barrera,
-              nDeck:juego.jugadorAnterior.deck.length
-            },
-            enTurno:true
-            }));
-        }
-        else if(ws.jugador === juego.jugadorAnterior){
-          ws.send(JSON.stringify({
-            pantalla:juego.pantalla,
-            momento:juego.momento,
-            jugador:{
-              barrera:juego.jugadorAnterior.barrera,
-              nDeck:juego.jugadorAnterior.deck.length,
-              mano:juego.jugadorAnterior.mano
-            },
-            jugadorEnemigo:{
-              barrera:juego.jugadorActual.barrera,
-              nDeck:juego.jugadorActual.deck.length
-            },
-            enTurno:false
-          }));
-        }
-      }
-    });
+function iniciarJuego(wsorigen) {
+  const resp = juego.iniciarJuego();
+  if (typeof resp.error !== "undefined") {
+    wsorigen.send(JSON.stringify(resp));
+    return;
   }
+  let res = {
+    event:"Iniciar juego",
+    payload:{
+      jugador: {
+        barrera: juego.jugadorActual.barrera,
+        nDeck: juego.jugadorActual.deck.length,
+        mano: juego.jugadorActual.mano,
+      },
+      jugadorEnemigo: {
+        barrera: juego.jugadorAnterior.barrera,
+        nDeck: juego.jugadorAnterior.deck.length,
+      },
+      enTurno: true,
+    }
+  }
+  wsorigen.send(JSON.stringify(res));
+  res.payload.enTurno=false
+  broadcast(wsorigen,JSON.stringify(res),true);
 }
 
 /**
- * 
- * @param {WebSocket} wsorigen 
- * @param {string} data 
+ *
+ * @param {WebSocket} ws
+ * @param {string} data
  */
-function procesarAccion(wsorigen, data) {
-  let objData = JSON.parse(data)
-  console.log("Pantalla: " + juego.pantalla)
-
-  if (objData.accion === 'Unir A Sala') {
-    unirASala(wsorigen, objData)
-  }
-  else if (objData.accion === 'Iniciar Juego') {
-    wss.clients.forEach(ws => {
-      if(ws.uuid===objData.uuid)
-        iniciarJuego(wsorigen)
-    })
+function procesarAccion(ws, data) {
+  let objData = JSON.parse(data);
+  switch (objData.event) {
+    case "Unir a sala":
+      unirASala(ws, objData);
+    break;
+    case "Iniciar juego":
+      iniciarJuego(ws);
+    break;
+    default:
+      ws.send(JSON.stringify({event:"Hello"}))
+    break;
   }
 }
 
-wss.on('connection', ws => {
-  ws.on('message', data => {
-    console.log('received: ' + data)
-    procesarAccion(ws, data)
+wss.on("connection", (ws) => {
+  ws.on("message", (data) => {
+    console.log("received: " + data);
+    procesarAccion(ws, data);
+  });
+  ws.on("close", (code, reason) => {
+    console.info(`close ws code:${code}, reason: ${reason}`);
   });
 });
-

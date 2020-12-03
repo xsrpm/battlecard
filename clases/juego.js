@@ -38,6 +38,14 @@ class Juego {
   obtenerEstadoSala() {
     return this.jugador.length < 2 ? "SALA ABIERTA" : "SALA CERRADA";
   }
+
+  obtenerNombreJugadores(){
+    let jugNames = []
+    for(const j of this.jugador){
+      jugNames.push(j.nombre)
+    }
+    return jugNames
+  }
   /**
    *
    * @param {string} nombreJugador
@@ -54,7 +62,8 @@ class Juego {
   }
 
   iniciarJuego() {
-    if (this.obtenerEstadoSala() === "SALA CERRADA") {
+    if (this.obtenerEstadoSala() === "SALA CERRADA" &&
+    this.pantalla === Pantalla.EN_SALA_DE_ESPERA) {
       this.jugador[0].repartirCartas();
       this.jugador[1].repartirCartas();
       this.jugador[0].iniciarTurno();
