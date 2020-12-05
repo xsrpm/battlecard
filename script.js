@@ -6,7 +6,7 @@ const sala = document.querySelector(".sala");
 const juego = document.querySelector(".juego");
 const h2 = sala.getElementsByTagName("h2");
 
-const nombreJugador = document.getElementById("nombreJugador");
+const inNombreJugador = document.getElementById("inNombreJugador");
 const btnUnirASala = document.getElementById("btnUnirASala");
 const btnJugar = document.getElementById("btnJugar");
 const btnIniciarJuego = document.getElementById("btnIniciarJuego");
@@ -19,9 +19,12 @@ const resultadoAtaque = document.querySelector(".resultadoAtaque");
 const manoYo = document.getElementById("manoYo");
 const zonaBatallaYo = document.getElementById("zonaBatallaYo");
 const zonaBatallaEnemiga = document.getElementById("zonaBatallaEnemiga");
+const barreraYo = document.getElementById("barreraYo");
+const barreraEnemiga = document.getElementById("barreraEnemiga");
 const jugYo = document.getElementById("jugYo");
 const jugEnemigo = document.getElementById("jugEnemigo");
 
+const data = {}
 //'localhost'
 //console.log(location.host);
 let url = "ws://localhost:8080/ws"
@@ -39,7 +42,7 @@ function cambiarPantalla(pantalla) {
   pantalla.classList.add("mostrarPantalla");
 }
 
-function enTurno(enTurno) {
+function mostrarEnTurno(enTurno) {
   if (enTurno === true) {
     jugYo.classList.remove("jugEnEspera");
     jugYo.classList.add("jugActivo");
@@ -54,29 +57,33 @@ function enTurno(enTurno) {
 }
 
 function iniciarTablero(objData) {
-  objData.jugador.barrera.forEach((b, i) => {
-    zonaBatallaYo.children[i].classList.add("barrera");
+  objData.payload.jugador.barrera.forEach((b, i) => {
+    barreraYo.children[i].classList.add("barrera");
   });
-  jugYo.children[1].children[0].innerText = objData.nDeck;
-  objData.jugador.mano.forEach((c, i) => {
+  jugYo.children[0].innerText = data.jugadores[0]
+  jugYo.children[1].children[0].innerText = objData.payload.jugador.nDeck;
+  objData.payload.jugador.mano.forEach((c, i) => {
     manoYo.children[i].classList.add("mano");
-    manoYo.children[i].children[0].children[0] = c.valor;
-    manoYo.children[i].children[0].children[1] = c.elemento;
+    manoYo.children[i].children[0].children[0].innerText = c.valor;
+    manoYo.children[i].children[0].children[1].innerText = c.elemento;
   });
-  objData.jugadorEnemigo.barrera.forEach((b, i) => {
-    zonaBatallaEnemiga.children[i].classList.add("barrera");
+  objData.payload.jugadorEnemigo.barrera.forEach((b, i) => {
+    barreraEnemiga.children[i].classList.add("barrera");
   });
-  jugEnemigo.children[1].children[0].innerText = objData.nDeck;
+  jugEnemigo.children[0].innerText = data.jugadores[1]
+  jugEnemigo.children[1].children[0].innerText = objData.payload.jugadorEnemigo.nDeck;
 }
 
 function unirASala(objData) {
   if (typeof objData.error !== "undefined"){ 
     console.log(objData.error);
+    alert(objData.error)
     return;
   }
   for (let i = 0; i < objData.payload.jugadores.length; i++) {
     h2[i].innerText = objData.payload.jugadores[i];
   }
+  data.jugadores = objData.payload.jugadores
   objData.payload.iniciar === true? btnIniciarJuego.disabled = false : ""
   cambiarPantalla(sala);
 }
@@ -86,7 +93,7 @@ function iniciarJuego(objData) {
     console.log(objData.error);
     return;
   }
-  enTurno(objData.payload.enTurno);
+  mostrarEnTurno(objData.payload.enTurno);
   iniciarTablero(objData);
   cambiarPantalla(juego);
 }
@@ -97,7 +104,7 @@ btnJugar.addEventListener("click", () => {
 btnUnirASala.addEventListener("click", () => {
   socket = new WebSocket(url);
   socket.onopen = (e)=>{
-    socket.send(JSON.stringify({ event: "Unir a sala", payload:{nombreJugador: nombreJugador.value }}));
+    socket.send(JSON.stringify({ event: "Unir a sala", payload:{nombreJugador: inNombreJugador.value }}));
   }
   socket.onmessage = (e) => {
     console.log("received: "+e.data);
@@ -107,7 +114,7 @@ btnUnirASala.addEventListener("click", () => {
         unirASala(objData);
       break;
       case "Iniciar juego":
-        enJuego(objData);
+        iniciarJuego(objData);
       break;
     }
   };
@@ -138,13 +145,15 @@ manoYo.addEventListener("click", (e) => {
   while (!target.classList.contains("slot")) target = target.parentElement;
   console.log(target);
 });
-zonaBatallaYo.addEventListener("click", (e) => {
+zonaBatallaYo.addEventListener("click", function (e) {
   let target = e.target;
+  if(target.id === this.id) return
   while (!target.classList.contains("slot")) target = target.parentElement;
   console.log(target);
 });
-zonaBatallaEnemiga.addEventListener("click", (e) => {
+zonaBatallaEnemiga.addEventListener("click", function (e) {
   let target = e.target;
+  if(target.id === this.id) return
   while (!target.classList.contains("slot")) target = target.parentElement;
   console.log(target);
 });
