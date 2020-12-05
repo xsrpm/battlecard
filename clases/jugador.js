@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const Carta = require("./carta.js");
-const CeldaBatalla = require("./celdaBatalla.js");
+const CeldaBatalla = require("./celdabatalla.js");
 
 const ResultadoCojerUnaCarta = {
   MANO_LLENA: "MANO LLENA",

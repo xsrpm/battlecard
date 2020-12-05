@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-console */
 const WebSocket = require("ws");
 const Juego = require("./clases/juego.js");
 /**
@@ -18,10 +20,26 @@ function broadcast(wsorigen, data, excludingItself) {
     if (ws.readyState === WebSocket.OPEN) {
       if (excludingItself) {
         if (ws !== wsorigen) {
-          ws.send(data);
+          ws.send(JSON.stringify(data));
         }
       } else {
-        ws.send(data);
+        ws.send(JSON.stringify(data));
+      }
+    }
+  });
+}
+/**
+ * 
+ * @param {WebSocket} wsorigen 
+ * @param {*} data 
+ * @param {Function} callback 
+ * @param {boolean} excludingItself 
+ */
+function broadcast2(wsorigen, data, callback, excludingItself) {
+  wss.clients.forEach((ws) => {
+    if (ws.readyState === WebSocket.OPEN) {
+      if(!(excludingItself && ws === wsorigen)){
+        callback(ws,data);
       }
     }
   });
@@ -40,7 +58,7 @@ function unirASala(wsorigen, data) {
   }
   const resp = juego.unirASala(nombreJugador);
   if(resp === 'Sala llena, no pueden entrar jugadores'){
-    wsorigen.send(JSON.stringify({ error: resp }));
+    wsorigen.send(JSON.stringify({ event:"Unir a sala",error: resp }));
     wsorigen.close();
     return;
   }
@@ -53,7 +71,47 @@ function unirASala(wsorigen, data) {
     },
   };
   juego.obtenerEstadoSala() === "SALA CERRADA" ? res.payload.iniciar = true: ""
-  broadcast(wsorigen, JSON.stringify(res), false);
+  broadcast(wsorigen, res, false);
+}
+/**
+ * 
+ * @param {WebSocket} ws 
+ * @param {*} data
+ */
+function iniciarJuegoSendData(ws,data){
+  if(ws.jugador === juego.jugadorActual){
+    data.payload = {
+      jugador:{
+        barrera: juego.jugadorActual.barrera,
+        nDeck: juego.jugadorActual.deck.length,
+        mano: juego.jugadorActual.mano,
+      },
+      jugadorEnemigo : {
+        barrera: juego.jugadorAnterior.barrera,
+        nDeck: juego.jugadorAnterior.deck.length,
+      },
+      enTurno:true
+    }
+  }
+  else if(ws.jugador === juego.jugadorAnterior){
+    data.payload = {
+        jugador:{
+          barrera: juego.jugadorAnterior.barrera,
+          nDeck: juego.jugadorAnterior.deck.length,
+          mano: juego.jugadorAnterior.mano,
+        },
+        jugadorEnemigo : {
+          barrera: juego.jugadorActual.barrera,
+          nDeck: juego.jugadorActual.deck.length,
+        },
+        enTurno:false
+      }
+  }
+  else{
+    console.log("Error no gestionado iniciar JuegoDataPorJugador")
+    data.error = "Error no gestionado iniciar JuegoDataPorJugador"
+  }
+  ws.send(JSON.stringify(data))
 }
 
 /**
@@ -62,28 +120,13 @@ function unirASala(wsorigen, data) {
  */
 function iniciarJuego(wsorigen) {
   const resp = juego.iniciarJuego();
-  if (typeof resp.error !== "undefined") {
+  if (resp !== "JUEGO INICIADO") {
     wsorigen.send(JSON.stringify(resp));
     return;
   }
-  let res = {
-    event:"Iniciar juego",
-    payload:{
-      jugador: {
-        barrera: juego.jugadorActual.barrera,
-        nDeck: juego.jugadorActual.deck.length,
-        mano: juego.jugadorActual.mano,
-      },
-      jugadorEnemigo: {
-        barrera: juego.jugadorAnterior.barrera,
-        nDeck: juego.jugadorAnterior.deck.length,
-      },
-      enTurno: true,
-    }
-  }
-  wsorigen.send(JSON.stringify(res));
-  res.payload.enTurno=false
-  broadcast(wsorigen,JSON.stringify(res),true);
+  let res = {event:"Iniciar juego"}
+
+  broadcast2(wsorigen,res,iniciarJuegoSendData,false);
 }
 
 /**

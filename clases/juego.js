@@ -33,10 +33,11 @@ class Juego {
     this.idCartaManoSel = 0;
     this.pantalla = null;
     this.momento = null;
+    this.estadoSala = "SALA ABIERTA"
   }
 
   obtenerEstadoSala() {
-    return this.jugador.length < 2 ? "SALA ABIERTA" : "SALA CERRADA";
+    return this.estadoSala
   }
 
   obtenerNombreJugadores(){
@@ -51,9 +52,10 @@ class Juego {
    * @param {string} nombreJugador
    */
   unirASala(nombreJugador) {
-    if (this.obtenerEstadoSala() === "SALA ABIERTA") {
+    if (this.estadoSala === "SALA ABIERTA") {
       let jug = new Jugador(nombreJugador);
       this.jugador.push(jug);
+      this.jugador.length < 2 ? this.estadoSala = "SALA ABIERTA" : this.estadoSala = "SALA CERRADA"
       this.pantalla = Juego.Pantalla.EN_SALA_DE_ESPERA;
       return jug;
     } else {
@@ -62,8 +64,9 @@ class Juego {
   }
 
   iniciarJuego() {
-    if (this.obtenerEstadoSala() === "SALA CERRADA" &&
+    if (this.estadoSala === "SALA CERRADA" &&
     this.pantalla === Pantalla.EN_SALA_DE_ESPERA) {
+      this.estadoSala = "SALA INICIADA"
       this.jugador[0].repartirCartas();
       this.jugador[1].repartirCartas();
       this.jugador[0].iniciarTurno();
@@ -72,8 +75,16 @@ class Juego {
       this.jugadorAnterior = this.jugador[1];
       this.pantalla = Pantalla.EN_JUEGO;
       return "JUEGO INICIADO";
-    } else {
+    } else if(this.estadoSala === "SALA INICIADA" && 
+    this.pantalla === Pantalla.EN_SALA_DE_ESPERA){
+      return "La sala está iniciandose"
+    }
+    else if(this.estadoSala === "SALA ABIERTA" &&
+    this.pantalla === Pantalla.EN_SALA_DE_ESPERA){
       return "No se tienen 2 jugadores para empezar";
+    }
+    else{
+      return "Condición no manejada al iniciarJuego"
     }
   }
 
