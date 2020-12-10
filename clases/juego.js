@@ -73,6 +73,8 @@ class Juego {
       this.jugador[1].iniciarTurno();
       this.jugadorActual = this.jugador[0];
       this.jugadorAnterior = this.jugador[1];
+      this.jugadorActual.setearTurno(true);
+      this.jugadorAnterior.setearTurno(false);
       this.pantalla = Pantalla.EN_JUEGO;
       return "JUEGO INICIADO";
     } else if(this.estadoSala === "SALA INICIADA" && 
@@ -93,6 +95,8 @@ class Juego {
     this.jugadorActual = this.jugadorAnterior;
     this.jugadorAnterior = jugadorTmp;
     this.jugadorActual.iniciarTurno()
+    this.jugadorActual.setearTurno(true)
+    this.jugadorAnterior.setearTurno(false)
     let res = this.jugadorActual.cogerUnaCartaDelDeck()
     if(res === "EXITO"){
       if(this.jugadorActual.sinCartasEnDeck()){

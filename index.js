@@ -82,29 +82,35 @@ function iniciarJuegoSendData(ws,data){
   if(ws.jugador === juego.jugadorActual){
     data.payload = {
       jugador:{
+        nombre: juego.jugadorActual.nombre,
         barrera: juego.jugadorActual.barrera,
         nDeck: juego.jugadorActual.deck.length,
         mano: juego.jugadorActual.mano,
+        enTurno:juego.jugadorActual.enTurno
       },
       jugadorEnemigo : {
+        nombre: juego.jugadorAnterior.nombre,
         barrera: juego.jugadorAnterior.barrera,
         nDeck: juego.jugadorAnterior.deck.length,
-      },
-      enTurno:true
+        enTurno: juego.jugadorAnterior.enTurno
+      }
     }
   }
   else if(ws.jugador === juego.jugadorAnterior){
     data.payload = {
         jugador:{
+          nombre: juego.jugadorAnterior.nombre,
           barrera: juego.jugadorAnterior.barrera,
           nDeck: juego.jugadorAnterior.deck.length,
           mano: juego.jugadorAnterior.mano,
+          enTurno:juego.jugadorAnterior.enTurno
         },
         jugadorEnemigo : {
+          nombre: juego.jugadorActual.nombre,
           barrera: juego.jugadorActual.barrera,
           nDeck: juego.jugadorActual.deck.length,
-        },
-        enTurno:false
+          enTurno:juego.jugadorActual.enTurno
+        }
       }
   }
   else{

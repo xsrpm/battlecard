@@ -107,6 +107,7 @@ class Jugador {
     this.nombre = nombre;
     this.puedeColocarCartaEnZB = true;
     this.nCartasEnZB = 0; // revisa codigo por esto
+    this.enTurno = false
   }
   //region Operaciones (Reglas)
 
@@ -120,6 +121,10 @@ class Jugador {
 
   ataquesPermitidos(){
     return this.nTurnos > 1
+  }
+
+  setearTurno(enTurno){
+    this.enTurno = enTurno 
   }
 
   iniciarTurno() {
