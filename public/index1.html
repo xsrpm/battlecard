@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>BattleCard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" />
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <div class="bienvenida">
+      <h1>BattleCard</h1>
+      <button id="btnJugar">Jugar</button>
+    </div>
+    <div class="recepcion">
+      <h1>Ingrese su nombre/nick</h1>
+      <input type="text" id="inNombreJugador">
+      <button id="btnUnirASala">Unirse a la Sala</button>
+    </div>
+    <div class="sala">
+      <h1>Sala de Espera</h1>
+      <div>
+        <h2>(Sin Jugador)</h2>
+      </div>
+      <div> 
+        <h2>(Sin Jugador)</h2>
+      </div>
+      <button id="btnIniciarJuego" disabled>Iniciar Juego</button>
+    </div>
+    <div class="juego">
+      <div class="jugadores">
+        <div id="jugEnemigo" class="jugEnEspera">
+          <h2>Jugador Enemigo</h2>
+          <h3>Deck: <span>20</span></h3>
+          <p>En turno</p>
+        </div>
+        <div id="jugYo" class="jugActivo">
+          <h2>Jugador (Yo)</h2>
+          <h3>Deck: <span>14</span></h3>
+          <p>En Turno</p>
+        </div>
+      </div>
+      <div class="tablero">
+        <div class="enemigo">
+          <div id="manoEnemigo">
+            <div class="slot oculto" data-id="0">
+              <p><span></span><span></span></p>
+            </div>
+            <div class="slot oculto" data-id="1">
+              <p><span></span><span></span></p>
+            </div>
+            <div class="slot oculto" data-id="2">
+              <p><span></span><span></span></p>
+            </div>
+            <div class="slot oculto" data-id="3">
+              <p><span></span><span></span></p>
+            </div>
+            <div class="slot oculto" data-id="4">
+              <p><span></span><span></span></p>
+            </div>
+          </div>
+          <div id="barreraEnemiga">
+            <div class="slot barrera" data-id="4"></div>
+            <div class="slot barrera" data-id="3"></div>
+            <div class="slot barrera" data-id="2"></div>
+            <div class="slot barrera" data-id="1"></div>
+            <div class="slot barrera" data-id="0"></div>
+          </div>
+          <div id="zonaBatallaEnemiga">
+            <div class="slot defensa" data-id="2">
+              <p><span>1</span><span>♣</span></p>
+            </div>
+            <div class="slot ataque" data-id="1">
+              <p><span>2</span><span>♣</span></p>
+            </div>
+            <div class="slot" data-id="0">
+              <p><span></span><span></span></p>
+            </div>
+          </div>
+        </div>
+        <div class="yo">
+          <div id="zonaBatallaYo">
+            <div class="slot" data-id="0">
+              <p><span></span><span></span></p>
+            </div>
+            <div class="slot" data-id="1">
+              <p><span></span><span></span></p>
+            </div>
+            <div class="slot" data-id="2">
+              <p><span></span><span></span></p>
+            </div>
+          </div>
+          <div id="barreraYo">
+            <div class="slot barrera" data-id="0"></div>
+            <div class="slot barrera" data-id="1"></div>
+            <div class="slot barrera" data-id="2"></div>
+            <div class="slot barrera" data-id="3"></div>
+            <div class="slot barrera" data-id="4"></div>
+          </div>
+          <div id="manoYo">
+            <div class="slot mano" data-id="0">
+              <p><span>8</span><span>♣</span></p>
+            </div>
+            <div class="slot mano" data-id="1">
+              <p><span>4</span><span>♣</span></p>
+            </div>
+            <div class="slot" data-id="2">
+              <p><span></span><span></span></p>
+            </div>
+            <div class="slot" data-id="3">
+              <p><span></span><span></span></p>
+            </div>
+            <div class="slot" data-id="4">
+              <p><span></span><span></span></p>
+            </div>
+          </div>
+        </div>
+        <div class="resultadoAtaque">
+          <div class="atacante">
+            <span>Atacante</span>
+          </div>
+          <div class="cartaAtacante">
+            <div class="slot mano">
+              <p><span></span><span></span></p>
+            </div>
+          </div>
+          <div class="bonusAtacante">
+            <span>(-2)</span>
+          </div>
+          <div class="vs">
+            <span>VS</span>
+          </div>
+          <div class="resultado">
+            <span>Gana Atacante</span>
+          </div>
+          <div class="detalleResultado">
+            <span>Destruye Barrera</span>
+          </div>
+          <div class="atacado">
+            <span>Atacado</span>
+          </div>
+          <div class="cartaAtacada">
+            <div class="slot mano">
+              <p><span></span><span></span></p>
+            </div>
+          </div>
+          <div class="bonusAtacando">
+            <span>(+4)</span>
+          </div>
+        </div>
+      </div>
+      <div class="botonera">
+        <p id="mensajeBotones"></p>
+        <button id="btnColocarEnAtaque" class="ocultar">de ataque</button>
+        <button id="btnColocarEnDefensa" class="ocultar">de defensa</button>
+        <button id="btnAtacarCarta" class="ocultar">Atacar carta</button>
+        <button id="btnAtacarBarrera" class="ocultar">Atacar barrera</button>
+        <button id="btnCambiarPosicion" class="ocultar">Cambiar posición</button>
+        <button id="btnCancelar" class="ocultar">Cancelar acción</button>
+        <button id="btnTerminarTurno">Terminar Turno</button>
+      </div>
+    </div>
+    <script src="../src/script.js"></script>
+  </body>
+</html>

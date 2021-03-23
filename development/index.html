@@ -4,11 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <title>BattleCard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" />
-    <link href="public/css/style.css" rel="stylesheet" type="text/css" />
-  </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous">
+    <link href="/style.78032849.css" rel="stylesheet" type="text/css">
+  <script src="/style.78032849.js"></script></head>
   <body>
-    <div class="bienvenida">
+    <div class="bienvenida mostrarPantalla">
       <h1>BattleCard</h1>
       <button id="btnJugar">Jugar</button>
     </div>
@@ -25,11 +25,11 @@
       <div> 
         <h2>(Sin Jugador)</h2>
       </div>
-      <button id="btnIniciarJuego" disabled>Iniciar Juego</button>
+      <button id="btnIniciarJuego" disabled="">Iniciar Juego</button>
     </div>
     <div class="juego">
       <div class="jugadores">
-        <div id="jugEnemigo" class="jugActivo">
+        <div id="jugEnemigo" class="">
           <h2>Jugador Enemigo</h2>
           <h3>Deck: <span>20</span></h3>
           <p>En turno</p>
@@ -42,12 +42,29 @@
       </div>
       <div class="tablero">
         <div class="enemigo">
+          <div id="manoEnemigo">
+            <div class="slot oculto" data-id="0">
+              <p><span></span><span></span></p>
+            </div>
+            <div class="slot oculto" data-id="1">
+              <p><span></span><span></span></p>
+            </div>
+            <div class="slot oculto" data-id="2">
+              <p><span></span><span></span></p>
+            </div>
+            <div class="slot oculto" data-id="3">
+              <p><span></span><span></span></p>
+            </div>
+            <div class="slot oculto" data-id="4">
+              <p><span></span><span></span></p>
+            </div>
+          </div>
           <div id="barreraEnemiga">
-            <div class="slot barrera" data-id="4"></div>
-            <div class="slot barrera" data-id="3"></div>
-            <div class="slot barrera" data-id="2"></div>
-            <div class="slot barrera" data-id="1"></div>
-            <div class="slot barrera" data-id="0"></div>
+            <div class="slot" data-id="4"></div>
+            <div class="slot" data-id="3"></div>
+            <div class="slot" data-id="2"></div>
+            <div class="slot" data-id="1"></div>
+            <div class="slot" data-id="0"></div>
           </div>
           <div id="zonaBatallaEnemiga">
             <div class="slot" data-id="2">
@@ -74,18 +91,18 @@
             </div>
           </div>
           <div id="barreraYo">
-            <div class="slot barrera" data-id="0"></div>
-            <div class="slot barrera" data-id="1"></div>
-            <div class="slot barrera" data-id="2"></div>
-            <div class="slot barrera" data-id="3"></div>
-            <div class="slot barrera" data-id="4"></div>
+            <div class="slot" data-id="0"></div>
+            <div class="slot" data-id="1"></div>
+            <div class="slot" data-id="2"></div>
+            <div class="slot" data-id="3"></div>
+            <div class="slot" data-id="4"></div>
           </div>
           <div id="manoYo">
-            <div class="slot mano" data-id="0">
-              <p><span>2</span><span>♣</span></p>
+            <div class="slot" data-id="0">
+              <p><span></span><span></span></p>
             </div>
-            <div class="slot mano" data-id="1">
-              <p><span>4</span><span>♣</span></p>
+            <div class="slot" data-id="1">
+              <p><span></span><span></span></p>
             </div>
             <div class="slot" data-id="2">
               <p><span></span><span></span></p>
@@ -133,11 +150,12 @@
         <button id="btnColocarEnAtaque" class="ocultar">de ataque</button>
         <button id="btnColocarEnDefensa" class="ocultar">de defensa</button>
         <button id="btnAtacarCarta" class="ocultar">Atacar carta</button>
+        <button id="btnAtacarBarrera" class="ocultar">Atacar barrera</button>
         <button id="btnCambiarPosicion" class="ocultar">Cambiar posición</button>
         <button id="btnCancelar" class="ocultar">Cancelar acción</button>
         <button id="btnTerminarTurno">Terminar Turno</button>
       </div>
     </div>
-    <script src="script.js"></script>
+    <script src="/script.58844512.js"></script>
   </body>
 </html>
