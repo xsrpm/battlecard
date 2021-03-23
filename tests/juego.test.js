@@ -28,17 +28,23 @@ describe("Juego objeto", () => {
       expect(juego.momento).toBeNull();
     });
   });
-
+  
   describe("obtener estado sala", () => {
     test("abierta", () => {
       expect(juego.obtenerEstadoSala()).toBe("SALA ABIERTA");
     });
     test("cerrada", () => {
-      let jug = new Jugador("Cesar");
-      juego.jugador.push(jug);
-      jug = new Jugador("Marco");
-      juego.jugador.push(jug);
+      juego.unirASala("Cesar")
+      juego.unirASala("Marco")
       expect(juego.obtenerEstadoSala()).toBe("SALA CERRADA");
+    });
+  });
+
+  describe('obtenerNombreJugadores', () => {
+    test('exitoso', () => {
+      juego.unirASala("Cesar")
+      juego.unirASala("Marco")
+      expect(juego.obtenerNombreJugadores()).toEqual(['Cesar','Marco'])
     });
   });
 
@@ -57,8 +63,9 @@ describe("Juego objeto", () => {
     });
   });
 
+
   describe("iniciar juego", () => {
-    test("juego iniciado", () => {
+    test("sala iniciada", () => {
       juego.unirASala("Cesar");
       juego.unirASala("Marco");
       let res = juego.iniciarJuego();
@@ -68,11 +75,17 @@ describe("Juego objeto", () => {
       expect(juego.jugadorActual).toEqual(juego.jugador[0]);
       expect(juego.jugadorAnterior).toEqual(juego.jugador[1]);
       expect(juego.pantalla).toBe(Juego.Pantalla.EN_JUEGO);
+      expect(juego.estadoSala).toBe("SALA INICIADA")
     });
-    test("sala no tiene 2 jugadores para iniciar", () => {
+    test("sala abierta", () => {
       juego.unirASala("Cesar");
       let res = juego.iniciarJuego();
       expect(res).toBe("No se tienen 2 jugadores para empezar");
+    });
+    test("condición no manejada", () => {
+      juego.estadoSala = ""
+      let res = juego.iniciarJuego();
+      expect(res).toBe("Condición no manejada al iniciarJuego");
     });
   });
 
@@ -84,9 +97,6 @@ describe("Juego objeto", () => {
       juego.cambioDeJugadorActual();
       expect(juego.jugadorActual).toEqual(jug1);
       expect(juego.jugadorAnterior).toEqual(jug0);
-    });
-    test('jugador sin cartas en deck', () => {
-      
     });
   });
 

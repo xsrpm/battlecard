@@ -28,6 +28,7 @@ class CeldaBatalla {
      */
     this.carta = null;
   }
+
   /**
    *
    * @param {Carta} carta

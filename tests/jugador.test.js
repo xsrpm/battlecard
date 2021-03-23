@@ -57,6 +57,38 @@ describe("Jugador objeto", () => {
     });
   });
 
+  describe('sin barreras', () => {
+    test("válido",()=>{
+      expect(jugador.sinBarreras()).toBe(true)
+    })
+  });
+
+  describe('sin Cartas En Deck', () => {
+    test("válido",()=>{
+      expect(jugador.sinCartasEnDeck()).toBe(true)
+    })
+  });
+
+  describe('ataques permitidos X Numero de Turnos', () => {
+    test("válido",()=>{
+      jugador.nTurnos++;
+      jugador.nTurnos++;
+      expect(jugador.ataquesPermitidosXNumTurnos()).toBe(true)
+    })
+    describe('ataques permitidos X Numero de Turnos', () => {
+      test("inválido",()=>{
+        expect(jugador.ataquesPermitidosXNumTurnos()).toBe(false)
+      })
+    })
+  });
+
+  describe('set En Turno', () => {
+    test("válido",()=>{
+      jugador.setEnTurno(true)
+      expect(jugador.enTurno).toBe(true)
+    })
+  });
+
   test("inicia turno válido", () => {
     jugador.zonaBatalla[1].agregarCarta(
       carta,

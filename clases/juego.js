@@ -36,18 +36,7 @@ class Juego {
     this.estadoSala = "SALA ABIERTA"
   }
 
-  obtenerEstadoSala() {
-    return this.estadoSala
-  }
-
-  obtenerNombreJugadores(){
-    let jugNames = []
-    for(const j of this.jugador){
-      jugNames.push(j.nombre)
-    }
-    return jugNames
-  }
-  /**
+    /**
    *
    * @param {string} nombreJugador
    */
@@ -63,24 +52,40 @@ class Juego {
     }
   }
 
+
+  obtenerEstadoSala() {
+    return this.estadoSala
+  }
+
+  obtenerNombreJugadores(){
+    let jugNames = []
+    for(const j of this.jugador){
+      jugNames.push(j.nombre)
+    }
+    return jugNames
+  }
+
   iniciarJuego() {
     if (this.estadoSala === "SALA CERRADA" &&
     this.pantalla === Pantalla.EN_SALA_DE_ESPERA) {
       this.estadoSala = "SALA INICIADA"
       this.jugador[0].repartirCartas();
       this.jugador[1].repartirCartas();
-      this.jugador[0].iniciarTurno();
-      this.jugador[1].iniciarTurno();
       this.jugadorActual = this.jugador[0];
       this.jugadorAnterior = this.jugador[1];
-      this.jugadorActual.setearTurno(true);
-      this.jugadorAnterior.setearTurno(false);
+      this.jugadorActual.setEnTurno(true);
+      this.jugadorAnterior.setEnTurno(false);
+      this.jugadorActual.iniciarTurno();
+      //this.jugador[1].iniciarTurno();
       this.pantalla = Pantalla.EN_JUEGO;
       return "JUEGO INICIADO";
-    } else if(this.estadoSala === "SALA INICIADA" && 
+      
+    } 
+    /*
+    else if(this.estadoSala === "SALA INICIADA" && 
     this.pantalla === Pantalla.EN_SALA_DE_ESPERA){
       return "La sala está iniciandose"
-    }
+    }*/
     else if(this.estadoSala === "SALA ABIERTA" &&
     this.pantalla === Pantalla.EN_SALA_DE_ESPERA){
       return "No se tienen 2 jugadores para empezar";
@@ -95,21 +100,24 @@ class Juego {
     this.jugadorActual = this.jugadorAnterior;
     this.jugadorAnterior = jugadorTmp;
     this.jugadorActual.iniciarTurno()
-    this.jugadorActual.setearTurno(true)
-    this.jugadorAnterior.setearTurno(false)
+    this.jugadorActual.setEnTurno(true)
+    this.jugadorAnterior.setEnTurno(false)
+    console.log(this.jugadorActual.estadoActual())
     let res = this.jugadorActual.cogerUnaCartaDelDeck()
-    if(res === "EXITO"){
-      if(this.jugadorActual.sinCartasEnDeck()){
+    console.log(res)
+    /*
+    if(res !== "EXITO"){
         this.pantalla = Pantalla.FIN_DE_JUEGO
         return "Jugador sin cartas en deck"     //FIN DEL JUEGO AL QUEDARSE SIN CARTAS EN EL DECK
-      }
     }
+    */
     return res
   }
 /**
  * 
  * @param {number} idPosZB 
  * @param {number} idCartaMano 
+ * @returns String
  */
   colocarCartaEnAtaque(idPosZB, idCartaMano) {
     let respuesta = this.jugadorActual.accionColocarCartaEnAtaque(
@@ -128,6 +136,16 @@ class Juego {
       idPosZB,
       idCartaMano
     );
+    return respuesta;
+  }
+
+  opcionesSeleccionarZonaBatalla(idZonaBatalla){
+    let respuesta = {
+      existeCarta: this.jugadorActual.existeCartaEnCeldaBatalla(idZonaBatalla),
+      puedeAtacarCarta:this.jugadorActual.puedeAtacarCartaDesdeId(this.jugadorAnterior,idZonaBatalla),
+      puedeAtacarBarrera:this.jugadorActual.posibilidadAtacarBarrera(this.jugadorAnterior,idZonaBatalla),
+      puedeCambiarPosicion:this.jugadorActual.posibilidadCambiarPosicionBatallaEnCarta(idZonaBatalla)
+    }
     return respuesta;
   }
 
