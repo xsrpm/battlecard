@@ -306,11 +306,18 @@ function colocarSeleccionarZonaBatalla(data) {
     let manoElementoCarta =
       manoYo.children[idCartaManoSeleccionada].children[0].children[1]
         .innerText;
-    manoYo.children[idCartaManoSeleccionada].children[0].children[0].innerText =
-      "";
-    manoYo.children[idCartaManoSeleccionada].children[0].children[1].innerText =
-      "";
-    manoYo.children[idCartaManoSeleccionada].classList.remove("mano");
+    let ULTIMA_CARTA = 4
+    data.payload.mano.forEach((c, i) => {
+      manoYo.children[i].children[0].children[0].innerText = c.valor;
+      manoYo.children[i].children[0].children[1].innerText = String.fromCharCode(
+        c.elemento
+      );
+    });
+    manoYo.children[ULTIMA_CARTA].children[0].children[0].innerText =
+    "";
+    manoYo.children[ULTIMA_CARTA].children[0].children[1].innerText =
+      ""; 
+    manoYo.children[ULTIMA_CARTA].classList.remove("mano");
     zonaBatallaYo.children[
       idCartaZBSeleccionada
     ].children[0].children[0].innerText = manoNumeroCarta;
