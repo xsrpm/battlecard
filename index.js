@@ -17,19 +17,19 @@ const wss = new WebSocket.Server({ port: 8080 });
 function sendMessage(ws, message) {
   ws.send(JSON.stringify(message));
   console.log("sended:");
-  console.log(message)
+  console.log(message);
 }
 
 /**
- * 
- * @param {WebSocket} wsorigen 
- * @param {*} message 
+ *
+ * @param {WebSocket} wsorigen
+ * @param {*} message
  */
 function sendMessageToOthers(wsorigen, message) {
   wss.clients.forEach((ws) => {
     if (ws.readyState === WebSocket.OPEN) {
       if (!(ws === wsorigen)) {
-        sendMessage(ws,message)
+        sendMessage(ws, message);
       }
     }
   });
@@ -43,42 +43,42 @@ function sendMessageToOthers(wsorigen, message) {
 function unirASala(ws, message) {
   let nombreJugador = message.payload.nombreJugador;
   if (typeof nombreJugador === "undefined") {
-    message.error ="nombreJugador is undefined"
-    sendMessage(ws,message)
+    message.error = "nombreJugador is undefined";
+    sendMessage(ws, message);
     ws.close();
     return;
   }
   const resp = juego.unirASala(nombreJugador);
   if (resp === "Sala llena, no pueden entrar jugadores") {
-    message.error = resp
-    sendMessage(ws,message)
+    message.error = resp;
+    sendMessage(ws, message);
     ws.close();
     return;
   }
   ws.jugador = resp;
   message.payload = {
-      jugadores: juego.obtenerNombreJugadores(),
-      iniciar: false,
-  }
+    jugadores: juego.obtenerNombreJugadores(),
+    iniciar: false,
+  };
   juego.obtenerEstadoSala() === "SALA CERRADA"
     ? (message.payload.iniciar = true)
     : "";
-  sendMessage(ws,message)
-  sendMessageToOthers(ws,message)
+  sendMessage(ws, message);
+  sendMessageToOthers(ws, message);
 }
 /**
  *
  * @param {WebSocket} ws
  * @param {*} message
  */
-function iniciarJuego(ws,message) {
+function iniciarJuego(ws, message) {
   const resp = juego.iniciarJuego();
   if (resp !== "JUEGO INICIADO") {
     message.payload = {
-        respuesta:resp
-    }
-    sendMessage(ws,message)
-    ws.close()
+      respuesta: resp,
+    };
+    sendMessage(ws, message);
+    ws.close();
     return;
   }
 
@@ -158,71 +158,79 @@ function iniciarJuego(ws,message) {
  */
 
 function colocarCarta(ws, message) {
+  if (accionAutorizada(ws, message) === false) return;
   let posicion, idZonaBatalla, idMano, resp;
-  ({posicion, idZonaBatalla, idMano} = message.payload)
-  if (posicion === "ATAQUE"){
+  ({ posicion, idZonaBatalla, idMano } = message.payload);
+  if (posicion === "ATAQUE") {
     resp = juego.colocarCartaEnAtaque(idZonaBatalla, idMano);
-    message.payload.carta = juego.jugadorActual.zonaBatalla[idZonaBatalla].carta 
-  }
-  else{
+    message.payload.carta =
+      juego.jugadorActual.zonaBatalla[idZonaBatalla].carta;
+  } else {
     resp = juego.colocarCartaEnDefensa(idZonaBatalla, idMano);
-  } 
-  message.payload.respuesta =  resp
-  sendMessage(ws,message)
-  message.event = "Colocar Carta Enemigo"
-  message.payload.posicion = posicion
-  message.payload.idZonaBatalla = idZonaBatalla
-  message.payload.idMano = idMano
-  sendMessageToOthers(ws,message)
+  }
+  message.payload.respuesta = resp;
+  sendMessage(ws, message);
+  message.event = "Colocar Carta Enemigo";
+  message.payload.posicion = posicion;
+  message.payload.idZonaBatalla = idZonaBatalla;
+  message.payload.idMano = idMano;
+  sendMessageToOthers(ws, message);
 }
 
 /**
- * 
- * @param {WebSocket} ws 
- * @param {*} message 
+ *
+ * @param {WebSocket} ws
+ * @param {*} message
  */
-function seleccionarZonaBatalla(ws,message){
-  let idZonaBatalla = message.payload.idZonaBatalla
-  message.payload = juego.opcionesSeleccionarZonaBatalla(idZonaBatalla)
-  sendMessage(ws,message)
+function seleccionarZonaBatalla(ws, message) {
+  if (accionAutorizada(ws, message) === false) return;
+  let idZonaBatalla = message.payload.idZonaBatalla;
+  message.payload = juego.opcionesSeleccionarZonaBatalla(idZonaBatalla);
+  sendMessage(ws, message);
 }
 
 /**
- * 
- * @param {WebSocket} ws 
- * @param {*} message 
+ *
+ * @param {WebSocket} ws
+ * @param {*} message
  */
-function terminarTurno(ws, message){
-  let res = juego.cambioDeJugadorActual()
-    message.payload = {
-      jugador: {
-        enTurno: juego.jugadorAnterior.enTurno
-      },
-      jugadorEnemigo: {
-        enTurno: juego.jugadorActual.enTurno
-      }
-    }
-    sendMessage(ws, message);
-    message.payload.jugador.enTurno = juego.jugadorActual.enTurno
-    message.payload.jugadorEnemigo.enTurno = juego.jugadorAnterior.enTurno
-    if(res.resultado === "EXITO")
-      message.payload.carta = res.carta
-    sendMessageToOthers(ws, message);
+function terminarTurno(ws, message) {
+  if (accionAutorizada(ws, message) === false) return;
+  let res = juego.cambioDeJugadorActual();
+  message.payload = {
+    jugador: {
+      enTurno: juego.jugadorAnterior.enTurno,
+    },
+    jugadorEnemigo: {
+      enTurno: juego.jugadorActual.enTurno,
+    },
+  };
+  sendMessage(ws, message);
+  message.payload.jugador.enTurno = juego.jugadorActual.enTurno;
+  message.payload.jugadorEnemigo.enTurno = juego.jugadorAnterior.enTurno;
+  if (res.resultado === "EXITO") message.payload.carta = res.carta;
+  sendMessageToOthers(ws, message);
 }
 /**
- * 
- * @param {WebSocket} ws 
- * @param {*} message 
- * @param {*} callback 
+ *
+ * @param {WebSocket} ws
+ * @param {*} message
+ * @param {*} callback
  */
-function accionAutorizada(ws,message,callback){
-  if(ws.jugador === juego.jugadorActual){
-    callback(ws,message)
+function accionAutorizada(ws, message) {
+  if (ws.jugador === juego.jugadorActual) {
+    return true;
   }
-  else{
-    message.error ="Usuario no está autorizado a realizar acción"
-    sendMessage(ws,message)
-  }
+  message.error = "Usuario no está autorizado a realizar acción";
+  sendMessage(ws, message);
+  return false;
+}
+
+function seleccionarMano(ws,message){
+  if (accionAutorizada(ws, message) === false) return;
+  let idMano = message.payload.idMano
+  message.payload =  juego.opcionesSeleccionarMano(idMano)
+  sendMessage(ws,message)
 }
 
 /**
@@ -232,26 +240,29 @@ function accionAutorizada(ws,message,callback){
  */
 function procesarAccion(ws, message) {
   let objMessage = JSON.parse(message);
-  console.log("received:")
-  console.log(objMessage)
+  console.log("received:");
+  console.log(objMessage);
   switch (objMessage.event) {
     case "Unir a sala":
       unirASala(ws, objMessage);
       break;
     case "Iniciar juego":
-      iniciarJuego(ws,objMessage);
+      iniciarJuego(ws, objMessage);
       break;
     case "Colocar Carta":
-      accionAutorizada(ws,objMessage,colocarCarta)
+      colocarCarta(ws, objMessage);
       break;
     case "Seleccionar Zona Batalla":
-      accionAutorizada(ws,objMessage,seleccionarZonaBatalla)
+      seleccionarZonaBatalla(ws, objMessage);
+      break;
+    case "Seleccionar Mano":
+      seleccionarMano(ws, objMessage);
       break;
     case "Terminar Turno":
-      accionAutorizada(ws,objMessage,terminarTurno)
+      terminarTurno(ws, objMessage);
       break;
     default:
-      sendMySelf(ws,{ event: "Hello" })
+      sendMySelf(ws, { event: "Hello" });
       break;
   }
 }

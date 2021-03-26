@@ -149,6 +149,14 @@ class Juego {
     return respuesta;
   }
 
+  opcionesSeleccionarMano(idMano){
+    let respuesta = {
+      existeCarta: this.jugadorActual.existeCartaEnMano(idMano),
+      puedeColocarCarta:this.jugadorActual.puedeColocarCartaDesdeId(idMano)
+    } 
+    return respuesta
+  }
+
   /**
    * 
    * @param {number} idCartaAtacante 

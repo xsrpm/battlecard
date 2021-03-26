@@ -177,16 +177,24 @@ class Jugador {
       return {resultado: ResultadoCojerUnaCarta.EXITO, carta: carta};
     }
   }
+
+
+  puedeColocarCartaDesdeId(idCartaMano){
+    if (!this.puedeColocarCartaEnZB)
+      return "No está habilitado para colocar carta";
+    if(!this.existeCartaEnMano(idCartaMano))
+      return "No hay carta en la mano para esa posicion";
+    return "Posible"
+  }
+
   /**
    * @param {number} idPosZB
    * @param {number} idCartaMano
    * @returns {string}
    */
   posibilidadColocarCartaEnPosicion(idPosZB, idCartaMano) {
-    if (!this.puedeColocarCartaEnZB)
-      return "No está habilitado para colocar carta";
-    if (this.mano[idCartaMano] === null || this.mano[idCartaMano] === undefined)
-      return "No hay carta en la mano para esa posicion";
+    let resp = this.puedeColocarCartaDesdeId(idCartaMano);
+    if (resp !== "Posible") return resp;
     if (
       this.zonaBatalla[idPosZB].posBatalla !== CeldaBatalla.Estado.NO_HAY_CARTA
     )
@@ -254,6 +262,8 @@ class Jugador {
       return "Hay cartas en zona de batalla enemiga";
     if (this.nAtaquesDisponibles === 0)
       return "No le quedan ataques disponibles";
+    if(this.nTurnos < 2)
+      return "Atacantes solo se pueden realizar desde el segundo turno"
     return "Posible";
   }
 
@@ -313,7 +323,10 @@ class Jugador {
    * @returns {string}
    */
   puedeAtacarCartas(jugadorAtacado) {
-    if (this.nCartasEnZB === 0) return "Sin cartas en zona de batalla";
+    if(this.nTurnos < 2)
+      return "Atacantes solo se pueden realizar desde el segundo turno"
+    if (this.nCartasEnZB === 0) 
+      return "Sin cartas en zona de batalla";
     if (jugadorAtacado.nCartasEnZB === 0)
       return "No hay cartas en zona de batalla enemiga";
     if (this.nAtaquesDisponibles === 0)
@@ -330,7 +343,16 @@ class Jugador {
    */
 
   existeCartaEnCeldaBatalla(idZonaBatalla) {
-    return this.zonaBatalla[idZonaBatalla].carta != null;
+    return this.zonaBatalla[idZonaBatalla].carta != null && this.zonaBatalla[idZonaBatalla] !== undefined
+  }
+
+/**
+ * 
+ * @param {number} idMano 
+ * @returns 
+ */
+  existeCartaEnMano(idMano) {
+    return this.mano[idMano] !== null && this.mano[idMano] !== undefined
   }
 
   /**
@@ -534,7 +556,7 @@ class Jugador {
     return rsAtaque;
   }
   /**
-   * @returns {boolean}
+   * @returns {string}
    */
   puedeCambiarPosicion() {
     if (this.nCartasEnZB === 0) return "Sin cartas en zona de batalla";
@@ -544,7 +566,7 @@ class Jugador {
   }
   /**
    * @param {number} idZonaBatalla
-   * @returns {boolean}
+   * @returns {string}
    */
   posibilidadCambiarPosicionBatallaEnCarta(idZonaBatalla) {
     let resp = this.puedeCambiarPosicion();
@@ -561,7 +583,7 @@ class Jugador {
 
   /**
    * @param {number} idCarta
-   * @returns {boolean}
+   * @returns {string}
    */
   cambiarPosicionBatalla(idCarta) {
     let respuesta = this.posibilidadCambiarPosicionBatallaEnCarta(idCarta);
