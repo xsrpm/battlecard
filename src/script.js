@@ -143,7 +143,7 @@ function colocarCarta() {
       !celda.classList.contains("ataque") &&
       !celda.classList.contains("defensa")
     ) {
-      celda.classList.add("disponible");
+      celda.classList.add("seleccionado");
     }
   }
   stepAccion = "COLOCAR SELECCIONAR ZONA BATALLA";
@@ -153,6 +153,29 @@ function colocarCarta() {
 function terminarTurno(objData){
   if(encuentraError(objData)) return;
   mostrarEnTurno(objData);
+}
+
+function seleccionarMano(objData){
+  if(encuentraError(objData)) return;
+  let {
+    existeCarta,
+    puedeColocarCarta
+  } = objData.payload;
+  if(existeCarta){
+    ocultarBotones();
+    Array.from(manoYo.children).forEach((e) =>
+      e.classList.remove("seleccionado")
+    );
+    cartaManoSeleccionada.classList.add("seleccionado");
+    if(puedeColocarCarta === "Posible"){
+      btnColocarEnAtaque.classList.remove("ocultar");
+      btnColocarEnDefensa.classList.remove("ocultar");
+      mensajeBotones.innerText = "Colocar carta en posición...";
+    }
+    else{
+      mensajeBotones.innerText = "No puede colocar mas cartas...";
+    }
+  }
 }
 
 btnJugar.addEventListener("click", () => {
@@ -186,6 +209,9 @@ btnUnirASala.addEventListener("click", () => {
         break;
       case "Seleccionar Zona Batalla":
         standBySeleccionarZonaBatalla(objData);
+        break;
+      case "Seleccionar Mano":
+        seleccionarMano(objData)
         break;
       case "Terminar Turno":
         terminarTurno(objData)
@@ -245,16 +271,17 @@ manoYo.addEventListener("click", function (e) {
   let target = e.target;
   while (!target.classList.contains("slot")) target = target.parentElement;
   console.log(target);
+  idCartaManoSeleccionada = target.dataset.id;
+  cartaManoSeleccionada = target
   if (target.classList.contains("mano")) {
-    ocultarBotones();
-    Array.from(manoYo.children).forEach((e) =>
-      e.classList.remove("seleccionado")
-    );
-    btnColocarEnAtaque.classList.remove("ocultar");
-    btnColocarEnDefensa.classList.remove("ocultar");
-    mensajeBotones.innerText = "Colocar carta en posición...";
-    target.classList.add("seleccionado");
-    idCartaManoSeleccionada = target.dataset.id;
+    stepAccion = "STAND BY";
+    message ={
+      event:"Seleccionar Mano",
+      payload:{
+        idMano: idCartaManoSeleccionada
+      }
+    }
+    sendMessage(message)
   }
 });
 /**
@@ -270,7 +297,7 @@ function colocarSeleccionarZonaBatalla(data) {
       e.classList.remove("seleccionado")
     );
     Array.from(zonaBatallaYo.children).forEach((e) =>
-      e.classList.remove("disponible")
+      e.classList.remove("seleccionado")
     );
     mensajeBotones.innerText = "";
     let manoNumeroCarta =
@@ -351,23 +378,27 @@ zonaBatallaYo.addEventListener("click", function (e) {
   idCartaZBSeleccionada = target.dataset.id;
   cartaZBSeleccionada = target;
   if (stepAccion === "COLOCAR SELECCIONAR ZONA BATALLA") {
-    message = {
-      event: "Colocar Carta",
-      payload: {
-        posicion: posicionBatalla,
-        idZonaBatalla: idCartaZBSeleccionada,
-        idMano: idCartaManoSeleccionada,
-      },
-    };
-    sendMessage(message);
+    if(!target.classList.contains("mano")){
+      message = {
+        event: "Colocar Carta",
+        payload: {
+          posicion: posicionBatalla,
+          idZonaBatalla: idCartaZBSeleccionada,
+          idMano: idCartaManoSeleccionada,
+        },
+      };
+      sendMessage(message);
+    }
   } else {
-    message = {
-      event: "Seleccionar Zona Batalla",
-      payload: {
-        idZonaBatalla: idCartaZBSeleccionada,
-      },
-    };
+    if (target.classList.contains("mano")) {
+      message = {
+        event: "Seleccionar Zona Batalla",
+        payload: {
+          idZonaBatalla: idCartaZBSeleccionada,
+        },
+      };
     sendMessage(message);
+    }
   }
 });
 zonaBatallaEnemiga.addEventListener("click", function (e) {

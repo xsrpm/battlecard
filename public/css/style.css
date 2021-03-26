@@ -206,7 +206,7 @@
   height: 100vh;
 }
 
-.tablero .slot{
+.slot{
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -218,28 +218,52 @@
   border-width: 0.2em;
 }
 
-.tablero .barrera{
+.slot.seleccionado{
+  border-style: double;
+  border-color:rgba(20, 202, 90, 0.863);
+  border-width: 0.4em;
+}
+
+.barrera{
   border-style: solid;
   border-color: black;
   background-color:rgb(80, 61, 53);
 }
 
-.tablero .ataque{
+.ataque{
   border-style: double;
   border-color:black;
   background-color: red;
 }
 
-.tablero .defensa{
+.ataque.seleccionado{
+  border-style: double;
+  border-color:blue;
+  border-width: 0.4em;
+}
+
+.defensa{
   border-style: double;
   border-color:black;
   background-color: green;
 }
 
-.tablero .mano{
+.defensa.seleccionado{
+  border-style: double;
+  border-color:blue;
+  border-width: 0.4em;
+}
+
+.mano{
   border-style: solid;
   border-color:rgb(71, 93, 192);
   background-color:white;
+}
+
+.mano.seleccionado{
+  border-style: double;
+  border-color:rgba(230, 161, 14, 0.863);
+  border-width: 0.4em;
 }
 
 #manoEnemigo{
@@ -261,18 +285,6 @@
   border-style: double;
   border-color:white;
   background-color:black;
-}
-
-.tablero .seleccionado{
-  border-style: double;
-  border-color:rgba(230, 161, 14, 0.863);
-  border-width: 0.4em;
-}
-
-.tablero .disponible{
-  border-style: double;
-  border-color:rgba(20, 202, 90, 0.863);
-  border-width: 0.4em;
 }
 
 .tablero .enemigo{
