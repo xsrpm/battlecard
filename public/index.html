@@ -42,52 +42,52 @@
       </div>
       <div class="tablero">
         <div class="enemigo">
-          <div id="manoEnemigo">
-            <div class="slot oculto" data-id="0">
-              <p><span></span><span></span></p>
+          <div id="zonaBatallaEnemiga">
+            <div class="slot" data-id="0">
+              <span></span><span></span>
             </div>
-            <div class="slot oculto" data-id="1">
-              <p><span></span><span></span></p>
+            <div class="slot" data-id="1">
+              <span></span><span></span>
             </div>
-            <div class="slot oculto" data-id="2">
-              <p><span></span><span></span></p>
-            </div>
-            <div class="slot oculto" data-id="3">
-              <p><span></span><span></span></p>
-            </div>
-            <div class="slot oculto" data-id="4">
-              <p><span></span><span></span></p>
+            <div class="slot" data-id="2">
+              <span></span><span></span>
             </div>
           </div>
           <div id="barreraEnemiga">
-            <div class="slot" data-id="4"></div>
-            <div class="slot" data-id="3"></div>
-            <div class="slot" data-id="2"></div>
-            <div class="slot" data-id="1"></div>
             <div class="slot" data-id="0"></div>
+            <div class="slot" data-id="1"></div>
+            <div class="slot" data-id="2"></div>
+            <div class="slot" data-id="3"></div>
+            <div class="slot" data-id="4"></div>
           </div>
-          <div id="zonaBatallaEnemiga">
-            <div class="slot" data-id="2">
-              <p><span></span><span></span></p>
+          <div id="manoEnemigo">
+            <div class="slot oculto" data-id="0">
+              <span></span><span></span>
             </div>
-            <div class="slot" data-id="1">
-              <p><span></span><span></span></p>
+            <div class="slot oculto" data-id="1">
+              <span></span><span></span>
             </div>
-            <div class="slot" data-id="0">
-              <p><span></span><span></span></p>
+            <div class="slot oculto" data-id="2">
+              <span></span><span></span>
+            </div>
+            <div class="slot oculto" data-id="3">
+              <span></span><span></span>
+            </div>
+            <div class="slot oculto" data-id="4">
+              <span></span><span></span>
             </div>
           </div>
         </div>
         <div class="yo">
           <div id="zonaBatallaYo">
             <div class="slot" data-id="0">
-              <p><span></span><span></span></p>
+              <span></span><span></span>
             </div>
             <div class="slot" data-id="1">
-              <p><span></span><span></span></p>
+              <span></span><span></span>
             </div>
             <div class="slot" data-id="2">
-              <p><span></span><span></span></p>
+              <span></span><span></span>
             </div>
           </div>
           <div id="barreraYo">
@@ -99,19 +99,19 @@
           </div>
           <div id="manoYo">
             <div class="slot" data-id="0">
-              <p><span></span><span></span></p>
+              <span></span><span></span>
             </div>
             <div class="slot" data-id="1">
-              <p><span></span><span></span></p>
+              <span></span><span></span>
             </div>
             <div class="slot" data-id="2">
-              <p><span></span><span></span></p>
+              <span></span><span></span>
             </div>
             <div class="slot" data-id="3">
-              <p><span></span><span></span></p>
+              <span></span><span></span>
             </div>
             <div class="slot" data-id="4">
-              <p><span></span><span></span></p>
+              <span></span><span></span>
             </div>
           </div>
         </div>
@@ -119,11 +119,9 @@
           <div class="atacante">
             <span>Atacante</span>
           </div>
-          <div class="cartaAtacante">
-            <div class="slot mano"></div>
-          </div>
+          <div id="cartaAtacante" class="slot mano"><span></span><span></span></div>
           <div class="bonusAtacante">
-            <span>(-2)</span>
+            <span></span>
           </div>
           <div class="vs">
             <span>VS</span>
@@ -137,11 +135,9 @@
           <div class="atacado">
             <span>Atacado</span>
           </div>
-          <div class="cartaAtacada">
-            <div class="slot mano"></div>
-          </div>
-          <div class="bonusAtacando">
-            <span>(+4)</span>
+          <div id="cartaAtacada" class="slot mano"><span></span><span></span></div>
+          <div class="bonusAtacado">
+            <span></span>
           </div>
         </div>
       </div>
@@ -152,7 +148,6 @@
         <button id="btnAtacarCarta" class="ocultar">Atacar carta</button>
         <button id="btnAtacarBarrera" class="ocultar">Atacar barrera</button>
         <button id="btnCambiarPosicion" class="ocultar">Cambiar posición</button>
-        <button id="btnCancelar" class="ocultar">Cancelar acción</button>
         <button id="btnTerminarTurno">Terminar Turno</button>
       </div>
     </div>

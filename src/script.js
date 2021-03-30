@@ -58,7 +58,7 @@ function cambiarPantalla(pantalla) {
 //Visual Juego
 
 function mostrarEnTurno(objData) {
-  if(encuentraError(objData)) return;
+  if (encuentraError(objData)) return;
   jugEnemigo.classList.remove("jugEnTurno");
   jugEnemigo.classList.remove("jugEnEspera");
   jugYo.classList.remove("jugEnTurno");
@@ -66,15 +66,14 @@ function mostrarEnTurno(objData) {
   if (objData.payload.jugador.enTurno) {
     jugYo.classList.add("jugEnTurno");
     jugEnemigo.classList.add("jugEnEspera");
-  }
-  else{
+  } else {
     jugYo.classList.add("jugEnEspera");
     jugEnemigo.classList.add("jugEnTurno");
   }
 }
 
 function iniciarTablero(objData) {
-  if(encuentraError(objData)) return;
+  if (encuentraError(objData)) return;
   for (let i = 0; i < objData.payload.jugador.nBarrera; i++) {
     barreraYo.children[i].classList.add("barrera");
   }
@@ -82,10 +81,8 @@ function iniciarTablero(objData) {
   jugYo.children[1].children[0].innerText = objData.payload.jugador.nDeck;
   objData.payload.jugador.mano.forEach((c, i) => {
     manoYo.children[i].classList.add("mano");
-    manoYo.children[i].children[0].children[0].innerText = c.valor;
-    manoYo.children[i].children[0].children[1].innerText = String.fromCharCode(
-      c.elemento
-    );
+    manoYo.children[i].children[0].innerText = c.valor;
+    manoYo.children[i].children[1].innerText = String.fromCharCode(c.elemento);
   });
   for (let i = 0; i < objData.payload.jugadorEnemigo.nBarrera; i++) {
     barreraEnemiga.children[i].classList.add("barrera");
@@ -95,7 +92,7 @@ function iniciarTablero(objData) {
     objData.payload.jugadorEnemigo.nDeck;
 }
 
-function encuentraError(objData){
+function encuentraError(objData) {
   if (typeof objData.error !== "undefined") {
     console.log(objData.error);
     alert(objData.error);
@@ -104,7 +101,7 @@ function encuentraError(objData){
 }
 
 function unirASala(objData) {
-  if(encuentraError(objData)) return;
+  if (encuentraError(objData)) return;
   for (let i = 0; i < objData.payload.jugadores.length; i++) {
     h2[i].innerText = objData.payload.jugadores[i];
   }
@@ -113,7 +110,7 @@ function unirASala(objData) {
 }
 
 function iniciarJuego(objData) {
-  if(encuentraError(objData)) return;
+  if (encuentraError(objData)) return;
   mostrarEnTurno(objData);
   iniciarTablero(objData);
   cambiarPantalla(juego);
@@ -125,7 +122,6 @@ function ocultarBotones() {
   btnAtacarCarta.classList.add("ocultar");
   btnAtacarBarrera.classList.add("ocultar");
   btnCambiarPosicion.classList.add("ocultar");
-  btnCancelar.classList.add("ocultar");
   //btnTerminarTurno.classList.add("ocultar");
 }
 
@@ -147,34 +143,162 @@ function colocarCarta() {
     }
   }
   stepAccion = "COLOCAR SELECCIONAR ZONA BATALLA";
-  console.log(stepAccion);
 }
 
-function terminarTurno(objData){
-  if(encuentraError(objData)) return;
+function terminarTurno(objData) {
+  if (encuentraError(objData)) return;
   mostrarEnTurno(objData);
 }
 
-function seleccionarMano(objData){
-  if(encuentraError(objData)) return;
-  let {
-    existeCarta,
-    puedeColocarCarta
-  } = objData.payload;
-  if(existeCarta){
+function seleccionarMano(objData) {
+  if (encuentraError(objData)) return;
+  let { existeCarta, puedeColocarCarta } = objData.payload;
+  if (existeCarta) {
     ocultarBotones();
     Array.from(manoYo.children).forEach((e) =>
       e.classList.remove("seleccionado")
     );
+    Array.from(zonaBatallaYo.children).forEach((e) =>
+      e.classList.remove("seleccionado")
+    );
     cartaManoSeleccionada.classList.add("seleccionado");
-    if(puedeColocarCarta === "Posible"){
+    if (puedeColocarCarta === "Posible") {
       btnColocarEnAtaque.classList.remove("ocultar");
       btnColocarEnDefensa.classList.remove("ocultar");
       mensajeBotones.innerText = "Colocar carta en posición...";
-    }
-    else{
+    } else {
       mensajeBotones.innerText = "No puede colocar mas cartas...";
     }
+  }
+}
+
+function atacarCarta(objData) {
+  if (encuentraError(objData)) return;
+  let {
+    estadoAtaque,
+    cartaAtacante,
+    cartaAtacada,
+    veredicto,
+    estadoCartaAtacante,
+    estadoCartaAtacada,
+    estadoBarrera,
+    idBarreraEliminada,
+    bonifCartaAtacante,
+    bonifCartaAtacada
+  } = objData.payload;
+  if (estadoAtaque === "Ataque realizado") {
+    resultadoAtaque.querySelector("#cartaAtacante").children[0].innerText =
+      cartaAtacante.valor;
+    resultadoAtaque.querySelector(
+      "#cartaAtacante"
+    ).children[1].innerText = String.fromCharCode(cartaAtacante.elemento);
+    resultadoAtaque.querySelector("#cartaAtacada").children[0].innerText =
+      cartaAtacada.valor;
+    resultadoAtaque.querySelector(
+      "#cartaAtacada"
+    ).children[1].innerText = String.fromCharCode(cartaAtacada.elemento);
+    resultadoAtaque.querySelector(
+      ".resultado"
+    ).children[0].innerText = veredicto;
+    resultadoAtaque.querySelector(".bonusAtacante").children[0].innerText = "+"+bonifCartaAtacante
+    resultadoAtaque.querySelector(".bonusAtacado").children[0].innerText ="+"+bonifCartaAtacada
+    if (estadoBarrera === "DESTRUIDA") {
+      resultadoAtaque.querySelector(".detalleResultado").children[0].innerText =
+        "Barrera destruida";
+      barreraEnemiga.children[idBarreraEliminada].classList.remove("barrera");
+    } else
+      resultadoAtaque.querySelector(".detalleResultado").children[0].innerText =
+        "";
+    if (estadoCartaAtacante === "DESTRUIDA") {
+      zonaBatallaYo.children[idCartaZBSeleccionada].children[0].innerText = "";
+      zonaBatallaYo.children[idCartaZBSeleccionada].children[1].innerText = "";
+      zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove("ataque");
+    }
+    if (estadoCartaAtacada === "DESTRUIDA") {
+      zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].children[0].innerText =
+        "";
+      zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].children[1].innerText =
+        "";
+      zonaBatallaEnemiga.children[
+        idCartaZBEnemigaSeleccionada
+      ].classList.remove("ataque", "defensa", "oculto");
+    } else {
+      if (
+        zonaBatallaEnemiga.children[
+          idCartaZBEnemigaSeleccionada
+        ].classList.contains("oculto")
+      ) {
+        zonaBatallaEnemiga.children[
+          idCartaZBEnemigaSeleccionada
+        ].classList.remove("oculto");
+        zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].classList.add(
+          "defensa"
+        );
+      }
+    }
+    zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove(
+      "seleccionado"
+    );
+    mensajeBotones.innerText=""
+    resultadoAtaque.classList.add("mostrarResultado");
+  }
+}
+
+function atacanTuCarta(objData){
+  if (encuentraError(objData)) return;
+  let {
+    estadoAtaque,
+    cartaAtacante,
+    cartaAtacada,
+    veredicto,
+    estadoCartaAtacante,
+    estadoCartaAtacada,
+    estadoBarrera,
+    idBarreraEliminada,
+    idCartaAtacante,
+    idCartaAtacada,
+    bonifCartaAtacante,
+    bonifCartaAtacada
+  } = objData.payload;
+  if (estadoAtaque === "Ataque realizado") {
+    resultadoAtaque.querySelector("#cartaAtacante").children[0].innerText =
+      cartaAtacante.valor;
+    resultadoAtaque.querySelector(
+      "#cartaAtacante"
+    ).children[1].innerText = String.fromCharCode(cartaAtacante.elemento);
+    resultadoAtaque.querySelector("#cartaAtacada").children[0].innerText =
+      cartaAtacada.valor;
+    resultadoAtaque.querySelector(
+      "#cartaAtacada"
+    ).children[1].innerText = String.fromCharCode(cartaAtacada.elemento);
+    resultadoAtaque.querySelector(
+      ".resultado"
+    ).children[0].innerText = veredicto;
+    resultadoAtaque.querySelector(".bonusAtacante").children[0].innerText = "+"+bonifCartaAtacante
+    resultadoAtaque.querySelector(".bonusAtacado").children[0].innerText ="+"+bonifCartaAtacada
+    if (estadoBarrera === "DESTRUIDA") {
+      resultadoAtaque.querySelector(".detalleResultado").children[0].innerText =
+        "Barrera destruida";
+
+      barreraYo.children[idBarreraEliminada].classList.remove("barrera");
+    } else
+      resultadoAtaque.querySelector(".detalleResultado").children[0].innerText =
+        "";
+    if (estadoCartaAtacante === "DESTRUIDA") {
+      zonaBatallaEnemiga.children[idCartaAtacante].children[0].innerText = "";
+      zonaBatallaEnemiga.children[idCartaAtacante].children[1].innerText = "";
+      zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove("ataque");
+    }
+    if (estadoCartaAtacada === "DESTRUIDA") {
+      zonaBatallaYo.children[idCartaAtacada].children[0].innerText =
+        "";
+      zonaBatallaYo.children[idCartaAtacada].children[1].innerText =
+        "";
+      zonaBatallaYo.children[
+        idCartaAtacada
+      ].classList.remove("ataque", "defensa", "oculto");
+    }
+    resultadoAtaque.classList.add("mostrarResultado");
   }
 }
 
@@ -204,17 +328,23 @@ btnUnirASala.addEventListener("click", () => {
       case "Colocar Carta":
         colocarSeleccionarZonaBatalla(objData);
         break;
-      case "Colocar Carta Enemigo":
-        colocarSeleccionarZonaBatallaEnemigo(objData);
+      case "Coloca Carta Otro Jugador":
+        colocaCartaOtroJugador(objData);
         break;
       case "Seleccionar Zona Batalla":
         standBySeleccionarZonaBatalla(objData);
         break;
       case "Seleccionar Mano":
-        seleccionarMano(objData)
+        seleccionarMano(objData);
+        break;
+      case "Atacar Carta":
+        atacarCarta(objData);
+        break;
+      case "Atacan Tu Carta":
+        atacanTuCarta(objData);
         break;
       case "Terminar Turno":
-        terminarTurno(objData)
+        terminarTurno(objData);
         break;
     }
   };
@@ -237,31 +367,35 @@ resultadoAtaque.addEventListener("click", () => {
   resultadoAtaque.classList.remove("mostrarResultado");
 });
 btnColocarEnAtaque.addEventListener("click", () => {
-  if (stepAccion === "STAND BY") {
-    posicionBatalla = "ATAQUE";
-    console.log(posicionBatalla);
+  if (stepAccion === "SELECCIONAR MANO") {
     stepAccion = "COLOCAR CARTA";
+    console.log("stepAccion: " + stepAccion);
+    posicionBatalla = "ATAQUE";
+    console.log("posicionBatalla: " + posicionBatalla);
     colocarCarta();
   }
 });
 btnColocarEnDefensa.addEventListener("click", () => {
-  if (stepAccion === "STAND BY") {
-    posicionBatalla = "DEFENSA";
-    console.log(posicionBatalla);
+  if (stepAccion === "SELECCIONAR MANO") {
     stepAccion = "COLOCAR CARTA";
+    console.log("stepAccion: " + stepAccion);
+    posicionBatalla = "DEFENSA";
+    console.log("posicionBatalla: " + posicionBatalla);
     colocarCarta();
   }
 });
 btnAtacarCarta.addEventListener("click", () => {
-  stepAccion = "ATACAR CARTA";
-  ocultarBotones();
-  mensajeBotones.innerText = "Seleccione objetivo...";
+  if (stepAccion === "SELECCIONAR ZONA BATALLA") {
+    console.log("ATACAR CARTA");
+    stepAccion = "ATACAR CARTA SELECCIONAR ZB ENEMIGA";
+    ocultarBotones();
+    mensajeBotones.innerText = "Seleccione objetivo...";
+  }
 });
 btnCambiarPosicion.addEventListener("click", () => {});
-btnCancelar.addEventListener("click", () => {});
 btnTerminarTurno.addEventListener("click", () => {
-  message = { event:"Terminar Turno"}
-  sendMessage(message)
+  message = { event: "Terminar Turno" };
+  sendMessage(message);
 });
 
 manoYo.addEventListener("click", function (e) {
@@ -270,18 +404,19 @@ manoYo.addEventListener("click", function (e) {
    */
   let target = e.target;
   while (!target.classList.contains("slot")) target = target.parentElement;
-  console.log(target);
   idCartaManoSeleccionada = target.dataset.id;
-  cartaManoSeleccionada = target
+  cartaManoSeleccionada = target;
   if (target.classList.contains("mano")) {
-    stepAccion = "STAND BY";
-    message ={
-      event:"Seleccionar Mano",
-      payload:{
-        idMano: idCartaManoSeleccionada
-      }
-    }
-    sendMessage(message)
+    stepAccion = "SELECCIONAR MANO";
+    console.log("stepAccion: " + stepAccion);
+    console.log(target);
+    message = {
+      event: "Seleccionar Mano",
+      payload: {
+        idMano: idCartaManoSeleccionada,
+      },
+    };
+    sendMessage(message);
   }
 });
 /**
@@ -290,7 +425,7 @@ manoYo.addEventListener("click", function (e) {
  */
 
 function colocarSeleccionarZonaBatalla(data) {
-  if(encuentraError(data)) return;
+  if (encuentraError(data)) return;
   if (data.payload.respuesta === "Carta colocada") {
     ocultarBotones();
     Array.from(manoYo.children).forEach((e) =>
@@ -301,62 +436,59 @@ function colocarSeleccionarZonaBatalla(data) {
     );
     mensajeBotones.innerText = "";
     let manoNumeroCarta =
-      manoYo.children[idCartaManoSeleccionada].children[0].children[0]
-        .innerText;
+      manoYo.children[idCartaManoSeleccionada].children[0].innerText;
     let manoElementoCarta =
-      manoYo.children[idCartaManoSeleccionada].children[0].children[1]
-        .innerText;
-    let ULTIMA_CARTA = 4
+      manoYo.children[idCartaManoSeleccionada].children[1].innerText;
+    let ULTIMA_CARTA = 4;
     data.payload.mano.forEach((c, i) => {
-      manoYo.children[i].children[0].children[0].innerText = c.valor;
-      manoYo.children[i].children[0].children[1].innerText = String.fromCharCode(
+      manoYo.children[i].children[0].innerText = c.valor;
+      manoYo.children[i].children[1].innerText = String.fromCharCode(
         c.elemento
       );
     });
-    manoYo.children[ULTIMA_CARTA].children[0].children[0].innerText =
-    "";
-    manoYo.children[ULTIMA_CARTA].children[0].children[1].innerText =
-      ""; 
+    manoYo.children[ULTIMA_CARTA].children[0].innerText = "";
+    manoYo.children[ULTIMA_CARTA].children[1].innerText = "";
     manoYo.children[ULTIMA_CARTA].classList.remove("mano");
     zonaBatallaYo.children[
       idCartaZBSeleccionada
-    ].children[0].children[0].innerText = manoNumeroCarta;
+    ].children[0].innerText = manoNumeroCarta;
     zonaBatallaYo.children[
       idCartaZBSeleccionada
-    ].children[0].children[1].innerText = manoElementoCarta;
+    ].children[1].innerText = manoElementoCarta;
     if (posicionBatalla === "ATAQUE")
       zonaBatallaYo.children[idCartaZBSeleccionada].classList.add("ataque");
     else zonaBatallaYo.children[idCartaZBSeleccionada].classList.add("defensa");
     stepAccion = "STAND BY";
-    console.log(stepAccion);
+    console.log("CARTA COLOCADA");
   }
 }
 
-function colocarSeleccionarZonaBatallaEnemigo(message) {
-  if(encuentraError(message)) return;
-  let { posicion, idZonaBatalla, idMano, respuesta,carta } = message.payload
+function colocaCartaOtroJugador(message) {
+  if (encuentraError(message)) return;
+  let { posicion, idZonaBatalla, idMano, respuesta, carta } = message.payload;
   if (respuesta === "Carta colocada") {
     ocultarBotones();
     manoEnemigo.children[idMano].classList.remove("oculto");
-    if (posicion === "ATAQUE"){
+    if (posicion === "ATAQUE") {
       zonaBatallaEnemiga.children[idZonaBatalla].classList.add("ataque");
-      let manoNumeroCarta = carta.valor
-      let manoElementoCarta = String.fromCharCode(carta.elemento)
+      let manoNumeroCarta = carta.valor;
+      let manoElementoCarta = String.fromCharCode(carta.elemento);
       zonaBatallaEnemiga.children[
         idZonaBatalla
-      ].children[0].children[0].innerText = manoNumeroCarta;
+      ].children[0].innerText = manoNumeroCarta;
       zonaBatallaEnemiga.children[
         idZonaBatalla
-      ].children[0].children[1].innerText = manoElementoCarta;
+      ].children[1].innerText = manoElementoCarta;
+    } else {
+      zonaBatallaEnemiga.children[idZonaBatalla].classList.add("oculto");
     }
-    else zonaBatallaEnemiga.children[idZonaBatalla].classList.add("oculto");
     stepAccion = "STAND BY";
-    console.log(stepAccion);
+    console.log("CARTA COLOCADA POR ENEMIGO");
   }
 }
 
 function standBySeleccionarZonaBatalla(message) {
-  if(encuentraError(message)) return;
+  if (encuentraError(message)) return;
   let {
     existeCarta,
     puedeAtacarCarta,
@@ -365,15 +497,26 @@ function standBySeleccionarZonaBatalla(message) {
   } = message.payload;
   if (existeCarta) {
     ocultarBotones();
-    cartaZBSeleccionada.classList.add("seleccionado");
     Array.from(zonaBatallaYo.children).forEach((e) =>
       e.classList.remove("seleccionado")
     );
-    if(puedeAtacarCarta === "Posible" || puedeAtacarCarta === "Posible" || puedeAtacarCarta === "Posible")
+    Array.from(manoYo.children).forEach((e) =>
+      e.classList.remove("seleccionado")
+    );
+    cartaZBSeleccionada.classList.add("seleccionado");
+    if (
+      puedeAtacarCarta === "Posible" ||
+      puedeAtacarBarrera === "Posible" ||
+      puedeCambiarPosicion === "Posible"
+    )
       mensajeBotones.innerText = "Seleccione acción";
-    if(puedeAtacarCarta === "Posible") btnAtacarCarta.classList.remove("ocultar");
-    if(puedeAtacarBarrera === "Posible") btnAtacarBarrera.classList.remove("ocultar");
-    if(puedeCambiarPosicion === "Posible") btnCambiarPosicion.classList.remove("ocultar");
+    else mensajeBotones.innerText = "No acciones disponibles";
+    if (puedeAtacarCarta === "Posible")
+      btnAtacarCarta.classList.remove("ocultar");
+    if (puedeAtacarBarrera === "Posible")
+      btnAtacarBarrera.classList.remove("ocultar");
+    if (puedeCambiarPosicion === "Posible")
+      btnCambiarPosicion.classList.remove("ocultar");
   }
 }
 
@@ -381,11 +524,18 @@ zonaBatallaYo.addEventListener("click", function (e) {
   let target = e.target;
   if (target.id === this.id) return;
   while (!target.classList.contains("slot")) target = target.parentElement;
-  console.log(target);
   idCartaZBSeleccionada = target.dataset.id;
   cartaZBSeleccionada = target;
   if (stepAccion === "COLOCAR SELECCIONAR ZONA BATALLA") {
-    if(!target.classList.contains("mano")){
+    if (
+      !(
+        target.classList.contains("ataque") ||
+        target.classList.contains("defensa") ||
+        target.classList.contains("oculto")
+      )
+    ) {
+      console.log("stepAccion: " + stepAccion);
+      console.log(target);
       message = {
         event: "Colocar Carta",
         payload: {
@@ -397,14 +547,22 @@ zonaBatallaYo.addEventListener("click", function (e) {
       sendMessage(message);
     }
   } else {
-    if (target.classList.contains("mano")) {
+    if (
+      target.classList.contains("ataque") ||
+      target.classList.contains("defensa") ||
+      target.classList.contains("oculto")
+    ) {
+      stepAccion = "SELECCIONAR ZONA BATALLA";
+      console.log("stepAccion: " + stepAccion);
+      console.log(target);
+
       message = {
         event: "Seleccionar Zona Batalla",
         payload: {
           idZonaBatalla: idCartaZBSeleccionada,
         },
       };
-    sendMessage(message);
+      sendMessage(message);
     }
   }
 });
@@ -412,5 +570,27 @@ zonaBatallaEnemiga.addEventListener("click", function (e) {
   let target = e.target;
   if (target.id === this.id) return;
   while (!target.classList.contains("slot")) target = target.parentElement;
-  console.log(target);
+  if (stepAccion === "ATACAR CARTA SELECCIONAR ZB ENEMIGA") {
+    if (
+      target.classList.contains("ataque") ||
+      target.classList.contains("defensa") ||
+      target.classList.contains("oculto")
+    ) {
+      console.log("stepAccion: " + stepAccion);
+      console.log("target: " + target);
+      idCartaZBEnemigaSeleccionada = target.dataset.id;
+      message = {
+        event: "Atacar Carta",
+        payload: {
+          idZonaBatalla: idCartaZBSeleccionada,
+          idZonaBatallaEnemiga: idCartaZBEnemigaSeleccionada,
+        },
+      };
+      sendMessage(message);
+    }
+  }
+});
+
+resultadoAtaque.addEventListener("click", function (e) {
+  resultadoAtaque.classList.remove("mostrarResultado");
 });

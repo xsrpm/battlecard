@@ -206,6 +206,10 @@
   height: 100vh;
 }
 
+.enemigo{
+  transform: rotate(-180deg);
+}
+
 .slot{
   display: flex;
   flex-direction: column;
@@ -268,17 +272,18 @@
 
 #manoEnemigo{
   display: flex;
-  flex-direction: row-reverse;
 }
 
 #barreraEnemiga{
   display: flex;
-  flex-direction: row-reverse;
 }
 
 #zonaBatallaEnemiga{
   display: flex;
-  flex-direction: row-reverse;
+}
+
+#zonaBatallaEnemiga .slot{
+  transform: rotate(-180deg);
 }
 
 .tablero .oculto{
@@ -287,20 +292,11 @@
   background-color:black;
 }
 
-.tablero .enemigo{
-  height: 48vh;
-  padding-top: 5vh;
-}
-
 .enemigo > div{
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-}
-
-.tablero .yo{
-  height: 52vh;
 }
 
 .yo > div{
