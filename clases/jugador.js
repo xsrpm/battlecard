@@ -19,40 +19,6 @@ const EstadoCarta = {
   DESTRUIDA: "DESTRUIDA", // Carta destruida
 };
 Object.freeze(EstadoCarta);
-
-class ResultadoAtaque {
-  constructor() {
-    /**
-     * @type {string}
-     */
-    this.estadoAtaque = undefined;
-    /**
-     * @type {Carta}
-     */
-    this.cartaAtacante = undefined;
-    /**
-     * @type {Carta}
-     */
-    this.cartaAtacada = undefined;
-    /**
-     * @type {VeredictoAtaque}
-     */
-    this.veredicto = undefined;
-    /**
-     * @type {string}
-     */
-    this.estadoCartaAtacante = undefined;
-    /**
-     * @type {string}
-     */
-    this.estadocartaAtacada = undefined;
-    /**
-     * @type {string}
-     */
-    this.estadoBarrera = undefined;
-  }
-}
-
 class Jugador {
   static get MAX_ZONA_BATALLA_CARDS() {
     return 3;
@@ -111,16 +77,16 @@ class Jugador {
   }
   //region Operaciones (Reglas)
 
-  estadoActual(){
+  estadoActual() {
     return {
       zonaBatalla: this.zonaBatalla,
-      deck:this.deck,
-      mano:this.mano,
-      barrera:this.barrera,
-      nTurnos:this.nTurnos,
-      enTurno:this.enTurno,
-      nombre:this.nombre
-    }
+      deck: this.deck,
+      mano: this.mano,
+      barrera: this.barrera,
+      nTurnos: this.nTurnos,
+      enTurno: this.enTurno,
+      nombre: this.nombre,
+    };
   }
 
   sinBarreras() {
@@ -144,7 +110,7 @@ class Jugador {
     this.nAtaquesDisponibles = 0;
     this.nCambiosPosicionesDisponibles = 0;
     this.cartaColocada = false;
-    this.puedeColocarCartaEnZB = true
+    this.puedeColocarCartaEnZB = true;
     for (let celdaBatalla of this.zonaBatalla) {
       if (celdaBatalla.carta != null) {
         if (
@@ -165,26 +131,25 @@ class Jugador {
    */
   cogerUnaCartaDelDeck() {
     if (this.mano.length === Jugador.MAX_MANO_CARDS)
-      return {resultado:ResultadoCojerUnaCarta.MANO_LLENA}
+      return { resultado: ResultadoCojerUnaCarta.MANO_LLENA };
     const carta = this.deck.pop();
     if (carta === undefined) {
       //console.log("Fin del Juego!!!");
       //console.log(this.nombre + " se quedó sin cartas en el mazo!!");
-      return {resultado: ResultadoCojerUnaCarta.DECK_VACIO}
+      return { resultado: ResultadoCojerUnaCarta.DECK_VACIO };
     } else {
       this.mano.push(carta);
       //console.log("Se coge una carta del deck a la mano");
-      return {resultado: ResultadoCojerUnaCarta.EXITO, carta: carta};
+      return { resultado: ResultadoCojerUnaCarta.EXITO, carta: carta };
     }
   }
 
-
-  puedeColocarCartaDesdeId(idCartaMano){
+  puedeColocarCartaDesdeId(idCartaMano) {
     if (!this.puedeColocarCartaEnZB)
       return "No está habilitado para colocar carta";
-    if(!this.existeCartaEnMano(idCartaMano))
+    if (!this.existeCartaEnMano(idCartaMano))
       return "No hay carta en la mano para esa posicion";
-    return "Posible"
+    return "Posible";
   }
 
   /**
@@ -262,8 +227,8 @@ class Jugador {
       return "Hay cartas en zona de batalla enemiga";
     if (this.nAtaquesDisponibles === 0)
       return "No le quedan ataques disponibles";
-    if(this.nTurnos < 2)
-      return "Atacantes solo se pueden realizar desde el segundo turno"
+    if (this.nTurnos < 2)
+      return "Atacantes solo se pueden realizar desde el segundo turno";
     return "Posible";
   }
 
@@ -323,10 +288,9 @@ class Jugador {
    * @returns {string}
    */
   puedeAtacarCartas(jugadorAtacado) {
-    if(this.nTurnos < 2)
-      return "Atacantes solo se pueden realizar desde el segundo turno"
-    if (this.nCartasEnZB === 0) 
-      return "Sin cartas en zona de batalla";
+    if (this.nTurnos < 2)
+      return "Atacantes solo se pueden realizar desde el segundo turno";
+    if (this.nCartasEnZB === 0) return "Sin cartas en zona de batalla";
     if (jugadorAtacado.nCartasEnZB === 0)
       return "No hay cartas en zona de batalla enemiga";
     if (this.nAtaquesDisponibles === 0)
@@ -343,28 +307,31 @@ class Jugador {
    */
 
   existeCartaEnCeldaBatalla(idZonaBatalla) {
-    return this.zonaBatalla[idZonaBatalla].carta != null && this.zonaBatalla[idZonaBatalla] !== undefined
-  }
-
-/**
- * 
- * @param {number} idMano 
- * @returns 
- */
-  existeCartaEnMano(idMano) {
-    return this.mano[idMano] !== null && this.mano[idMano] !== undefined
+    return (
+      this.zonaBatalla[idZonaBatalla].carta != null &&
+      this.zonaBatalla[idZonaBatalla] !== undefined
+    );
   }
 
   /**
-   * 
-   * @param {Jugador} jugadorAtacado 
-   * @param {number} idZonaBatalla 
-   * @returns 
+   *
+   * @param {number} idMano
+   * @returns
+   */
+  existeCartaEnMano(idMano) {
+    return this.mano[idMano] !== null && this.mano[idMano] !== undefined;
+  }
+
+  /**
+   *
+   * @param {Jugador} jugadorAtacado
+   * @param {number} idZonaBatalla
+   * @returns
    */
   puedeAtacarCartaDesdeId(jugadorAtacado, idZonaBatalla) {
     let resp = this.puedeAtacarCartas(jugadorAtacado);
     if (resp !== "Posible") return resp;
-    if (this.existeCartaEnCeldaBatalla(idCartaAtacante) !== true)
+    if (this.existeCartaEnCeldaBatalla(idZonaBatalla) !== true)
       return "No hay carta en tu ubicación de zona de batalla";
     if (
       this.zonaBatalla[idZonaBatalla].dispAtaque ===
@@ -372,7 +339,7 @@ class Jugador {
     )
       return "Carta atacante no tiene ataque disponible";
     if (
-      this.zonaBatalla[idCartaAtacante].posBatalla !==
+      this.zonaBatalla[idZonaBatalla].posBatalla !==
       CeldaBatalla.Estado.POS_BATALLA_ATAQUE
     )
       return "Carta atacante no está en posición de ataque";
@@ -386,7 +353,7 @@ class Jugador {
    * @returns {string}
    */
   posibilidadAtacarCarta(jugadorAtacado, idCartaAtacada, idCartaAtacante) {
-   let resp = puedeAtacarCartaDesdeId(jugadorAtacado, idCartaAtacante);
+    let resp = this.puedeAtacarCartaDesdeId(jugadorAtacado, idCartaAtacante);
     if (resp !== "Posible") return resp;
     if (jugadorAtacado.zonaBatalla[idCartaAtacada].carta === null)
       return "No hay carta en ubicación de zona de batalla enemiga";
@@ -401,41 +368,58 @@ class Jugador {
    */
   calculoValorAtaque(cartaAtacante, cartaAtacada) {
     let calculoVAtacante = cartaAtacante.valor,
-      calculoVAtacada = cartaAtacada.valor;
+      calculoVAtacada = cartaAtacada.valor,
+      bonifCartaAtacante = 0,
+      bonifCartaAtacada = 0;
 
     switch (cartaAtacante.elemento + " " + cartaAtacada.elemento) {
       case Carta.Elemento.ESPADA + " " + Carta.Elemento.TREBOL:
-        calculoVAtacada += 6;
+        bonifCartaAtacada = 6;
+        calculoVAtacada += bonifCartaAtacada;
         break;
       case Carta.Elemento.TREBOL + " " + Carta.Elemento.ESPADA:
-        calculoVAtacante += 6;
+        bonifCartaAtacante = 6;
+        calculoVAtacante += bonifCartaAtacante;
         break;
       case Carta.Elemento.ESPADA + " " + Carta.Elemento.CORAZON:
-        calculoVAtacante += 2;
+        bonifCartaAtacante = 2;
+        calculoVAtacante += bonifCartaAtacante;
         break;
       case Carta.Elemento.CORAZON + " " + Carta.Elemento.ESPADA:
-        calculoVAtacada += 2;
+        bonifCartaAtacante = 2;
+        calculoVAtacada += bonifCartaAtacante;
         break;
       case Carta.Elemento.COCO + " " + Carta.Elemento.TREBOL:
-        calculoVAtacante += 4;
+        bonifCartaAtacante = 4;
+        calculoVAtacante += bonifCartaAtacante;
         break;
       case Carta.Elemento.TREBOL + " " + Carta.Elemento.COCO:
-        calculoVAtacada += 4;
+        bonifCartaAtacada = 4;
+        calculoVAtacada += bonifCartaAtacada;
         break;
       case Carta.Elemento.ESPADA + " " + Carta.Elemento.COCO:
-        calculoVAtacante += 4;
+        bonifCartaAtacante = 4;
+        calculoVAtacante += bonifCartaAtacante;
         break;
       case Carta.Elemento.COCO + " " + Carta.Elemento.ESPADA:
-        calculoVAtacada += 4;
+        bonifCartaAtacada = 4;
+        calculoVAtacada += bonifCartaAtacada;
         break;
       case Carta.Elemento.CORAZON + " " + Carta.Elemento.TREBOL:
-        calculoVAtacante += 2;
+        bonifCartaAtacante = 2;
+        calculoVAtacante += bonifCartaAtacante;
         break;
       case Carta.Elemento.TREBOL + " " + Carta.Elemento.CORAZON:
-        calculoVAtacada += 2;
+        bonifCartaAtacada = 2;
+        calculoVAtacada += bonifCartaAtacada;
         break;
     }
-    return { calculoVAtacante, calculoVAtacada };
+    return {
+      calculoVAtacante,
+      calculoVAtacada,
+      bonifCartaAtacante,
+      bonifCartaAtacada,
+    };
   }
 
   /**
@@ -444,12 +428,7 @@ class Jugador {
    * @param {Carta} cartaAtacada
    * @returns {VeredictoAtaque} VeredictoAtaque
    */
-  obtenerVeredictoAtaque(cartaAtacante, cartaAtacada) {
-    let { calculoVAtacante, calculoVAtacada } = this.calculoValorAtaque(
-      cartaAtacante,
-      cartaAtacada
-    );
-
+  obtenerVeredictoAtaque(calculoVAtacante, calculoVAtacada) {
     if (calculoVAtacante > calculoVAtacada) {
       return VeredictoAtaque.GANA_ATACANTE; //gana
     } else if (calculoVAtacante < calculoVAtacada) {
@@ -463,11 +442,10 @@ class Jugador {
    * @param {Jugador} jugadorAtacado
    * @param {number} idCartaAtacada
    * @param {number} idCartaAtacante
-   * @returns {ResultadoAtaque}
    */
   accionAtacarCarta(jugadorAtacado, idCartaAtacante, idCartaAtacada) {
     //Sistema de produccion
-    let rsAtaque = new ResultadoAtaque();
+    let rsAtaque = {};
     rsAtaque.estadoAtaque = this.posibilidadAtacarCarta(
       jugadorAtacado,
       idCartaAtacada,
@@ -478,10 +456,22 @@ class Jugador {
       rsAtaque.cartaAtacante = this.zonaBatalla[idCartaAtacante].carta;
       rsAtaque.cartaAtacada = jugadorAtacado.zonaBatalla[idCartaAtacada].carta;
 
-      //Obtener veredicto
+      let {
+        calculoVAtacante,
+        calculoVAtacada,
+        bonifCartaAtacante,
+        bonifCartaAtacada,
+      } = this.calculoValorAtaque(
+        rsAtaque.cartaAtacante,
+        rsAtaque.cartaAtacada
+      );
+
+      rsAtaque.bonifCartaAtacada = bonifCartaAtacada
+      rsAtaque.bonifCartaAtacante = bonifCartaAtacante
+
       rsAtaque.veredicto = this.obtenerVeredictoAtaque(
-        this.zonaBatalla[idCartaAtacante].carta,
-        jugadorAtacado.zonaBatalla[idCartaAtacada].carta
+        calculoVAtacante,
+        calculoVAtacada
       );
 
       //Setear resultados
@@ -501,6 +491,7 @@ class Jugador {
         if (rsAtaque.veredicto === VeredictoAtaque.GANA_ATACANTE) {
           //gana atacante
           jugadorAtacado.zonaBatalla[idCartaAtacada].quitarCarta();
+          rsAtaque.idBarreraEliminada = jugadorAtacado.barrera.length - 1;
           jugadorAtacado.barrera.pop();
           jugadorAtacado.nCartasEnZB--;
           rsAtaque.estadoCartaAtacante = EstadoCarta.ACTIVA;
@@ -654,4 +645,4 @@ class Jugador {
   //TODO: separar funcionalidades zonabatalla en una clase zonabatalla que herede de la clase Array
 }
 
-module.exports = { Jugador, ResultadoAtaque };
+module.exports = { Jugador };

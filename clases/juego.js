@@ -178,12 +178,6 @@ class Juego {
  */
   atacarCarta(idCartaAtacante,idCartaAtacada) {
     let res = this.jugadorActual.accionAtacarCarta(this.jugadorAnterior,idCartaAtacante,idCartaAtacada)
-    if(res.estadoBarrera === "DESTRUIDA"){
-      if(this.jugadorAnterior.sinBarreras()){
-        this.pantalla = Pantalla.FIN_DE_JUEGO
-        return "Jugador sin barreras" //FIN DEL JUEGO COMPROBAR QUE TODAVIA TENGA CARTAS DE BARRERA
-      }
-    }
     return res 
   }
 

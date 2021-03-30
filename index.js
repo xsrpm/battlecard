@@ -169,11 +169,14 @@ function colocarCarta(ws, message) {
     resp = juego.colocarCartaEnDefensa(idZonaBatalla, idMano);
   }
   message.payload.respuesta = resp;
+  message.payload.mano = juego.jugadorActual.mano
   sendMessage(ws, message);
-  message.event = "Colocar Carta Enemigo";
+  delete message.payload.mano
+  message.event = "Coloca Carta Otro Jugador";
   message.payload.posicion = posicion;
   message.payload.idZonaBatalla = idZonaBatalla;
-  message.payload.idMano = idMano;
+  let ULTIMA_CARTA = 4
+  message.payload.idMano = ULTIMA_CARTA;
   sendMessageToOthers(ws, message);
 }
 
@@ -233,6 +236,24 @@ function seleccionarMano(ws,message){
   sendMessage(ws,message)
 }
 
+function atacarCarta(ws,message){
+  if (accionAutorizada(ws, message) === false) return;
+  let {idZonaBatalla,idZonaBatallaEnemiga} = message.payload
+  let res = juego.atacarCarta(idZonaBatalla,idZonaBatallaEnemiga)
+  message.payload = res
+  if(res.estadoBarrera === "DESTRUIDA"){
+    if(juego.jugadorAnterior.sinBarreras()){
+      this.pantalla = Pantalla.FIN_DE_JUEGO
+      //FIN DEL JUEGO COMPROBAR QUE TODAVIA TENGA CARTAS DE BARRERA
+    }
+  }
+  sendMessage(ws,message)
+  message.event ="Atacan Tu Carta"
+  message.payload.idCartaAtacante = idZonaBatalla
+  message.payload.idCartaAtacada = idZonaBatallaEnemiga
+  sendMessageToOthers(ws,message)
+}
+
 /**
  *
  * @param {WebSocket} ws
@@ -257,6 +278,9 @@ function procesarAccion(ws, message) {
       break;
     case "Seleccionar Mano":
       seleccionarMano(ws, objMessage);
+      break;
+    case "Atacar Carta":
+      atacarCarta(ws,objMessage)
       break;
     case "Terminar Turno":
       terminarTurno(ws, objMessage);
