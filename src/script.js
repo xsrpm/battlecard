@@ -57,6 +57,21 @@ function cambiarPantalla(pantalla) {
 
 //Visual Juego
 
+function mostrarCartaCogida(objData){
+  if (encuentraError(objData)) return;
+  if(objData.payload.cogerCarta === "EXITO"){
+    if(typeof objData.payload.carta !== "undefined"){
+      manoYo.children[4].children[0].innerText = objData.payload.carta.valor
+      manoYo.children[4].children[1].innerText = String.fromCharCode(objData.payload.carta.elemento)
+      manoYo.children[4].classList.add("mano")
+    }
+    else{
+      manoEnemigo.children[4].classList.add("oculto")
+    }
+  }
+}
+
+
 function mostrarEnTurno(objData) {
   if (encuentraError(objData)) return;
   jugEnemigo.classList.remove("jugEnTurno");
@@ -66,9 +81,13 @@ function mostrarEnTurno(objData) {
   if (objData.payload.jugador.enTurno) {
     jugYo.classList.add("jugEnTurno");
     jugEnemigo.classList.add("jugEnEspera");
+    jugYo.children[1].children[0].innerText=objData.payload.jugador.nDeck
+    jugEnemigo.children[1].children[0].innerText=objData.payload.jugadorEnemigo.nDeck
   } else {
     jugYo.classList.add("jugEnEspera");
     jugEnemigo.classList.add("jugEnTurno");
+    jugYo.children[1].children[0].innerText=objData.payload.jugadorEnemigo.nDeck
+    jugEnemigo.children[1].children[0].innerText=objData.payload.jugador.nDeck
   }
 }
 
@@ -148,6 +167,7 @@ function colocarCarta() {
 function terminarTurno(objData) {
   if (encuentraError(objData)) return;
   mostrarEnTurno(objData);
+  mostrarCartaCogida(objData);
 }
 
 function seleccionarMano(objData) {
@@ -287,7 +307,7 @@ function atacanTuCarta(objData){
     if (estadoCartaAtacante === "DESTRUIDA") {
       zonaBatallaEnemiga.children[idCartaAtacante].children[0].innerText = "";
       zonaBatallaEnemiga.children[idCartaAtacante].children[1].innerText = "";
-      zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove("ataque");
+      zonaBatallaEnemiga.children[idCartaAtacante].classList.remove("ataque");
     }
     if (estadoCartaAtacada === "DESTRUIDA") {
       zonaBatallaYo.children[idCartaAtacada].children[0].innerText =
