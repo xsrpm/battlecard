@@ -203,14 +203,23 @@ function terminarTurno(ws, message) {
   message.payload = {
     jugador: {
       enTurno: juego.jugadorAnterior.enTurno,
+      nDeck: juego.jugadorAnterior.deck.length
     },
     jugadorEnemigo: {
       enTurno: juego.jugadorActual.enTurno,
+      nDeck: juego.jugadorActual.deck.length
     },
+    cogerCarta: res.resultado
   };
   sendMessage(ws, message);
-  message.payload.jugador.enTurno = juego.jugadorActual.enTurno;
-  message.payload.jugadorEnemigo.enTurno = juego.jugadorAnterior.enTurno;
+  message.payload.jugador = {
+    enTurno: juego.jugadorActual.enTurno,
+    nDeck: juego.jugadorActual.deck.length
+  }
+  message.payload.jugadorEnemigo = {
+    enTurno: juego.jugadorAnterior.enTurno,
+    nDeck: juego.jugadorAnterior.deck.length
+  }
   if (res.resultado === "EXITO") message.payload.carta = res.carta;
   sendMessageToOthers(ws, message);
 }
