@@ -322,6 +322,32 @@ function atacanTuCarta(objData){
   }
 }
 
+function cambiarPosicion(objData){
+  if (encuentraError(objData)) return;
+  let {respuesta,posBatalla} = objData.payload
+  if(stepAccion !== "CAMBIAR POSICION")
+    return
+  if(respuesta === "Posicion cambiada"){
+    if(posBatalla === "Posición de batalla: Ataque")
+      zonaBatallaYo.children[idCartaZBSeleccionada].className = "slot ataque"
+    else
+      zonaBatallaYo.children[idCartaZBSeleccionada].className = "slot defensa"
+  }
+}
+
+function cambiaPosicionEnemigo(objData){
+  if (encuentraError(objData)) return;
+  let {respuesta,posBatalla,idZonaBatalla,carta} = objData.payload
+  if(respuesta === "Posicion cambiada"){
+    zonaBatallaEnemiga.children[idZonaBatalla].children[0].innerText = carta.valor
+    zonaBatallaEnemiga.children[idZonaBatalla].children[1].innerText = String.fromCharCode(carta.elemento)
+    if(posBatalla === "Posición de batalla: Ataque")
+      zonaBatallaEnemiga.children[idZonaBatalla].className = "slot ataque"
+    else
+      zonaBatallaEnemiga.children[idZonaBatalla].className = "slot defensa"
+  }
+}
+
 btnJugar.addEventListener("click", () => {
   cambiarPantalla(recepcion);
 });
@@ -362,6 +388,12 @@ btnUnirASala.addEventListener("click", () => {
         break;
       case "Atacan Tu Carta":
         atacanTuCarta(objData);
+        break;
+      case "Cambiar Posicion":
+        cambiarPosicion(objData);
+        break;
+      case "Cambia Posicion Enemigo":
+        cambiaPosicionEnemigo(objData);
         break;
       case "Terminar Turno":
         terminarTurno(objData);
@@ -412,7 +444,20 @@ btnAtacarCarta.addEventListener("click", () => {
     mensajeBotones.innerText = "Seleccione objetivo...";
   }
 });
-btnCambiarPosicion.addEventListener("click", () => {});
+btnCambiarPosicion.addEventListener("click", () => {
+  if (stepAccion === "SELECCIONAR ZONA BATALLA") {
+    console.log("CAMBIAR POSICION");
+    stepAccion = "CAMBIAR POSICION";
+    ocultarBotones();
+    message = {
+      event: "Cambiar Posicion",
+      payload: {
+        idZonaBatalla: idCartaZBSeleccionada
+      }
+    }
+    sendMessage(message)
+  }
+});
 btnTerminarTurno.addEventListener("click", () => {
   message = { event: "Terminar Turno" };
   sendMessage(message);
