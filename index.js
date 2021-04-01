@@ -263,6 +263,17 @@ function atacarCarta(ws,message){
   sendMessageToOthers(ws,message)
 }
 
+function cambiarPosicion(ws,message){
+  if (accionAutorizada(ws, message) === false) return;
+  let { idZonaBatalla} = message.payload
+  let res = juego.cambiarPosicionBatalla(idZonaBatalla)
+  message.payload = res
+  sendMessage(ws,message)
+  message.event ="Cambia Posicion Enemigo"
+  message.payload.idZonaBatalla = idZonaBatalla
+  sendMessageToOthers(ws,message)
+}
+
 /**
  *
  * @param {WebSocket} ws
@@ -290,6 +301,9 @@ function procesarAccion(ws, message) {
       break;
     case "Atacar Carta":
       atacarCarta(ws,objMessage)
+      break;
+    case "Cambiar Posicion":
+      cambiarPosicion(ws,objMessage)
       break;
     case "Terminar Turno":
       terminarTurno(ws, objMessage);

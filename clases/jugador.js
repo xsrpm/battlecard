@@ -574,7 +574,6 @@ class Jugador {
 
   /**
    * @param {number} idCarta
-   * @returns {string}
    */
   cambiarPosicionBatalla(idCarta) {
     let respuesta = this.posibilidadCambiarPosicionBatallaEnCarta(idCarta);
@@ -601,7 +600,7 @@ class Jugador {
       respuesta = "Posicion cambiada";
       //logger.debug("Cambio de Posición Realizado!!\n");
     }
-    return respuesta;
+    return {respuesta: respuesta, posBatalla: this.zonaBatalla[idCarta].posBatalla, carta: this.zonaBatalla[idCarta].carta};
   }
 
   repartirCartas() {
