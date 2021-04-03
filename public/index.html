@@ -1,33 +1,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
     <title>BattleCard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+      integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+      crossorigin="anonymous"
+    />
     <link href="css/style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <div class="bienvenida mostrarPantalla">
+    <div id="bienvenida" class="mostrarPantalla">
       <h1>BattleCard</h1>
       <button id="btnJugar">Jugar</button>
     </div>
-    <div class="recepcion">
+    <div id="recepcion">
       <h1>Ingrese su nombre/nick</h1>
-      <input type="text" id="inNombreJugador">
+      <input type="text" id="inNombreJugador" />
       <button id="btnUnirASala">Unirse a la Sala</button>
     </div>
-    <div class="sala">
+    <div id="sala">
       <h1>Sala de Espera</h1>
       <div>
         <h2>(Sin Jugador)</h2>
       </div>
-      <div> 
+      <div>
         <h2>(Sin Jugador)</h2>
       </div>
       <button id="btnIniciarJuego" disabled>Iniciar Juego</button>
     </div>
-    <div class="juego">
+    <div id="juego" class="">
       <div class="jugadores">
         <div id="jugEnemigo" class="">
           <h2>Jugador Enemigo</h2>
@@ -43,15 +48,9 @@
       <div class="tablero">
         <div class="enemigo">
           <div id="zonaBatallaEnemiga">
-            <div class="slot" data-id="0">
-              <span></span><span></span>
-            </div>
-            <div class="slot" data-id="1">
-              <span></span><span></span>
-            </div>
-            <div class="slot" data-id="2">
-              <span></span><span></span>
-            </div>
+            <div class="slot" data-id="0"><span></span><span></span></div>
+            <div class="slot" data-id="1"><span></span><span></span></div>
+            <div class="slot" data-id="2"><span></span><span></span></div>
           </div>
           <div id="barreraEnemiga">
             <div class="slot" data-id="0"></div>
@@ -80,15 +79,9 @@
         </div>
         <div class="yo">
           <div id="zonaBatallaYo">
-            <div class="slot" data-id="0">
-              <span></span><span></span>
-            </div>
-            <div class="slot" data-id="1">
-              <span></span><span></span>
-            </div>
-            <div class="slot" data-id="2">
-              <span></span><span></span>
-            </div>
+            <div class="slot" data-id="0"><span></span><span></span></div>
+            <div class="slot" data-id="1"><span></span><span></span></div>
+            <div class="slot" data-id="2"><span></span><span></span></div>
           </div>
           <div id="barreraYo">
             <div class="slot" data-id="0"></div>
@@ -98,28 +91,20 @@
             <div class="slot" data-id="4"></div>
           </div>
           <div id="manoYo">
-            <div class="slot" data-id="0">
-              <span></span><span></span>
-            </div>
-            <div class="slot" data-id="1">
-              <span></span><span></span>
-            </div>
-            <div class="slot" data-id="2">
-              <span></span><span></span>
-            </div>
-            <div class="slot" data-id="3">
-              <span></span><span></span>
-            </div>
-            <div class="slot" data-id="4">
-              <span></span><span></span>
-            </div>
+            <div class="slot" data-id="0"><span></span><span></span></div>
+            <div class="slot" data-id="1"><span></span><span></span></div>
+            <div class="slot" data-id="2"><span></span><span></span></div>
+            <div class="slot" data-id="3"><span></span><span></span></div>
+            <div class="slot" data-id="4"><span></span><span></span></div>
           </div>
         </div>
         <div class="resultadoAtaque">
           <div class="atacante">
             <span>Atacante</span>
           </div>
-          <div id="cartaAtacante" class="slot mano"><span></span><span></span></div>
+          <div id="cartaAtacante" class="slot mano">
+            <span></span><span></span>
+          </div>
           <div class="bonusAtacante">
             <span></span>
           </div>
@@ -135,10 +120,15 @@
           <div class="atacado">
             <span>Atacado</span>
           </div>
-          <div id="cartaAtacada" class="slot mano"><span></span><span></span></div>
+          <div id="cartaAtacada" class="slot mano">
+            <span></span><span></span>
+          </div>
           <div class="bonusAtacado">
             <span></span>
           </div>
+        </div>
+        <div class="info">
+          <h1></h1>
         </div>
       </div>
       <div class="botonera">
@@ -147,10 +137,25 @@
         <button id="btnColocarEnDefensa" class="ocultar">de defensa</button>
         <button id="btnAtacarCarta" class="ocultar">Atacar carta</button>
         <button id="btnAtacarBarrera" class="ocultar">Atacar barrera</button>
-        <button id="btnCambiarPosicion" class="ocultar">Cambiar posición</button>
+        <button id="btnCambiarPosicion" class="ocultar">
+          Cambiar posición
+        </button>
         <button id="btnTerminarTurno">Terminar Turno</button>
+        <button id="btnFinDeJuego" class="ocultar">Fin de Juego</button>
       </div>
     </div>
+    <div id="finDeJuego">
+      <div class="victoria">
+        <h1>Victoria</h1>
+        <p></p>
+      </div>
+      <div class="derrota">
+        <h1>Derrota</h1>
+        <p></p>
+      </div>
+      <button id="btnVolverInicio" class="btnVolverInicio">Volver a la pantalla inicial</button>
+    </div>
+    
     <script src="../src/script.js"></script>
   </body>
 </html>

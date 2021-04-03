@@ -1,11 +1,12 @@
 //VIsual Aplicación y juego
 
 const pantallas = document.querySelectorAll("body > div");
-const bienvenida = document.querySelector(".bienvenida");
-const recepcion = document.querySelector(".recepcion");
-const sala = document.querySelector(".sala");
+const bienvenida = document.getElementById("bienvenida");
+const recepcion = document.getElementById("recepcion");
+const sala = document.getElementById("sala");
 
-const juego = document.querySelector(".juego");
+const juego = document.getElementById("juego");
+const finDeJuego = document.getElementById("finDeJuego")
 const h2 = sala.getElementsByTagName("h2");
 const inNombreJugador = document.getElementById("inNombreJugador");
 const btnUnirASala = document.getElementById("btnUnirASala");
@@ -19,7 +20,10 @@ const btnAtacarBarrera = document.getElementById("btnAtacarBarrera");
 const btnCambiarPosicion = document.getElementById("btnCambiarPosicion");
 const btnCancelar = document.getElementById("btnCancelar");
 const btnTerminarTurno = document.getElementById("btnTerminarTurno");
+const btnFinDeJuego = document.getElementById("btnFinDeJuego")
+const btnVolverInicio = document.getElementById("btnVolverInicio")
 const resultadoAtaque = document.querySelector(".resultadoAtaque");
+const info = document.querySelector(".info")
 const manoEnemigo = document.getElementById("manoEnemigo");
 const manoYo = document.getElementById("manoYo");
 const zonaBatallaYo = document.getElementById("zonaBatallaYo");
@@ -42,6 +46,9 @@ let cartaZBEnemigaSeleccionada;
 let stepAccion = "STAND BY";
 let posicionBatalla;
 let message;
+let nombreJugadorDerrotado
+let nombreJugadorVictorioso
+
 
 //Visual Life Cicle (App)
 /**
@@ -59,15 +66,27 @@ function cambiarPantalla(pantalla) {
 
 function mostrarCartaCogida(objData){
   if (encuentraError(objData)) return;
-  if(objData.payload.cogerCarta === "EXITO"){
-    if(typeof objData.payload.carta !== "undefined"){
-      manoYo.children[4].children[0].innerText = objData.payload.carta.valor
-      manoYo.children[4].children[1].innerText = String.fromCharCode(objData.payload.carta.elemento)
+  let {carta, resultado} = objData.payload
+  if(resultado === "EXITO"){
+    if(typeof carta !== "undefined"){
+      manoYo.children[4].children[0].innerText = carta.valor
+      manoYo.children[4].children[1].innerText = String.fromCharCode(carta.elemento)
       manoYo.children[4].classList.add("mano")
     }
     else{
       manoEnemigo.children[4].classList.add("oculto")
     }
+  }
+  else if(resultado === "DECK VACIO"){
+    nombreJugadorDerrotado = objData.payload.nombreJugadorDerrotado
+    nombreJugadorVictorioso = objData.payload.nombreJugadorVictorioso
+    info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin cartas para tomar del deck`
+    info.classList.add("mostrarResultado")
+    btnFinDeJuego.classList.remove("ocultar")
+    btnTerminarTurno.classList.add("ocultar")
+  }
+  else{
+    console.log("MANO LLENA")
   }
 }
 
@@ -109,6 +128,7 @@ function iniciarTablero(objData) {
   jugEnemigo.children[0].innerText = objData.payload.jugadorEnemigo.nombre;
   jugEnemigo.children[1].children[0].innerText =
     objData.payload.jugadorEnemigo.nDeck;
+  btnTerminarTurno.classList.remove("ocultar")
 }
 
 function encuentraError(objData) {
@@ -120,6 +140,8 @@ function encuentraError(objData) {
 }
 
 function unirASala(objData) {
+  h2[0].innerText =""
+  h2[1].innerText =""
   if (encuentraError(objData)) return;
   for (let i = 0; i < objData.payload.jugadores.length; i++) {
     h2[i].innerText = objData.payload.jugadores[i];
@@ -130,6 +152,7 @@ function unirASala(objData) {
 
 function iniciarJuego(objData) {
   if (encuentraError(objData)) return;
+  btnFinDeJuego.classList.add("ocultar");
   mostrarEnTurno(objData);
   iniciarTablero(objData);
   cambiarPantalla(juego);
@@ -141,7 +164,6 @@ function ocultarBotones() {
   btnAtacarCarta.classList.add("ocultar");
   btnAtacarBarrera.classList.add("ocultar");
   btnCambiarPosicion.classList.add("ocultar");
-  //btnTerminarTurno.classList.add("ocultar");
 }
 
 function sendMessage(message) {
@@ -164,9 +186,19 @@ function colocarCarta() {
   stepAccion = "COLOCAR SELECCIONAR ZONA BATALLA";
 }
 
+function quitarSeleccionEnCartas(){
+  Array.from(manoYo.children).forEach((e) =>
+  e.classList.remove("seleccionado")
+  );
+  Array.from(zonaBatallaYo.children).forEach((e) =>
+    e.classList.remove("seleccionado")
+  );
+}
+
 function terminarTurno(objData) {
   if (encuentraError(objData)) return;
   mostrarEnTurno(objData);
+  quitarSeleccionEnCartas()
   mostrarCartaCogida(objData);
 }
 
@@ -175,12 +207,7 @@ function seleccionarMano(objData) {
   let { existeCarta, puedeColocarCarta } = objData.payload;
   if (existeCarta) {
     ocultarBotones();
-    Array.from(manoYo.children).forEach((e) =>
-      e.classList.remove("seleccionado")
-    );
-    Array.from(zonaBatallaYo.children).forEach((e) =>
-      e.classList.remove("seleccionado")
-    );
+    quitarSeleccionEnCartas()
     cartaManoSeleccionada.classList.add("seleccionado");
     if (puedeColocarCarta === "Posible") {
       btnColocarEnAtaque.classList.remove("ocultar");
@@ -493,12 +520,7 @@ function colocarSeleccionarZonaBatalla(data) {
   if (encuentraError(data)) return;
   if (data.payload.respuesta === "Carta colocada") {
     ocultarBotones();
-    Array.from(manoYo.children).forEach((e) =>
-      e.classList.remove("seleccionado")
-    );
-    Array.from(zonaBatallaYo.children).forEach((e) =>
-      e.classList.remove("seleccionado")
-    );
+    quitarSeleccionEnCartas()
     mensajeBotones.innerText = "";
     let manoNumeroCarta =
       manoYo.children[idCartaManoSeleccionada].children[0].innerText;
@@ -562,12 +584,7 @@ function standBySeleccionarZonaBatalla(message) {
   } = message.payload;
   if (existeCarta) {
     ocultarBotones();
-    Array.from(zonaBatallaYo.children).forEach((e) =>
-      e.classList.remove("seleccionado")
-    );
-    Array.from(manoYo.children).forEach((e) =>
-      e.classList.remove("seleccionado")
-    );
+    quitarSeleccionEnCartas()
     cartaZBSeleccionada.classList.add("seleccionado");
     if (
       puedeAtacarCarta === "Posible" ||
@@ -659,3 +676,15 @@ zonaBatallaEnemiga.addEventListener("click", function (e) {
 resultadoAtaque.addEventListener("click", function (e) {
   resultadoAtaque.classList.remove("mostrarResultado");
 });
+info.addEventListener("click",function(e){
+  info.classList.remove("mostrarResultado")
+})
+btnFinDeJuego.addEventListener("click",function(){
+  finDeJuego.children[0].children[1].innerText= nombreJugadorVictorioso
+  finDeJuego.children[1].children[1].innerText= nombreJugadorDerrotado
+  cambiarPantalla(finDeJuego)
+})
+
+btnVolverInicio.addEventListener("click",function(){
+  cambiarPantalla(bienvenida)
+})

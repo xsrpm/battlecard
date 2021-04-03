@@ -5,6 +5,11 @@ TODO:
 - corregir la visualizacion de cartas al robar una carta (corregido)
 - Cancelar acciones de colocado de cartas o ataque (corregido)
 - Cambiar posición (corregido)
-- Quitar seleccion en cartas al terminar turno
-- Termino de juego al quedarse sin cartas en deck para jalar
+- Quitar seleccion en cartas al terminar turno (realizado)
+- Termino de juego al quedarse sin cartas en deck para jalar (realizado)
 - Termino de juego al quedarse sin barreras
+- Boton cancelar, volver una acción atras (colocar carta)
+- Quitar el boton Terminar Turno cuando no es su turno.
+- Luego de jugar un tiempo, se queda bloqueadas celdas donde no se puede colocar cartas a pesar que se ven vacias y no se puede atacar cartas a celdas que aparece con alguna carta
+- Obligatorio ingresar con un nombre (y que no se repita)
+- Flujo reiniciar juego.
