@@ -35,6 +35,14 @@ function sendMessageToOthers(wsorigen, message) {
   });
 }
 
+function cerrarSala(){
+  wss.clients.forEach((ws) => {
+    if (ws.readyState === WebSocket.OPEN) {
+        ws.close()
+    }
+  });
+}
+
 /**
  *
  * @param {WebSocket} ws
@@ -199,35 +207,21 @@ function seleccionarZonaBatalla(ws, message) {
  */
 function terminarTurno(ws, message) {
   if (accionAutorizada(ws, message) === false) return;
-  let res = juego.cambioDeJugadorActual();
-  message.payload = {
-    jugador: {
-      enTurno: juego.jugadorAnterior.enTurno,
-      nDeck: juego.jugadorAnterior.deck.length
-    },
-    jugadorEnemigo: {
-      enTurno: juego.jugadorActual.enTurno,
-      nDeck: juego.jugadorActual.deck.length
-    },
-    cogerCarta: res.resultado
-  };
+  let res = juego.terminarTurno()
+  message.payload = JSON.parse(JSON.stringify(res))
   sendMessage(ws, message);
-  message.payload.jugador = {
-    enTurno: juego.jugadorActual.enTurno,
-    nDeck: juego.jugadorActual.deck.length
-  }
-  message.payload.jugadorEnemigo = {
-    enTurno: juego.jugadorAnterior.enTurno,
-    nDeck: juego.jugadorAnterior.deck.length
-  }
-  if (res.resultado === "EXITO") message.payload.carta = res.carta;
+  message.payload.jugador.enTurno= res.jugadorEnemigo.enTurno
+  message.payload.jugadorEnemigo.enTurno= res.jugador.enTurno
   sendMessageToOthers(ws, message);
+  if(res.resultado === "DECK VACIO"){
+    cerrarSala()
+  }
 }
+
 /**
  *
  * @param {WebSocket} ws
  * @param {*} message
- * @param {*} callback
  */
 function accionAutorizada(ws, message) {
   if (ws.jugador === juego.jugadorActual) {

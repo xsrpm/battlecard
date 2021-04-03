@@ -24,10 +24,6 @@ class Juego {
      * @type {Jugador}
      */
     this.jugadorAnterior = null;
-    /**
-     * @type {Jugador}
-     */
-    this.jugadorVictorioso = null;
     this.idCartaZonaBSel = 0;
     this.idCartaZonaBSelEnemigo = 0;
     this.idCartaManoSel = 0;
@@ -51,7 +47,6 @@ class Juego {
       return "Sala llena, no pueden entrar jugadores";
     }
   }
-
 
   obtenerEstadoSala() {
     return this.estadoSala
@@ -79,7 +74,6 @@ class Juego {
       //this.jugador[1].iniciarTurno();
       this.pantalla = Pantalla.EN_JUEGO;
       return "JUEGO INICIADO";
-      
     } 
     /*
     else if(this.estadoSala === "SALA INICIADA" && 
@@ -95,6 +89,19 @@ class Juego {
     }
   }
 
+  finalizarJuego(){
+    this.pantalla = Pantalla.FIN_DE_JUEGO
+    this.jugador= []
+    this.jugadorActual = null;
+    this.jugadorAnterior = null;
+    this.idCartaZonaBSel = 0;
+    this.idCartaZonaBSelEnemigo = 0;
+    this.idCartaManoSel = 0;
+    this.pantalla = null;
+    this.momento = null;
+    this.estadoSala = "SALA ABIERTA"
+  }
+
   cambioDeJugadorActual() {
     let jugadorTmp = this.jugadorActual;
     this.jugadorActual = this.jugadorAnterior;
@@ -102,15 +109,35 @@ class Juego {
     this.jugadorActual.iniciarTurno()
     this.jugadorActual.setEnTurno(true)
     this.jugadorAnterior.setEnTurno(false)
-    console.log(this.jugadorActual.estadoActual())
-    let res = this.jugadorActual.cogerUnaCartaDelDeck()
-    console.log(res)
-    /*
-    if(res !== "EXITO"){
-        this.pantalla = Pantalla.FIN_DE_JUEGO
-        return "Jugador sin cartas en deck"     //FIN DEL JUEGO AL QUEDARSE SIN CARTAS EN EL DECK
+  }
+
+  terminarTurno(){
+    this.cambioDeJugadorActual();
+    let res = this.cogerUnaCartaDelDeck()
+    res = {
+     ...res,
+      jugador: {
+        enTurno: this.jugadorAnterior.enTurno,
+        nDeck: this.jugadorAnterior.deck.length
+      },
+      jugadorEnemigo: {
+        enTurno: this.jugadorActual.enTurno,
+        nDeck: this.jugadorActual.deck.length
+      }
+    };
+    if(res.resultado === "DECK VACIO"){
+      this.finalizarJuego()
     }
-    */
+    return res
+  }
+
+
+  cogerUnaCartaDelDeck(){
+    let res = this.jugadorActual.cogerUnaCartaDelDeck()
+    if(res.resultado === "DECK VACIO"){
+      res.nombreJugadorDerrotado = this.jugadorActual.nombre
+      res.nombreJugadorVictorioso = this.jugadorAnterior.nombre
+    }
     return res
   }
 /**
