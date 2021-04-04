@@ -110,7 +110,7 @@ function mostrarEnTurno(objData) {
   }
 }
 
-function iniciarTablero(objData) {
+function inicializarJuego(objData) {
   if (encuentraError(objData)) return;
   for (let i = 0; i < objData.payload.jugador.nBarrera; i++) {
     barreraYo.children[i].classList.add("barrera");
@@ -122,13 +122,32 @@ function iniciarTablero(objData) {
     manoYo.children[i].children[0].innerText = c.valor;
     manoYo.children[i].children[1].innerText = String.fromCharCode(c.elemento);
   });
+  
+  Array.from(zonaBatallaYo.children).forEach((el)=>{
+    el.classList.remove("ataque","defensa","oculto")
+    el.children[0].innerText=""
+    el.children[1].innerText=""
+  })
+  Array.from(zonaBatallaEnemiga.children).forEach((el)=>{
+    el.classList.remove("ataque","defensa","oculto")
+    el.children[0].innerText=""
+    el.children[1].innerText=""
+  })
   for (let i = 0; i < objData.payload.jugadorEnemigo.nBarrera; i++) {
     barreraEnemiga.children[i].classList.add("barrera");
   }
+  for (let i = 0; i < objData.payload.jugadorEnemigo.nMano; i++) {
+    manoEnemigo.children[i].classList.add("oculto");
+  }
+
   jugEnemigo.children[0].innerText = objData.payload.jugadorEnemigo.nombre;
-  jugEnemigo.children[1].children[0].innerText =
-    objData.payload.jugadorEnemigo.nDeck;
+  jugEnemigo.children[1].children[0].innerText = objData.payload.jugadorEnemigo.nDeck;
   btnTerminarTurno.classList.remove("ocultar")
+  btnFinDeJuego.classList.add("ocultar");
+  info.classList.remove("mostrarResultado")
+  resultadoAtaque.classList.remove("mostrarResultado")
+  mostrarEnTurno(objData);
+  ocultarBotones();
 }
 
 function encuentraError(objData) {
@@ -140,8 +159,8 @@ function encuentraError(objData) {
 }
 
 function unirASala(objData) {
-  h2[0].innerText =""
-  h2[1].innerText =""
+  h2[0].innerText ="(Sin Jugador)"
+  h2[1].innerText ="(Sin Jugador)"
   if (encuentraError(objData)) return;
   for (let i = 0; i < objData.payload.jugadores.length; i++) {
     h2[i].innerText = objData.payload.jugadores[i];
@@ -152,9 +171,7 @@ function unirASala(objData) {
 
 function iniciarJuego(objData) {
   if (encuentraError(objData)) return;
-  btnFinDeJuego.classList.add("ocultar");
-  mostrarEnTurno(objData);
-  iniciarTablero(objData);
+  inicializarJuego(objData);
   cambiarPantalla(juego);
 }
 
