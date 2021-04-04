@@ -103,6 +103,7 @@ function iniciarJuego(ws, message) {
         nombre: juego.jugadorAnterior.nombre,
         nBarrera: juego.jugadorAnterior.barrera.length,
         nDeck: juego.jugadorAnterior.deck.length,
+        nMano: juego.jugadorActual.mano.length,
         enTurno: juego.jugadorAnterior.enTurno,
       },
     };
@@ -119,6 +120,7 @@ function iniciarJuego(ws, message) {
         nombre: juego.jugadorActual.nombre,
         nBarrera: juego.jugadorActual.barrera.length,
         nDeck: juego.jugadorActual.deck.length,
+        nMano: juego.jugadorActual.mano.length,
         enTurno: juego.jugadorActual.enTurno,
       },
     };
@@ -136,6 +138,7 @@ function iniciarJuego(ws, message) {
         nombre: juego.jugadorActual.nombre,
         nBarrera: juego.jugadorActual.barrera.length,
         nDeck: juego.jugadorActual.deck.length,
+        nMano: juego.jugadorActual.mano.length,
         enTurno: juego.jugadorActual.enTurno,
       },
     };
@@ -152,6 +155,7 @@ function iniciarJuego(ws, message) {
         nombre: juego.jugadorAnterior.nombre,
         nBarrera: juego.jugadorAnterior.barrera.length,
         nDeck: juego.jugadorAnterior.deck.length,
+        nMano: juego.jugadorAnterior.mano.length,
         enTurno: juego.jugadorAnterior.enTurno,
       },
     };
