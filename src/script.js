@@ -48,6 +48,7 @@ let posicionBatalla;
 let message;
 let nombreJugadorDerrotado
 let nombreJugadorVictorioso
+let sinBarrerasFlag;
 
 
 //Visual Life Cicle (App)
@@ -80,10 +81,10 @@ function mostrarCartaCogida(objData){
   else if(resultado === "DECK VACIO"){
     nombreJugadorDerrotado = objData.payload.nombreJugadorDerrotado
     nombreJugadorVictorioso = objData.payload.nombreJugadorVictorioso
-    info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin cartas para tomar del deck`
-    info.classList.add("mostrarResultado")
+    info.children[0].innerText=`${nombreJugadorDerrotado} se ha quedado sin cartas para tomar del deck`
     btnFinDeJuego.classList.remove("ocultar")
     btnTerminarTurno.classList.add("ocultar")
+    info.classList.add("mostrarResultado")
   }
   else{
     console.log("MANO LLENA")
@@ -148,6 +149,7 @@ function inicializarJuego(objData) {
   resultadoAtaque.classList.remove("mostrarResultado")
   mostrarEnTurno(objData);
   ocultarBotones();
+  sinBarrerasFlag = false
 }
 
 function encuentraError(objData) {
@@ -270,6 +272,14 @@ function atacarCarta(objData) {
       resultadoAtaque.querySelector(".detalleResultado").children[0].innerText =
         "Barrera destruida";
       barreraEnemiga.children[idBarreraEliminada].classList.remove("barrera");
+      sinBarrerasFlag = objData.payload.sinBarreras
+      if(sinBarrerasFlag){
+        nombreJugadorDerrotado = objData.payload.nombreJugadorDerrotado
+        nombreJugadorVictorioso = objData.payload.nombreJugadorVictorioso
+        info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin barreras`
+        btnFinDeJuego.classList.remove("ocultar")
+        btnTerminarTurno.classList.add("ocultar")
+      }
     } else
       resultadoAtaque.querySelector(".detalleResultado").children[0].innerText =
         "";
@@ -343,8 +353,15 @@ function atacanTuCarta(objData){
     if (estadoBarrera === "DESTRUIDA") {
       resultadoAtaque.querySelector(".detalleResultado").children[0].innerText =
         "Barrera destruida";
-
       barreraYo.children[idBarreraEliminada].classList.remove("barrera");
+      sinBarrerasFlag = objData.payload.sinBarreras
+      if(sinBarrerasFlag){
+        nombreJugadorDerrotado = objData.payload.nombreJugadorDerrotado
+        nombreJugadorVictorioso = objData.payload.nombreJugadorVictorioso
+        info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin barreras`
+        btnFinDeJuego.classList.remove("ocultar")
+        btnTerminarTurno.classList.add("ocultar")
+      }
     } else
       resultadoAtaque.querySelector(".detalleResultado").children[0].innerText =
         "";
@@ -461,6 +478,9 @@ btnIniciarJuego.addEventListener("click", () => {
 });
 resultadoAtaque.addEventListener("click", () => {
   resultadoAtaque.classList.remove("mostrarResultado");
+  if(sinBarrerasFlag){
+    info.classList.add("mostrarResultado")
+  }
 });
 btnColocarEnAtaque.addEventListener("click", () => {
   if (stepAccion === "SELECCIONAR MANO") {
@@ -692,6 +712,9 @@ zonaBatallaEnemiga.addEventListener("click", function (e) {
 
 resultadoAtaque.addEventListener("click", function (e) {
   resultadoAtaque.classList.remove("mostrarResultado");
+  if(sinBarrerasFlag){
+    info.classList.add("mostrarResultado")
+  }
 });
 info.addEventListener("click",function(e){
   info.classList.remove("mostrarResultado")
