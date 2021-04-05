@@ -317,7 +317,6 @@ function atacarCarta(objData) {
     resultadoAtaque.classList.add("mostrarResultado");
   }
 }
-
 function atacanTuCarta(objData){
   if (encuentraError(objData)) return;
   let {
@@ -380,6 +379,57 @@ function atacanTuCarta(objData){
       ].classList.remove("ataque", "defensa", "oculto");
     }
     resultadoAtaque.classList.add("mostrarResultado");
+  }
+}
+
+function atacarBarrera(objData){
+  if (encuentraError(objData)) return;
+  let {
+    resultado,
+    idBarreraEliminada
+  } = objData.payload;
+  if(resultado === "Barrera destruida"){
+    barreraEnemiga.children[idBarreraEliminada].classList.remove("barrera");
+      sinBarrerasFlag = objData.payload.sinBarreras
+      if(sinBarrerasFlag){
+        nombreJugadorDerrotado = objData.payload.nombreJugadorDerrotado
+        nombreJugadorVictorioso = objData.payload.nombreJugadorVictorioso
+        info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin barreras`
+        btnFinDeJuego.classList.remove("ocultar")
+        btnTerminarTurno.classList.add("ocultar")
+      }
+      else{
+        info.children[0].innerText=`Barrera destruida`
+      }
+      zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove(
+        "seleccionado"
+      );
+      mensajeBotones.innerText=""
+      ocultarBotones();
+      info.classList.add("mostrarResultado")
+  }
+}
+
+function atacanTuBarrera(objData){
+  if (encuentraError(objData)) return;
+  let {
+    resultado,
+    idBarreraEliminada
+  } = objData.payload;
+  if(resultado === "Barrera destruida"){
+    barreraYo.children[idBarreraEliminada].classList.remove("barrera");
+      sinBarrerasFlag = objData.payload.sinBarreras
+      if(sinBarrerasFlag){
+        nombreJugadorDerrotado = objData.payload.nombreJugadorDerrotado
+        nombreJugadorVictorioso = objData.payload.nombreJugadorVictorioso
+        info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin barreras`
+        btnFinDeJuego.classList.remove("ocultar")
+        btnTerminarTurno.classList.add("ocultar")
+      }
+      else{
+        info.children[0].innerText=`Barrera destruida`
+      }
+      info.classList.add("mostrarResultado")
   }
 }
 
@@ -447,8 +497,14 @@ btnUnirASala.addEventListener("click", () => {
       case "Atacar Carta":
         atacarCarta(objData);
         break;
+      case "Atacar Barrera":
+        atacarBarrera(objData);
+        break;
       case "Atacan Tu Carta":
         atacanTuCarta(objData);
+        break;
+      case "Atacan Tu Barrera":
+        atacanTuBarrera(objData);
         break;
       case "Cambiar Posicion":
         cambiarPosicion(objData);
@@ -508,6 +564,15 @@ btnAtacarCarta.addEventListener("click", () => {
     mensajeBotones.innerText = "Seleccione objetivo...";
   }
 });
+btnAtacarBarrera.addEventListener("click",()=>{
+  message = {
+    event : "Atacar Barrera",
+    payload:{
+      idZonaBatalla: idCartaZBSeleccionada
+    }
+  }
+  sendMessage(message)
+})
 btnCambiarPosicion.addEventListener("click", () => {
   if (stepAccion === "SELECCIONAR ZONA BATALLA") {
     console.log("CAMBIAR POSICION");
