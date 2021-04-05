@@ -190,9 +190,9 @@ class Juego {
    */
   atacarBarrera(idCartaAtacante) {
     let res= this.jugadorActual.accionAtacarBarrera(this.jugadorAnterior,idCartaAtacante)
-    if(res === "Barrera destruida"){
-      if(this.jugadorAnterior.sinBarreras()){
-        this.pantalla = Pantalla.FIN_DE_JUEGO
+    if(typeof res.sinBarreras !== "undefined"){
+      if(res.sinBarreras){
+        this.finalizarJuego()
       }
     }
     return res
@@ -206,7 +206,7 @@ class Juego {
     let res = this.jugadorActual.accionAtacarCarta(this.jugadorAnterior,idCartaAtacante,idCartaAtacada)
     if(typeof res.sinBarreras !== "undefined"){
       if(res.sinBarreras){
-        this.pantalla = Pantalla.FIN_DE_JUEGO
+        this.finalizarJuego()
       }
     }
     return res 

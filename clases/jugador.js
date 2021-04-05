@@ -267,21 +267,25 @@ class Jugador {
   /**
    * @param {Jugador} jugadorAtacado
    * @param {number} idCartaAtacante
-   * @returns {string}
    */
   accionAtacarBarrera(jugadorAtacado, idCartaAtacante) {
-    let respuesta = this.posibilidadAtacarBarrera(
+    let respuesta = {}
+    respuesta.resultado = this.posibilidadAtacarBarrera(
       jugadorAtacado,
       idCartaAtacante
     );
-    if (respuesta === "Posible") {
+    if (respuesta.resultado === "Posible") {
+      respuesta.idBarreraEliminada = jugadorAtacado.barrera.length - 1
       jugadorAtacado.barrera.pop();
       this.ataqueRealizado(idCartaAtacante);
-      respuesta = "Barrera destruida";
-      //console.log("Ataque Realizado!!");
-      //console.log("Barrera Destruida");
+      if(jugadorAtacado.sinBarreras()){
+        respuesta.sinBarreras = true
+        respuesta.nombreJugadorDerrotado = jugadorAtacado.nombre
+        respuesta.nombreJugadorVictorioso = this.nombre
+      }
+      respuesta.resultado = "Barrera destruida"
     }
-    return respuesta;
+    return respuesta
   }
   /**
    * @param {Jugador} jugadorAtacado

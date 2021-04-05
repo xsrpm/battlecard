@@ -253,6 +253,22 @@ function atacarCarta(ws,message){
   message.payload.idCartaAtacante = idZonaBatalla
   message.payload.idCartaAtacada = idZonaBatallaEnemiga
   sendMessageToOthers(ws,message)
+  if(res.sinBarreras){
+    cerrarSala()
+  }
+}
+
+function atacarBarrera(ws,message){
+  if (accionAutorizada(ws, message) === false) return;
+  let {idZonaBatalla} = message.payload
+  let res = juego.atacarBarrera(idZonaBatalla)
+  message.payload = res
+  sendMessage(ws,message)
+  message.event ="Atacan Tu Barrera"
+  sendMessageToOthers(ws,message)
+  if(res.sinBarreras){
+    cerrarSala()
+  }
 }
 
 function cambiarPosicion(ws,message){
@@ -293,6 +309,9 @@ function procesarAccion(ws, message) {
       break;
     case "Atacar Carta":
       atacarCarta(ws,objMessage)
+      break;
+    case "Atacar Barrera":
+      atacarBarrera(ws,objMessage)
       break;
     case "Cambiar Posicion":
       cambiarPosicion(ws,objMessage)
