@@ -5,8 +5,7 @@
   "main": "",
   "scripts": {
     "dev": "rm -rf ./development && rm -rf ./.cache && parcel public/index.html --out-dir development -p 3000",
-    "build": "parcel build public/index.html --out-dir dist --public-url ./",
-    "replit": "rm -rf ./replit && rm -rf ./.cache && parcel public/index.html --out-dir replit -p 80"
+    "build": "parcel build public/index.html --out-dir dist --public-url ./"
   },
   "repository": {
     "type": "git",
