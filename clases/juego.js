@@ -193,7 +193,6 @@ class Juego {
     if(res === "Barrera destruida"){
       if(this.jugadorAnterior.sinBarreras()){
         this.pantalla = Pantalla.FIN_DE_JUEGO
-        return "Jugador sin barreras" //FIN DEL JUEGO COMPROBAR QUE TODAVIA TENGA CARTAS DE BARRERA
       }
     }
     return res
@@ -205,6 +204,11 @@ class Juego {
  */
   atacarCarta(idCartaAtacante,idCartaAtacada) {
     let res = this.jugadorActual.accionAtacarCarta(this.jugadorAnterior,idCartaAtacante,idCartaAtacada)
+    if(typeof res.sinBarreras !== "undefined"){
+      if(res.sinBarreras){
+        this.pantalla = Pantalla.FIN_DE_JUEGO
+      }
+    }
     return res 
   }
 

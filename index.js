@@ -248,12 +248,6 @@ function atacarCarta(ws,message){
   let {idZonaBatalla,idZonaBatallaEnemiga} = message.payload
   let res = juego.atacarCarta(idZonaBatalla,idZonaBatallaEnemiga)
   message.payload = res
-  if(res.estadoBarrera === "DESTRUIDA"){
-    if(juego.jugadorAnterior.sinBarreras()){
-      this.pantalla = Pantalla.FIN_DE_JUEGO
-      //FIN DEL JUEGO COMPROBAR QUE TODAVIA TENGA CARTAS DE BARRERA
-    }
-  }
   sendMessage(ws,message)
   message.event ="Atacan Tu Carta"
   message.payload.idCartaAtacante = idZonaBatalla

@@ -8,7 +8,7 @@ Object.freeze(Elemento);
 
 class Carta {
   static get MAX_VALOR_CARTA() {
-    return 3;
+    return 13;
   }
   static get MIN_VALOR_CARTA() {
     return 1;

@@ -497,6 +497,11 @@ class Jugador {
           rsAtaque.estadoCartaAtacante = EstadoCarta.ACTIVA;
           rsAtaque.estadoCartaAtacada = EstadoCarta.DESTRUIDA;
           rsAtaque.estadoBarrera = EstadoCarta.DESTRUIDA;
+          if(jugadorAtacado.sinBarreras()){
+            rsAtaque.sinBarreras = true
+            rsAtaque.nombreJugadorDerrotado = jugadorAtacado.nombre
+            rsAtaque.nombreJugadorVictorioso = this.nombre
+          }
         } else if (rsAtaque.veredicto === VeredictoAtaque.PIERDE_ATACANTE) {
           //pierde atacante
           this.zonaBatalla[idCartaAtacante].quitarCarta();
