@@ -1,4 +1,5 @@
-//VIsual Aplicación y juego
+
+import "./components/jugador-panel"
 
 const pantallas = document.querySelectorAll("body > div");
 const bienvenida = document.getElementById("bienvenida");
@@ -41,8 +42,7 @@ let idCartaManoSeleccionada;
 let idCartaZBSeleccionada;
 let idCartaZBEnemigaSeleccionada;
 let cartaManoSeleccionada;
-let cartaZBSeleccionana;
-let cartaZBEnemigaSeleccionada;
+let cartaZBSeleccionada;
 let stepAccion = "STAND BY";
 let posicionBatalla;
 let message;
@@ -94,20 +94,15 @@ function mostrarCartaCogida(objData){
 
 function mostrarEnTurno(objData) {
   if (encuentraError(objData)) return;
-  jugEnemigo.classList.remove("jugEnTurno");
-  jugEnemigo.classList.remove("jugEnEspera");
-  jugYo.classList.remove("jugEnTurno");
-  jugYo.classList.remove("jugEnEspera");
   if (objData.payload.jugador.enTurno) {
-    jugYo.classList.add("jugEnTurno");
-    jugEnemigo.classList.add("jugEnEspera");
-    jugYo.children[1].children[0].innerText=objData.payload.jugador.nDeck
-    jugEnemigo.children[1].children[0].innerText=objData.payload.jugadorEnemigo.nDeck
-  } else {
-    jugYo.classList.add("jugEnEspera");
-    jugEnemigo.classList.add("jugEnTurno");
-    jugYo.children[1].children[0].innerText=objData.payload.jugadorEnemigo.nDeck
-    jugEnemigo.children[1].children[0].innerText=objData.payload.jugador.nDeck
+    jugYo.setAttribute("en-turno","true")
+    jugYo.querySelector("span[slot='nCartas']").textContent=objData.payload.jugador.nDeck
+    jugEnemigo.querySelector("span[slot='nCartas']").textContent=objData.payload.jugadorEnemigo.nDeck
+  }
+  else{
+    jugEnemigo.setAttribute("en-turno","true")
+    jugYo.querySelector("span[slot='nCartas']").textContent=objData.payload.jugadorEnemigo.nDeck
+    jugEnemigo.querySelector("span[slot='nCartas']").textContent=objData.payload.jugador.nDeck
   }
 }
 
@@ -116,8 +111,8 @@ function inicializarJuego(objData) {
   for (let i = 0; i < objData.payload.jugador.nBarrera; i++) {
     barreraYo.children[i].classList.add("barrera");
   }
-  jugYo.children[0].innerText = objData.payload.jugador.nombre;
-  jugYo.children[1].children[0].innerText = objData.payload.jugador.nDeck;
+  jugYo.querySelector("span[slot='jugadorNombre']").textContent =objData.payload.jugador.nombre;
+  jugYo.querySelector("span[slot='nCartas']").textContent = objData.payload.jugador.nDeck;
   objData.payload.jugador.mano.forEach((c, i) => {
     manoYo.children[i].classList.add("mano");
     manoYo.children[i].children[0].innerText = c.valor;
@@ -140,9 +135,8 @@ function inicializarJuego(objData) {
   for (let i = 0; i < objData.payload.jugadorEnemigo.nMano; i++) {
     manoEnemigo.children[i].classList.add("oculto");
   }
-
-  jugEnemigo.children[0].innerText = objData.payload.jugadorEnemigo.nombre;
-  jugEnemigo.children[1].children[0].innerText = objData.payload.jugadorEnemigo.nDeck;
+  jugEnemigo.querySelector("span[slot='jugadorNombre']").textContent =objData.payload.jugadorEnemigo.nombre;
+  jugEnemigo.querySelector("span[slot='nCartas']").textContent = objData.payload.jugadorEnemigo.nDeck;
   btnTerminarTurno.classList.remove("ocultar")
   btnFinDeJuego.classList.add("ocultar");
   info.classList.remove("mostrarResultado")
@@ -167,7 +161,7 @@ function unirASala(objData) {
   for (let i = 0; i < objData.payload.jugadores.length; i++) {
     h2[i].innerText = objData.payload.jugadores[i];
   }
-  objData.payload.iniciar === true ? (btnIniciarJuego.disabled = false) : "";
+  objData.payload.iniciar === true ? btnIniciarJuego.disabled = false : "";
   cambiarPantalla(sala);
 }
 

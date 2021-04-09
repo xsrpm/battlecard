@@ -79,7 +79,7 @@
     background-color: rgb(174, 235, 235);
   }
   
-  #juego .jugadores{
+  .jugadores{
     display: grid;
     grid-area: jugadores;
     justify-self:right;
@@ -88,34 +88,10 @@
     word-wrap: break-word;
   }
   
-  .jugadores > div{
-    width:15vw
-  }
-  
-  #juego .jugEnTurno{
-    opacity:1;
-    border-style: double;
-  }
-  .jugEnTurno p{
-    visibility: visible;
-    color:red;
-    font-weight: bolder;
-  }
-  #juego .jugEnEspera{
-    opacity:0.5;
-  }
-  .jugEnEspera p{
-    visibility: hidden
-  }
-  
-  
-  #juego .botonera{
+  .botonera{
     display: grid;
     grid-area: botonera;
     justify-self:left;
-  }
-  
-  .botonera{
     width:15vw;
     text-align: center;
   }

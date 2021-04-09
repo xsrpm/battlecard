@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es-ES">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
@@ -13,7 +13,7 @@
     <link href="css/style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <div id="bienvenida" class="mostrarPantalla">
+    <div id="bienvenida" >
       <h1>BattleCard</h1>
       <button id="btnJugar">Jugar</button>
     </div>
@@ -32,18 +32,16 @@
       </div>
       <button id="btnIniciarJuego" disabled>Iniciar Juego</button>
     </div>
-    <div id="juego" class="">
+    <div id="juego" class="mostrarPantalla" >
       <div class="jugadores">
-        <div id="jugEnemigo" class="">
-          <h2>Jugador Enemigo</h2>
-          <h3>Deck: <span>20</span></h3>
-          <p>En turno</p>
-        </div>
-        <div id="jugYo" class="jugEnEspera">
-          <h2>Jugador (Yo)</h2>
-          <h3>Deck: <span>14</span></h3>
-          <p>En Turno</p>
-        </div>
+        <jugador-panel id="jugEnemigo" en-turno="false">
+          <span slot="jugadorNombre">JugadorEnemigo</span>
+          <span slot="nCartas">20</span>
+        </jugador-panel>
+        <jugador-panel id="jugYo" en-turno=false>
+          <span slot="jugadorNombre">Jugador (Yo)</span>
+          <span slot="nCartas">20</span>
+        </jugador-panel> 
       </div>
       <div class="tablero">
         <div class="enemigo">
@@ -156,6 +154,6 @@
       <button id="btnVolverInicio" class="btnVolverInicio">Volver a la pantalla inicial</button>
     </div>
     
-    <script src="../src/script.js"></script>
+    <script type="module" src="../src/script.js"></script>
   </body>
 </html>

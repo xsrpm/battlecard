@@ -14,6 +14,7 @@
 |Termino de juego al quedarse sin barreras al atacar cartas en zona de batalla | OK |
 |Atacar Barreras | OK |
 |Termino de juego al quedarse sin barreras al atacar directamente | OK |
+|Refactoring|Pendiente|
 |Boton cancelar, volver una acción atras (colocar carta) | Pendiente |
 |Quitar el boton Terminar Turno cuando no es su turno. | Pendiente |
 |Luego de jugar un tiempo, se queda bloqueadas celdas donde no se puede colocar cartas a pesar que se ven vacias y no se puede atacar cartas a celdas que aparece con alguna carta | Pendiente |
