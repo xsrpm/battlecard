@@ -164,7 +164,7 @@ function unirASala(objData) {
   for (let i = 0; i < objData.payload.jugadores.length; i++) {
     h2[i].innerText = objData.payload.jugadores[i];
   }
-  objData.payload.iniciar === true ? btnIniciarJuego.disabled = false : "";
+  objData.payload.iniciar === true ? btnIniciarJuego.disabled = false : btnIniciarJuego.disabled = true;
   cambiarPantalla(sala);
 }
 
