@@ -13,7 +13,7 @@
     <link href="css/style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <div id="bienvenida" >
+    <div id="bienvenida" class="mostrarPantalla" >
       <h1>BattleCard</h1>
       <button id="btnJugar">Jugar</button>
     </div>
@@ -32,7 +32,7 @@
       </div>
       <button id="btnIniciarJuego" disabled>Iniciar Juego</button>
     </div>
-    <div id="juego" class="mostrarPantalla" >
+    <div id="juego">
       <div class="jugadores">
         <jugador-panel id="jugEnemigo" en-turno="false">
           <span slot="jugadorNombre">JugadorEnemigo</span>
@@ -96,35 +96,18 @@
             <div class="slot" data-id="4"><span></span><span></span></div>
           </div>
         </div>
-        <div class="resultadoAtaque">
-          <div class="atacante">
-            <span>Atacante</span>
-          </div>
-          <div id="cartaAtacante" class="slot mano">
-            <span></span><span></span>
-          </div>
-          <div class="bonusAtacante">
-            <span></span>
-          </div>
-          <div class="vs">
-            <span>VS</span>
-          </div>
-          <div class="resultado">
-            <span>Gana Atacante</span>
-          </div>
-          <div class="detalleResultado">
-            <span>Destruye Barrera</span>
-          </div>
-          <div class="atacado">
-            <span>Atacado</span>
-          </div>
-          <div id="cartaAtacada" class="slot mano">
-            <span></span><span></span>
-          </div>
-          <div class="bonusAtacado">
-            <span></span>
-          </div>
-        </div>
+        <resultado-ataque mostrar="false">
+          <span slot="nombre-atacante">Atacante</span>
+          <span slot="valor-atacante"></span>
+          <span slot="elemento-atacante"></span>
+          <span slot="bonus-atacante"></span>
+          <span slot="resultado">Gana Atacante</span>
+          <span slot="detalle-resultado">Destruye Barrera</span>
+          <span slot="nombre-atacado">Atacado</span>
+          <span slot="valor-atacado"></span>
+          <span slot="elemento-atacado"></span>
+          <span slot="bonus-atacado"></span>
+        </resultado-ataque>
         <div class="info">
           <h1></h1>
         </div>

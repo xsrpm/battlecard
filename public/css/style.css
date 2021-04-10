@@ -109,64 +109,6 @@
     background-color: green;
   }
   
-  
-  .resultadoAtaque{
-    display: grid;
-    grid-template-columns:1fr 1fr 1fr;
-    grid-template-rows: 0.5fr 1fr 0.5fr;
-    grid-template-areas: 
-                        "atacante vs atacado"
-                        "cartaAtacante resultado cartaAtacada"
-                        "bonusAtacante detalleResultado bonusAtacado";
-    position: absolute;
-    background-color: tomato;
-    text-align: center;
-    justify-items: center;
-    align-items: center;
-    visibility: hidden;
-  }
-  
-  .resultadoAtaque.mostrarResultado{
-    visibility:visible
-  }
-  
-  .resultadoAtaque .atacante{
-    display: grid;
-    grid-area: atacante;
-  }
-  .resultadoAtaque .cartaAtacante{
-    display: grid;
-    grid-area: cartaAtacante;
-  }
-  .resultadoAtaque .bonusAtacante{
-    display: grid;
-    grid-area: bonusAtacante;
-  }
-  .resultadoAtaque .vs{
-    display: grid;
-    grid-area: vs;
-  }
-  .resultadoAtaque .resultado{
-    display: grid;
-    grid-area: resultado;
-  }
-  .resultadoAtaque .detalleResultado{
-    display: grid;
-    grid-area: detalleResultado;
-  }
-  .resultadoAtaque .atacado{
-    display: grid;
-    grid-area: atacado;
-  }
-  .resultadoAtaque .cartaAtacada{
-    display: grid;
-    grid-area: cartaAtacada;
-  }
-  .resultadoAtaque .bonusAtacado{
-    display: grid;
-    grid-area: bonusAtacado;
-  }
-  
   .info{
     display: grid;
     text-align: center;
@@ -181,7 +123,6 @@
   .info.mostrarResultado{
     visibility: visible;
   }
-  
   
   #juego .tablero{
     grid-area: tablero;

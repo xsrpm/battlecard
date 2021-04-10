@@ -1,5 +1,6 @@
 
-import "./components/jugador-panel"
+import "./components/jugador-panel";
+import "./components/resultado-ataque";
 
 const pantallas = document.querySelectorAll("body > div");
 const bienvenida = document.getElementById("bienvenida");
@@ -23,7 +24,7 @@ const btnCancelar = document.getElementById("btnCancelar");
 const btnTerminarTurno = document.getElementById("btnTerminarTurno");
 const btnFinDeJuego = document.getElementById("btnFinDeJuego")
 const btnVolverInicio = document.getElementById("btnVolverInicio")
-const resultadoAtaque = document.querySelector(".resultadoAtaque");
+const resultadoAtaque = document.querySelector("resultado-ataque")
 const info = document.querySelector(".info")
 const manoEnemigo = document.getElementById("manoEnemigo");
 const manoYo = document.getElementById("manoYo");
@@ -96,11 +97,13 @@ function mostrarEnTurno(objData) {
   if (encuentraError(objData)) return;
   if (objData.payload.jugador.enTurno) {
     jugYo.setAttribute("en-turno","true")
+    jugEnemigo.setAttribute("en-turno","false")
     jugYo.querySelector("span[slot='nCartas']").textContent=objData.payload.jugador.nDeck
     jugEnemigo.querySelector("span[slot='nCartas']").textContent=objData.payload.jugadorEnemigo.nDeck
   }
   else{
     jugEnemigo.setAttribute("en-turno","true")
+    jugYo.setAttribute("en-turno","false")
     jugYo.querySelector("span[slot='nCartas']").textContent=objData.payload.jugadorEnemigo.nDeck
     jugEnemigo.querySelector("span[slot='nCartas']").textContent=objData.payload.jugador.nDeck
   }
@@ -140,7 +143,7 @@ function inicializarJuego(objData) {
   btnTerminarTurno.classList.remove("ocultar")
   btnFinDeJuego.classList.add("ocultar");
   info.classList.remove("mostrarResultado")
-  resultadoAtaque.classList.remove("mostrarResultado")
+  resultadoAtaque.setAttribute("mostrar","false")
   mostrarEnTurno(objData);
   ocultarBotones();
   sinBarrerasFlag = false
@@ -247,24 +250,15 @@ function atacarCarta(objData) {
     bonifCartaAtacada
   } = objData.payload;
   if (estadoAtaque === "Ataque realizado") {
-    resultadoAtaque.querySelector("#cartaAtacante").children[0].innerText =
-      cartaAtacante.valor;
-    resultadoAtaque.querySelector(
-      "#cartaAtacante"
-    ).children[1].innerText = String.fromCharCode(cartaAtacante.elemento);
-    resultadoAtaque.querySelector("#cartaAtacada").children[0].innerText =
-      cartaAtacada.valor;
-    resultadoAtaque.querySelector(
-      "#cartaAtacada"
-    ).children[1].innerText = String.fromCharCode(cartaAtacada.elemento);
-    resultadoAtaque.querySelector(
-      ".resultado"
-    ).children[0].innerText = veredicto;
-    resultadoAtaque.querySelector(".bonusAtacante").children[0].innerText = "+"+bonifCartaAtacante
-    resultadoAtaque.querySelector(".bonusAtacado").children[0].innerText ="+"+bonifCartaAtacada
+    resultadoAtaque.querySelector("span[slot='valor-atacante']").textContent = cartaAtacada.valor;
+    resultadoAtaque.querySelector("span[slot='elemento-atacante']").textContent = String.fromCharCode(cartaAtacante.elemento);
+    resultadoAtaque.querySelector("span[slot='valor-atacado']").textContent = cartaAtacada.valor;
+    resultadoAtaque.querySelector("span[slot='elemento-atacado']").textContent = String.fromCharCode(cartaAtacada.elemento);
+    resultadoAtaque.querySelector("span[slot='resultado']").textContent = veredicto;
+    resultadoAtaque.querySelector("span[slot='bonus-atacante']").textContent = "+"+bonifCartaAtacante
+    resultadoAtaque.querySelector("span[slot='bonus-atacado']").textContent ="+"+bonifCartaAtacada
     if (estadoBarrera === "DESTRUIDA") {
-      resultadoAtaque.querySelector(".detalleResultado").children[0].innerText =
-        "Barrera destruida";
+      resultadoAtaque.querySelector("span[slot='detalle-resultado']").textContent = "Barrera destruida";
       barreraEnemiga.children[idBarreraEliminada].classList.remove("barrera");
       sinBarrerasFlag = objData.payload.sinBarreras
       if(sinBarrerasFlag){
@@ -275,40 +269,27 @@ function atacarCarta(objData) {
         btnTerminarTurno.classList.add("ocultar")
       }
     } else
-      resultadoAtaque.querySelector(".detalleResultado").children[0].innerText =
-        "";
+      resultadoAtaque.querySelector("span[slot='detalle-resultado']").textContent = "";
     if (estadoCartaAtacante === "DESTRUIDA") {
       zonaBatallaYo.children[idCartaZBSeleccionada].children[0].innerText = "";
       zonaBatallaYo.children[idCartaZBSeleccionada].children[1].innerText = "";
       zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove("ataque");
     }
     if (estadoCartaAtacada === "DESTRUIDA") {
-      zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].children[0].innerText =
-        "";
-      zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].children[1].innerText =
-        "";
-      zonaBatallaEnemiga.children[
-        idCartaZBEnemigaSeleccionada
-      ].classList.remove("ataque", "defensa", "oculto");
+      zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].children[0].innerText = "";
+      zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].children[1].innerText ="";
+      zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].classList.remove("ataque", "defensa", "oculto");
     } else {
       if (
-        zonaBatallaEnemiga.children[
-          idCartaZBEnemigaSeleccionada
-        ].classList.contains("oculto")
+        zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].classList.contains("oculto")
       ) {
-        zonaBatallaEnemiga.children[
-          idCartaZBEnemigaSeleccionada
-        ].classList.remove("oculto");
-        zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].classList.add(
-          "defensa"
-        );
+        zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].classList.remove("oculto");
+        zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].classList.add("defensa");
       }
     }
-    zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove(
-      "seleccionado"
-    );
+    zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove("seleccionado");
     mensajeBotones.innerText=""
-    resultadoAtaque.classList.add("mostrarResultado");
+    resultadoAtaque.setAttribute("mostrar","true");
   }
 }
 function atacanTuCarta(objData){
@@ -328,24 +309,15 @@ function atacanTuCarta(objData){
     bonifCartaAtacada
   } = objData.payload;
   if (estadoAtaque === "Ataque realizado") {
-    resultadoAtaque.querySelector("#cartaAtacante").children[0].innerText =
-      cartaAtacante.valor;
-    resultadoAtaque.querySelector(
-      "#cartaAtacante"
-    ).children[1].innerText = String.fromCharCode(cartaAtacante.elemento);
-    resultadoAtaque.querySelector("#cartaAtacada").children[0].innerText =
-      cartaAtacada.valor;
-    resultadoAtaque.querySelector(
-      "#cartaAtacada"
-    ).children[1].innerText = String.fromCharCode(cartaAtacada.elemento);
-    resultadoAtaque.querySelector(
-      ".resultado"
-    ).children[0].innerText = veredicto;
-    resultadoAtaque.querySelector(".bonusAtacante").children[0].innerText = "+"+bonifCartaAtacante
-    resultadoAtaque.querySelector(".bonusAtacado").children[0].innerText ="+"+bonifCartaAtacada
+    resultadoAtaque.querySelector("span[slot='valor-atacante']").textContent = cartaAtacada.valor;
+    resultadoAtaque.querySelector("span[slot='elemento-atacante']").textContent = String.fromCharCode(cartaAtacante.elemento);
+    resultadoAtaque.querySelector("span[slot='valor-atacado']").textContent = cartaAtacada.valor;
+    resultadoAtaque.querySelector("span[slot='elemento-atacado']").textContent = String.fromCharCode(cartaAtacada.elemento);
+    resultadoAtaque.querySelector("span[slot='resultado']").textContent = veredicto;
+    resultadoAtaque.querySelector("span[slot='bonus-atacante']").textContent = "+"+bonifCartaAtacante
+    resultadoAtaque.querySelector("span[slot='bonus-atacado']").textContent ="+"+bonifCartaAtacada
     if (estadoBarrera === "DESTRUIDA") {
-      resultadoAtaque.querySelector(".detalleResultado").children[0].innerText =
-        "Barrera destruida";
+      resultadoAtaque.querySelector("span[slot='detalle-resultado']").textContent = "Barrera destruida";
       barreraYo.children[idBarreraEliminada].classList.remove("barrera");
       sinBarrerasFlag = objData.payload.sinBarreras
       if(sinBarrerasFlag){
@@ -356,8 +328,7 @@ function atacanTuCarta(objData){
         btnTerminarTurno.classList.add("ocultar")
       }
     } else
-      resultadoAtaque.querySelector(".detalleResultado").children[0].innerText =
-        "";
+      resultadoAtaque.querySelector("span[slot='detalle-resultado']").textContent = "";
     if (estadoCartaAtacante === "DESTRUIDA") {
       zonaBatallaEnemiga.children[idCartaAtacante].children[0].innerText = "";
       zonaBatallaEnemiga.children[idCartaAtacante].children[1].innerText = "";
@@ -372,7 +343,7 @@ function atacanTuCarta(objData){
         idCartaAtacada
       ].classList.remove("ataque", "defensa", "oculto");
     }
-    resultadoAtaque.classList.add("mostrarResultado");
+    resultadoAtaque.setAttribute("mostrar","true");
   }
 }
 
@@ -527,11 +498,12 @@ btnIniciarJuego.addEventListener("click", () => {
   sendMessage(message);
 });
 resultadoAtaque.addEventListener("click", () => {
-  resultadoAtaque.classList.remove("mostrarResultado");
+  resultadoAtaque.setAttribute("mostrar","false")
   if(sinBarrerasFlag){
     info.classList.add("mostrarResultado")
   }
 });
+
 btnColocarEnAtaque.addEventListener("click", () => {
   if (stepAccion === "SELECCIONAR MANO") {
     stepAccion = "COLOCAR CARTA";
@@ -769,12 +741,6 @@ zonaBatallaEnemiga.addEventListener("click", function (e) {
   }
 });
 
-resultadoAtaque.addEventListener("click", function (e) {
-  resultadoAtaque.classList.remove("mostrarResultado");
-  if(sinBarrerasFlag){
-    info.classList.add("mostrarResultado")
-  }
-});
 info.addEventListener("click",function(e){
   info.classList.remove("mostrarResultado")
 })
