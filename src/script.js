@@ -579,10 +579,7 @@ manoYo.addEventListener("click", function (e) {
     sendMessage();
   }
 });
-/**
- *
- * @param {*} data
- */
+
 
 function colocarSeleccionarZonaBatalla() {
   if (encuentraError()) return;
@@ -595,7 +592,7 @@ function colocarSeleccionarZonaBatalla() {
     let manoElementoCarta =
       manoYo.children[idCartaManoSeleccionada].children[1].innerText;
     let ULTIMA_CARTA = 4;
-    data.payload.mano.forEach((c, i) => {
+    message.payload.mano.forEach((c, i) => {
       manoYo.children[i].children[0].innerText = c.valor;
       manoYo.children[i].children[1].innerText = String.fromCharCode(
         c.elemento
