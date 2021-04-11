@@ -50,12 +50,6 @@ function cerrarSala(){
  */
 function unirASala(ws, message) {
   let nombreJugador = message.payload.nombreJugador;
-  if (typeof nombreJugador === "undefined") {
-    message.error = "nombreJugador is undefined";
-    sendMessage(ws, message);
-    ws.close();
-    return;
-  }
   const resp = juego.unirASala(nombreJugador);
   if (resp === "Sala llena, no pueden entrar jugadores") {
     message.error = resp;
@@ -65,8 +59,7 @@ function unirASala(ws, message) {
   }
   ws.jugador = resp;
   message.payload = {
-    jugadores: juego.obtenerNombreJugadores(),
-    iniciar: false,
+    jugadores: juego.obtenerNombreJugadores()
   };
   juego.obtenerEstadoSala() === "SALA CERRADA"
     ? message.payload.iniciar = true
