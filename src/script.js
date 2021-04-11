@@ -438,7 +438,7 @@ btnUnirASala.addEventListener("click", () => {
   };
   socket.onmessage = (e) => {
     console.log("received:");
-    let message = JSON.parse(e.data);
+    message = JSON.parse(e.data);
     console.log(message);
     switch (message.event) {
       case "Unir a sala":
@@ -584,7 +584,7 @@ manoYo.addEventListener("click", function (e) {
  * @param {*} data
  */
 
-function colocarSeleccionarZonaBatalla(message) {
+function colocarSeleccionarZonaBatalla() {
   if (encuentraError()) return;
   if (message.payload.respuesta === "Carta colocada") {
     ocultarBotones();
