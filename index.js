@@ -28,7 +28,7 @@ function sendMessage(ws, message) {
 function sendMessageToOthers(wsorigen, message) {
   wss.clients.forEach((ws) => {
     if (ws.readyState === WebSocket.OPEN) {
-      if (!(ws === wsorigen)) {
+      if (ws !== wsorigen) {
         sendMessage(ws, message);
       }
     }

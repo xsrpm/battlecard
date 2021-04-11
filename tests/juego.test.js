@@ -2,10 +2,6 @@
 const Juego = require("../clases/juego");
 const { Jugador } = require("../clases/jugador");
 
-describe("Juego clase", () => {
-  test("should ", () => {});
-});
-
 describe("Juego objeto", () => {
   /**
    * @type {Juego}
@@ -130,9 +126,6 @@ describe("Juego objeto", () => {
         "Barrera destruida"
       );
     });
-    test('jugador sin barreras', () => {
-      
-    });
   });
 
   describe("atacar Carta", () => {
@@ -147,9 +140,6 @@ describe("Juego objeto", () => {
       expect(juego.atacarCarta(0,0).estadoAtaque).toBe(
         "Ataque realizado"
       );
-    });
-    test('jugador sin barreras', () => {
-      
     });
   });
 
