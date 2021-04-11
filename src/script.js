@@ -170,7 +170,7 @@ function unirASala() {
 
 function iniciarJuego() {
   if (encuentraError()) return;
-  inicializarJuego(message);
+  inicializarJuego();
   cambiarPantalla(juego);
 }
 
@@ -412,7 +412,7 @@ function cambiarPosicion(){
 }
 
 function cambiaPosicionEnemigo(){
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   let {respuesta,posBatalla,idZonaBatalla,carta} = message.payload
   if(respuesta === "Posicion cambiada"){
     zonaBatallaEnemiga.children[idZonaBatalla].children[0].innerText = carta.valor
