@@ -135,12 +135,9 @@ class Jugador {
       return { resultado: ResultadoCojerUnaCarta.MANO_LLENA };
     const carta = this.deck.pop();
     if (carta === undefined) {
-      //console.log("Fin del Juego!!!");
-      //console.log(this.nombre + " se quedó sin cartas en el mazo!!");
       return { resultado: ResultadoCojerUnaCarta.DECK_VACIO };
     } else {
       this.mano.push(carta);
-      //console.log("Se coge una carta del deck a la mano");
       return { resultado: ResultadoCojerUnaCarta.EXITO, carta: carta };
     }
   }
@@ -188,7 +185,6 @@ class Jugador {
       this.zonaBatalla[idPosZB].agregarCarta(carta, posBatalla);
       this.nCartasEnZB++;
       respuesta = "Carta colocada";
-      //console.log("Carta Colocada!!");
     }
     return respuesta;
   }
@@ -387,6 +383,7 @@ class Jugador {
         calculoVAtacante += bonifCartaAtacante;
         break;
       case Carta.Elemento.ESPADA + " " + Carta.Elemento.CORAZON:
+      case Carta.Elemento.CORAZON + " " + Carta.Elemento.TREBOL:
         bonifCartaAtacante = 2;
         calculoVAtacante += bonifCartaAtacante;
         break;
@@ -395,24 +392,14 @@ class Jugador {
         calculoVAtacada += bonifCartaAtacante;
         break;
       case Carta.Elemento.COCO + " " + Carta.Elemento.TREBOL:
-        bonifCartaAtacante = 4;
-        calculoVAtacante += bonifCartaAtacante;
-        break;
-      case Carta.Elemento.TREBOL + " " + Carta.Elemento.COCO:
-        bonifCartaAtacada = 4;
-        calculoVAtacada += bonifCartaAtacada;
-        break;
       case Carta.Elemento.ESPADA + " " + Carta.Elemento.COCO:
         bonifCartaAtacante = 4;
         calculoVAtacante += bonifCartaAtacante;
         break;
+      case Carta.Elemento.TREBOL + " " + Carta.Elemento.COCO:
       case Carta.Elemento.COCO + " " + Carta.Elemento.ESPADA:
         bonifCartaAtacada = 4;
         calculoVAtacada += bonifCartaAtacada;
-        break;
-      case Carta.Elemento.CORAZON + " " + Carta.Elemento.TREBOL:
-        bonifCartaAtacante = 2;
-        calculoVAtacante += bonifCartaAtacante;
         break;
       case Carta.Elemento.TREBOL + " " + Carta.Elemento.CORAZON:
         bonifCartaAtacada = 2;
@@ -551,7 +538,6 @@ class Jugador {
       rsAtaque.estadoAtaque = "Ataque realizado";
 
       this.ataqueRealizado(idCartaAtacante);
-      //console.log(ataqueCartaRealizadoDialogo(rsAtaque));
     }
     return rsAtaque;
   }
@@ -607,7 +593,6 @@ class Jugador {
         CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE;
       this.nCambiosPosicionesDisponibles--;
       respuesta = "Posicion cambiada";
-      //logger.debug("Cambio de Posición Realizado!!\n");
     }
     return {
       respuesta: respuesta,
@@ -617,8 +602,6 @@ class Jugador {
   }
 
   repartirCartas() {
-    //console.log("repartirCartas");
-    //console.log("Jugador: " + this.nombre);
     let cartasElegidas = [];
     let n, m, cartasRepartidas;
 
@@ -642,19 +625,15 @@ class Jugador {
         let c = new Carta(m + 1, Object.values(Carta.Elemento)[n]);
         if (this.barrera.length < Jugador.MAX_BARRERA_CARDS) {
           this.barrera.push(c);
-          //console.log("Barrera: " + c.valor + " " + c.elemento);
         } else if (this.mano.length < Jugador.MAX_MANO_CARDS) {
           this.mano.push(c);
-          //console.log("Mano: " + c.valor + " " + c.elemento);
         } else {
           this.deck.push(c);
-          //console.log("Deck: " + c.valor + " " + c.elemento);
         }
       }
     }
   }
 
-  //TODO: separar funcionalidades zonabatalla en una clase zonabatalla que herede de la clase Array
 }
 
 module.exports = { Jugador };
