@@ -66,9 +66,9 @@ function cambiarPantalla(pantalla) {
 
 //Visual Juego
 
-function mostrarCartaCogida(objData){
-  if (encuentraError(objData)) return;
-  let {carta, resultado} = objData.payload
+function mostrarCartaCogida(){
+  if (encuentraError(message)) return;
+  let {carta, resultado} = message.payload
   if(resultado === "EXITO"){
     if(typeof carta !== "undefined"){
       manoYo.children[4].children[0].innerText = carta.valor
@@ -80,8 +80,8 @@ function mostrarCartaCogida(objData){
     }
   }
   else if(resultado === "DECK VACIO"){
-    nombreJugadorDerrotado = objData.payload.nombreJugadorDerrotado
-    nombreJugadorVictorioso = objData.payload.nombreJugadorVictorioso
+    nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
+    nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
     info.children[0].innerText=`${nombreJugadorDerrotado} se ha quedado sin cartas para tomar del deck`
     btnFinDeJuego.classList.remove("ocultar")
     btnTerminarTurno.classList.add("ocultar")
@@ -93,30 +93,30 @@ function mostrarCartaCogida(objData){
 }
 
 
-function mostrarEnTurno(objData) {
-  if (encuentraError(objData)) return;
-  if (objData.payload.jugador.enTurno) {
+function mostrarEnTurno() {
+  if (encuentraError(message)) return;
+  if (message.payload.jugador.enTurno) {
     jugYo.setAttribute("en-turno","true")
     jugEnemigo.setAttribute("en-turno","false")
-    jugYo.querySelector("span[slot='nCartas']").textContent=objData.payload.jugador.nDeck
-    jugEnemigo.querySelector("span[slot='nCartas']").textContent=objData.payload.jugadorEnemigo.nDeck
+    jugYo.querySelector("span[slot='nCartas']").textContent=message.payload.jugador.nDeck
+    jugEnemigo.querySelector("span[slot='nCartas']").textContent=message.payload.jugadorEnemigo.nDeck
   }
   else{
     jugEnemigo.setAttribute("en-turno","true")
     jugYo.setAttribute("en-turno","false")
-    jugYo.querySelector("span[slot='nCartas']").textContent=objData.payload.jugadorEnemigo.nDeck
-    jugEnemigo.querySelector("span[slot='nCartas']").textContent=objData.payload.jugador.nDeck
+    jugYo.querySelector("span[slot='nCartas']").textContent=message.payload.jugadorEnemigo.nDeck
+    jugEnemigo.querySelector("span[slot='nCartas']").textContent=message.payload.jugador.nDeck
   }
 }
 
-function inicializarJuego(objData) {
-  if (encuentraError(objData)) return;
-  for (let i = 0; i < objData.payload.jugador.nBarrera; i++) {
+function inicializarJuego() {
+  if (encuentraError(message)) return;
+  for (let i = 0; i < message.payload.jugador.nBarrera; i++) {
     barreraYo.children[i].classList.add("barrera");
   }
-  jugYo.querySelector("span[slot='jugadorNombre']").textContent =objData.payload.jugador.nombre;
-  jugYo.querySelector("span[slot='nCartas']").textContent = objData.payload.jugador.nDeck;
-  objData.payload.jugador.mano.forEach((c, i) => {
+  jugYo.querySelector("span[slot='jugadorNombre']").textContent =message.payload.jugador.nombre;
+  jugYo.querySelector("span[slot='nCartas']").textContent = message.payload.jugador.nDeck;
+  message.payload.jugador.mano.forEach((c, i) => {
     manoYo.children[i].classList.add("mano");
     manoYo.children[i].children[0].innerText = c.valor;
     manoYo.children[i].children[1].innerText = String.fromCharCode(c.elemento);
@@ -132,45 +132,45 @@ function inicializarJuego(objData) {
     el.children[0].innerText=""
     el.children[1].innerText=""
   })
-  for (let i = 0; i < objData.payload.jugadorEnemigo.nBarrera; i++) {
+  for (let i = 0; i < message.payload.jugadorEnemigo.nBarrera; i++) {
     barreraEnemiga.children[i].classList.add("barrera");
   }
-  for (let i = 0; i < objData.payload.jugadorEnemigo.nMano; i++) {
+  for (let i = 0; i < message.payload.jugadorEnemigo.nMano; i++) {
     manoEnemigo.children[i].classList.add("oculto");
   }
-  jugEnemigo.querySelector("span[slot='jugadorNombre']").textContent =objData.payload.jugadorEnemigo.nombre;
-  jugEnemigo.querySelector("span[slot='nCartas']").textContent = objData.payload.jugadorEnemigo.nDeck;
+  jugEnemigo.querySelector("span[slot='jugadorNombre']").textContent =message.payload.jugadorEnemigo.nombre;
+  jugEnemigo.querySelector("span[slot='nCartas']").textContent = message.payload.jugadorEnemigo.nDeck;
   btnTerminarTurno.classList.remove("ocultar")
   btnFinDeJuego.classList.add("ocultar");
   info.classList.remove("mostrarResultado")
   resultadoAtaque.setAttribute("mostrar","false")
-  mostrarEnTurno(objData);
+  mostrarEnTurno(message);
   ocultarBotones();
   sinBarrerasFlag = false
 }
 
-function encuentraError(objData) {
-  if (typeof objData.error !== "undefined") {
-    console.log(objData.error);
-    alert(objData.error);
+function encuentraError() {
+  if (typeof message.error !== "undefined") {
+    console.log(message.error);
+    alert(message.error);
     return true;
   }
 }
 
-function unirASala(objData) {
+function unirASala() {
   h2[0].innerText ="(Sin Jugador)"
   h2[1].innerText ="(Sin Jugador)"
-  if (encuentraError(objData)) return;
-  for (let i = 0; i < objData.payload.jugadores.length; i++) {
-    h2[i].innerText = objData.payload.jugadores[i];
+  if (encuentraError(message)) return;
+  for (let i = 0; i < message.payload.jugadores.length; i++) {
+    h2[i].innerText = message.payload.jugadores[i];
   }
-  objData.payload.iniciar === true ? btnIniciarJuego.disabled = false : btnIniciarJuego.disabled = true;
+  message.payload.iniciar === true ? btnIniciarJuego.disabled = false : btnIniciarJuego.disabled = true;
   cambiarPantalla(sala);
 }
 
-function iniciarJuego(objData) {
-  if (encuentraError(objData)) return;
-  inicializarJuego(objData);
+function iniciarJuego() {
+  if (encuentraError(message)) return;
+  inicializarJuego(message);
   cambiarPantalla(juego);
 }
 
@@ -182,7 +182,7 @@ function ocultarBotones() {
   btnCambiarPosicion.classList.add("ocultar");
 }
 
-function sendMessage(message) {
+function sendMessage() {
   socket.send(JSON.stringify(message));
   console.log("sended:");
   console.log(message);
@@ -211,16 +211,16 @@ function quitarSeleccionEnCartas(){
   );
 }
 
-function terminarTurno(objData) {
-  if (encuentraError(objData)) return;
-  mostrarEnTurno(objData);
+function terminarTurno() {
+  if (encuentraError(message)) return;
+  mostrarEnTurno(message);
   quitarSeleccionEnCartas()
-  mostrarCartaCogida(objData);
+  mostrarCartaCogida(message);
 }
 
-function seleccionarMano(objData) {
-  if (encuentraError(objData)) return;
-  let { existeCarta, puedeColocarCarta } = objData.payload;
+function seleccionarMano() {
+  if (encuentraError(message)) return;
+  let { existeCarta, puedeColocarCarta } = message.payload;
   if (existeCarta) {
     ocultarBotones();
     quitarSeleccionEnCartas()
@@ -235,8 +235,8 @@ function seleccionarMano(objData) {
   }
 }
 
-function atacarCarta(objData) {
-  if (encuentraError(objData)) return;
+function atacarCarta() {
+  if (encuentraError(message)) return;
   let {
     estadoAtaque,
     cartaAtacante,
@@ -248,7 +248,7 @@ function atacarCarta(objData) {
     idBarreraEliminada,
     bonifCartaAtacante,
     bonifCartaAtacada
-  } = objData.payload;
+  } = message.payload;
   if (estadoAtaque === "Ataque realizado") {
     resultadoAtaque.querySelector("span[slot='valor-atacante']").textContent = cartaAtacada.valor;
     resultadoAtaque.querySelector("span[slot='elemento-atacante']").textContent = String.fromCharCode(cartaAtacante.elemento);
@@ -260,16 +260,16 @@ function atacarCarta(objData) {
     if (estadoBarrera === "DESTRUIDA") {
       resultadoAtaque.querySelector("span[slot='detalle-resultado']").textContent = "Barrera destruida";
       barreraEnemiga.children[idBarreraEliminada].classList.remove("barrera");
-      sinBarrerasFlag = objData.payload.sinBarreras
+      sinBarrerasFlag = message.payload.sinBarreras
       if(sinBarrerasFlag){
-        nombreJugadorDerrotado = objData.payload.nombreJugadorDerrotado
-        nombreJugadorVictorioso = objData.payload.nombreJugadorVictorioso
+        nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
+        nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
         info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin barreras`
         btnFinDeJuego.classList.remove("ocultar")
         btnTerminarTurno.classList.add("ocultar")
       }
     } else
-      resultadoAtaque.querySelector("span[slot='detalle-resultado']").textContent = "";
+        resultadoAtaque.querySelector("span[slot='detalle-resultado']").textContent = "";
     if (estadoCartaAtacante === "DESTRUIDA") {
       zonaBatallaYo.children[idCartaZBSeleccionada].children[0].innerText = "";
       zonaBatallaYo.children[idCartaZBSeleccionada].children[1].innerText = "";
@@ -292,8 +292,8 @@ function atacarCarta(objData) {
     resultadoAtaque.setAttribute("mostrar","true");
   }
 }
-function atacanTuCarta(objData){
-  if (encuentraError(objData)) return;
+function atacanTuCarta(){
+  if (encuentraError(message)) return;
   let {
     estadoAtaque,
     cartaAtacante,
@@ -307,7 +307,7 @@ function atacanTuCarta(objData){
     idCartaAtacada,
     bonifCartaAtacante,
     bonifCartaAtacada
-  } = objData.payload;
+  } = message.payload;
   if (estadoAtaque === "Ataque realizado") {
     resultadoAtaque.querySelector("span[slot='valor-atacante']").textContent = cartaAtacada.valor;
     resultadoAtaque.querySelector("span[slot='elemento-atacante']").textContent = String.fromCharCode(cartaAtacante.elemento);
@@ -319,16 +319,16 @@ function atacanTuCarta(objData){
     if (estadoBarrera === "DESTRUIDA") {
       resultadoAtaque.querySelector("span[slot='detalle-resultado']").textContent = "Barrera destruida";
       barreraYo.children[idBarreraEliminada].classList.remove("barrera");
-      sinBarrerasFlag = objData.payload.sinBarreras
+      sinBarrerasFlag = message.payload.sinBarreras
       if(sinBarrerasFlag){
-        nombreJugadorDerrotado = objData.payload.nombreJugadorDerrotado
-        nombreJugadorVictorioso = objData.payload.nombreJugadorVictorioso
+        nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
+        nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
         info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin barreras`
         btnFinDeJuego.classList.remove("ocultar")
         btnTerminarTurno.classList.add("ocultar")
       }
     } else
-      resultadoAtaque.querySelector("span[slot='detalle-resultado']").textContent = "";
+        resultadoAtaque.querySelector("span[slot='detalle-resultado']").textContent = "";
     if (estadoCartaAtacante === "DESTRUIDA") {
       zonaBatallaEnemiga.children[idCartaAtacante].children[0].innerText = "";
       zonaBatallaEnemiga.children[idCartaAtacante].children[1].innerText = "";
@@ -347,18 +347,18 @@ function atacanTuCarta(objData){
   }
 }
 
-function atacarBarrera(objData){
-  if (encuentraError(objData)) return;
+function atacarBarrera(){
+  if (encuentraError(message)) return;
   let {
     resultado,
     idBarreraEliminada
-  } = objData.payload;
+  } = message.payload;
   if(resultado === "Barrera destruida"){
     barreraEnemiga.children[idBarreraEliminada].classList.remove("barrera");
-      sinBarrerasFlag = objData.payload.sinBarreras
+      sinBarrerasFlag = message.payload.sinBarreras
       if(sinBarrerasFlag){
-        nombreJugadorDerrotado = objData.payload.nombreJugadorDerrotado
-        nombreJugadorVictorioso = objData.payload.nombreJugadorVictorioso
+        nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
+        nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
         info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin barreras`
         btnFinDeJuego.classList.remove("ocultar")
         btnTerminarTurno.classList.add("ocultar")
@@ -375,18 +375,18 @@ function atacarBarrera(objData){
   }
 }
 
-function atacanTuBarrera(objData){
-  if (encuentraError(objData)) return;
+function atacanTuBarrera(){
+  if (encuentraError(message)) return;
   let {
     resultado,
     idBarreraEliminada
-  } = objData.payload;
+  } = message.payload;
   if(resultado === "Barrera destruida"){
     barreraYo.children[idBarreraEliminada].classList.remove("barrera");
-      sinBarrerasFlag = objData.payload.sinBarreras
+      sinBarrerasFlag = message.payload.sinBarreras
       if(sinBarrerasFlag){
-        nombreJugadorDerrotado = objData.payload.nombreJugadorDerrotado
-        nombreJugadorVictorioso = objData.payload.nombreJugadorVictorioso
+        nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
+        nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
         info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin barreras`
         btnFinDeJuego.classList.remove("ocultar")
         btnTerminarTurno.classList.add("ocultar")
@@ -398,9 +398,9 @@ function atacanTuBarrera(objData){
   }
 }
 
-function cambiarPosicion(objData){
-  if (encuentraError(objData)) return;
-  let {respuesta,posBatalla} = objData.payload
+function cambiarPosicion(){
+  if (encuentraError(message)) return;
+  let {respuesta,posBatalla} = message.payload
   if(stepAccion !== "CAMBIAR POSICION")
     return
   if(respuesta === "Posicion cambiada"){
@@ -411,9 +411,9 @@ function cambiarPosicion(objData){
   }
 }
 
-function cambiaPosicionEnemigo(objData){
-  if (encuentraError(objData)) return;
-  let {respuesta,posBatalla,idZonaBatalla,carta} = objData.payload
+function cambiaPosicionEnemigo(){
+  if (encuentraError(message)) return;
+  let {respuesta,posBatalla,idZonaBatalla,carta} = message.payload
   if(respuesta === "Posicion cambiada"){
     zonaBatallaEnemiga.children[idZonaBatalla].children[0].innerText = carta.valor
     zonaBatallaEnemiga.children[idZonaBatalla].children[1].innerText = String.fromCharCode(carta.elemento)
@@ -438,47 +438,47 @@ btnUnirASala.addEventListener("click", () => {
   };
   socket.onmessage = (e) => {
     console.log("received:");
-    let objData = JSON.parse(e.data);
-    console.log(objData);
-    switch (objData.event) {
+    let message = JSON.parse(e.data);
+    console.log(message);
+    switch (message.event) {
       case "Unir a sala":
-        unirASala(objData);
+        unirASala(message);
         break;
       case "Iniciar juego":
-        iniciarJuego(objData);
+        iniciarJuego(message);
         break;
       case "Colocar Carta":
-        colocarSeleccionarZonaBatalla(objData);
+        colocarSeleccionarZonaBatalla(message);
         break;
       case "Coloca Carta Otro Jugador":
-        colocaCartaOtroJugador(objData);
+        colocaCartaOtroJugador(message);
         break;
       case "Seleccionar Zona Batalla":
-        standBySeleccionarZonaBatalla(objData);
+        standBySeleccionarZonaBatalla(message);
         break;
       case "Seleccionar Mano":
-        seleccionarMano(objData);
+        seleccionarMano(message);
         break;
       case "Atacar Carta":
-        atacarCarta(objData);
+        atacarCarta(message);
         break;
       case "Atacar Barrera":
-        atacarBarrera(objData);
+        atacarBarrera(message);
         break;
       case "Atacan Tu Carta":
-        atacanTuCarta(objData);
+        atacanTuCarta(message);
         break;
       case "Atacan Tu Barrera":
-        atacanTuBarrera(objData);
+        atacanTuBarrera(message);
         break;
       case "Cambiar Posicion":
-        cambiarPosicion(objData);
+        cambiarPosicion(message);
         break;
       case "Cambia Posicion Enemigo":
-        cambiaPosicionEnemigo(objData);
+        cambiaPosicionEnemigo(message);
         break;
       case "Terminar Turno":
-        terminarTurno(objData);
+        terminarTurno(message);
         break;
     }
   };
@@ -618,7 +618,7 @@ function colocarSeleccionarZonaBatalla(data) {
   }
 }
 
-function colocaCartaOtroJugador(message) {
+function colocaCartaOtroJugador() {
   if (encuentraError(message)) return;
   let { posicion, idZonaBatalla, idMano, respuesta, carta } = message.payload;
   if (respuesta === "Carta colocada") {
@@ -642,7 +642,7 @@ function colocaCartaOtroJugador(message) {
   }
 }
 
-function standBySeleccionarZonaBatalla(message) {
+function standBySeleccionarZonaBatalla() {
   if (encuentraError(message)) return;
   let {
     existeCarta,
