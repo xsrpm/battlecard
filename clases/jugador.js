@@ -118,8 +118,9 @@ class Jugador {
         ) {
           celdaBatalla.dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE;
           this.nAtaquesDisponibles++;
-        } else
+        } else{
           celdaBatalla.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE;
+        }
         celdaBatalla.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_DISPONIBLE;
         this.nCambiosPosicionesDisponibles++;
       }
@@ -269,23 +270,23 @@ class Jugador {
    * @param {number} idCartaAtacante
    */
   accionAtacarBarrera(jugadorAtacado, idCartaAtacante) {
-    let respuesta = {}
+    let respuesta = {};
     respuesta.resultado = this.posibilidadAtacarBarrera(
       jugadorAtacado,
       idCartaAtacante
     );
     if (respuesta.resultado === "Posible") {
-      respuesta.idBarreraEliminada = jugadorAtacado.barrera.length - 1
+      respuesta.idBarreraEliminada = jugadorAtacado.barrera.length - 1;
       jugadorAtacado.barrera.pop();
       this.ataqueRealizado(idCartaAtacante);
-      if(jugadorAtacado.sinBarreras()){
-        respuesta.sinBarreras = true
-        respuesta.nombreJugadorDerrotado = jugadorAtacado.nombre
-        respuesta.nombreJugadorVictorioso = this.nombre
+      if (jugadorAtacado.sinBarreras()) {
+        respuesta.sinBarreras = true;
+        respuesta.nombreJugadorDerrotado = jugadorAtacado.nombre;
+        respuesta.nombreJugadorVictorioso = this.nombre;
       }
-      respuesta.resultado = "Barrera destruida"
+      respuesta.resultado = "Barrera destruida";
     }
-    return respuesta
+    return respuesta;
   }
   /**
    * @param {Jugador} jugadorAtacado
@@ -430,7 +431,6 @@ class Jugador {
    *
    * @param {Carta} cartaAtacante
    * @param {Carta} cartaAtacada
-   * @returns {VeredictoAtaque} VeredictoAtaque
    */
   obtenerVeredictoAtaque(calculoVAtacante, calculoVAtacada) {
     if (calculoVAtacante > calculoVAtacada) {
@@ -470,8 +470,8 @@ class Jugador {
         rsAtaque.cartaAtacada
       );
 
-      rsAtaque.bonifCartaAtacada = bonifCartaAtacada
-      rsAtaque.bonifCartaAtacante = bonifCartaAtacante
+      rsAtaque.bonifCartaAtacada = bonifCartaAtacada;
+      rsAtaque.bonifCartaAtacante = bonifCartaAtacante;
 
       rsAtaque.veredicto = this.obtenerVeredictoAtaque(
         calculoVAtacante,
@@ -501,10 +501,10 @@ class Jugador {
           rsAtaque.estadoCartaAtacante = EstadoCarta.ACTIVA;
           rsAtaque.estadoCartaAtacada = EstadoCarta.DESTRUIDA;
           rsAtaque.estadoBarrera = EstadoCarta.DESTRUIDA;
-          if(jugadorAtacado.sinBarreras()){
-            rsAtaque.sinBarreras = true
-            rsAtaque.nombreJugadorDerrotado = jugadorAtacado.nombre
-            rsAtaque.nombreJugadorVictorioso = this.nombre
+          if (jugadorAtacado.sinBarreras()) {
+            rsAtaque.sinBarreras = true;
+            rsAtaque.nombreJugadorDerrotado = jugadorAtacado.nombre;
+            rsAtaque.nombreJugadorVictorioso = this.nombre;
           }
         } else if (rsAtaque.veredicto === VeredictoAtaque.PIERDE_ATACANTE) {
           //pierde atacante
@@ -609,7 +609,11 @@ class Jugador {
       respuesta = "Posicion cambiada";
       //logger.debug("Cambio de Posición Realizado!!\n");
     }
-    return {respuesta: respuesta, posBatalla: this.zonaBatalla[idCarta].posBatalla, carta: this.zonaBatalla[idCarta].carta};
+    return {
+      respuesta: respuesta,
+      posBatalla: this.zonaBatalla[idCarta].posBatalla,
+      carta: this.zonaBatalla[idCarta].carta,
+    };
   }
 
   repartirCartas() {

@@ -71,7 +71,6 @@ class Juego {
       this.jugadorActual.setEnTurno(true);
       this.jugadorAnterior.setEnTurno(false);
       this.jugadorActual.iniciarTurno();
-      //this.jugador[1].iniciarTurno();
       this.pantalla = Pantalla.EN_JUEGO;
       return "JUEGO INICIADO";
     } 
@@ -147,11 +146,10 @@ class Juego {
  * @returns String
  */
   colocarCartaEnAtaque(idPosZB, idCartaMano) {
-    let respuesta = this.jugadorActual.accionColocarCartaEnAtaque(
+    return this.jugadorActual.accionColocarCartaEnAtaque(
       idPosZB,
       idCartaMano
     );
-    return respuesta;
   }
 /**
  * 
@@ -159,29 +157,26 @@ class Juego {
  * @param {number} idCartaMano 
  */
   colocarCartaEnDefensa(idPosZB, idCartaMano) {
-    let respuesta = this.jugadorActual.accionColocarCartaEnDefensa(
+    return this.jugadorActual.accionColocarCartaEnDefensa(
       idPosZB,
       idCartaMano
     );
-    return respuesta;
   }
 
   opcionesSeleccionarZonaBatalla(idZonaBatalla){
-    let respuesta = {
+    return {
       existeCarta: this.jugadorActual.existeCartaEnCeldaBatalla(idZonaBatalla),
       puedeAtacarCarta:this.jugadorActual.puedeAtacarCartaDesdeId(this.jugadorAnterior,idZonaBatalla),
       puedeAtacarBarrera:this.jugadorActual.posibilidadAtacarBarrera(this.jugadorAnterior,idZonaBatalla),
       puedeCambiarPosicion:this.jugadorActual.posibilidadCambiarPosicionBatallaEnCarta(idZonaBatalla)
     }
-    return respuesta;
   }
 
   opcionesSeleccionarMano(idMano){
-    let respuesta = {
+    return {
       existeCarta: this.jugadorActual.existeCartaEnMano(idMano),
       puedeColocarCarta:this.jugadorActual.puedeColocarCartaDesdeId(idMano)
     } 
-    return respuesta
   }
 
   /**

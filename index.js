@@ -69,8 +69,8 @@ function unirASala(ws, message) {
     iniciar: false,
   };
   juego.obtenerEstadoSala() === "SALA CERRADA"
-    ? (message.payload.iniciar = true)
-    : "";
+    ? message.payload.iniciar = true
+    : message.payload.iniciar = false;
   sendMessage(ws, message);
   sendMessageToOthers(ws, message);
 }
