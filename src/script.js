@@ -67,7 +67,7 @@ function cambiarPantalla(pantalla) {
 //Visual Juego
 
 function mostrarCartaCogida(){
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   let {carta, resultado} = message.payload
   if(resultado === "EXITO"){
     if(typeof carta !== "undefined"){
@@ -94,7 +94,7 @@ function mostrarCartaCogida(){
 
 
 function mostrarEnTurno() {
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   if (message.payload.jugador.enTurno) {
     jugYo.setAttribute("en-turno","true")
     jugEnemigo.setAttribute("en-turno","false")
@@ -110,7 +110,7 @@ function mostrarEnTurno() {
 }
 
 function inicializarJuego() {
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   for (let i = 0; i < message.payload.jugador.nBarrera; i++) {
     barreraYo.children[i].classList.add("barrera");
   }
@@ -144,7 +144,7 @@ function inicializarJuego() {
   btnFinDeJuego.classList.add("ocultar");
   info.classList.remove("mostrarResultado")
   resultadoAtaque.setAttribute("mostrar","false")
-  mostrarEnTurno(message);
+  mostrarEnTurno();
   ocultarBotones();
   sinBarrerasFlag = false
 }
@@ -160,7 +160,7 @@ function encuentraError() {
 function unirASala() {
   h2[0].innerText ="(Sin Jugador)"
   h2[1].innerText ="(Sin Jugador)"
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   for (let i = 0; i < message.payload.jugadores.length; i++) {
     h2[i].innerText = message.payload.jugadores[i];
   }
@@ -169,7 +169,7 @@ function unirASala() {
 }
 
 function iniciarJuego() {
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   inicializarJuego(message);
   cambiarPantalla(juego);
 }
@@ -212,14 +212,14 @@ function quitarSeleccionEnCartas(){
 }
 
 function terminarTurno() {
-  if (encuentraError(message)) return;
-  mostrarEnTurno(message);
+  if (encuentraError()) return;
+  mostrarEnTurno();
   quitarSeleccionEnCartas()
-  mostrarCartaCogida(message);
+  mostrarCartaCogida();
 }
 
 function seleccionarMano() {
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   let { existeCarta, puedeColocarCarta } = message.payload;
   if (existeCarta) {
     ocultarBotones();
@@ -236,7 +236,7 @@ function seleccionarMano() {
 }
 
 function atacarCarta() {
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   let {
     estadoAtaque,
     cartaAtacante,
@@ -293,7 +293,7 @@ function atacarCarta() {
   }
 }
 function atacanTuCarta(){
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   let {
     estadoAtaque,
     cartaAtacante,
@@ -348,7 +348,7 @@ function atacanTuCarta(){
 }
 
 function atacarBarrera(){
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   let {
     resultado,
     idBarreraEliminada
@@ -376,7 +376,7 @@ function atacarBarrera(){
 }
 
 function atacanTuBarrera(){
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   let {
     resultado,
     idBarreraEliminada
@@ -399,7 +399,7 @@ function atacanTuBarrera(){
 }
 
 function cambiarPosicion(){
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   let {respuesta,posBatalla} = message.payload
   if(stepAccion !== "CAMBIAR POSICION")
     return
@@ -434,7 +434,7 @@ btnUnirASala.addEventListener("click", () => {
       event: "Unir a sala",
       payload: { nombreJugador: inNombreJugador.value },
     };
-    sendMessage(message);
+    sendMessage();
   };
   socket.onmessage = (e) => {
     console.log("received:");
@@ -442,43 +442,43 @@ btnUnirASala.addEventListener("click", () => {
     console.log(message);
     switch (message.event) {
       case "Unir a sala":
-        unirASala(message);
+        unirASala();
         break;
       case "Iniciar juego":
-        iniciarJuego(message);
+        iniciarJuego();
         break;
       case "Colocar Carta":
-        colocarSeleccionarZonaBatalla(message);
+        colocarSeleccionarZonaBatalla();
         break;
       case "Coloca Carta Otro Jugador":
-        colocaCartaOtroJugador(message);
+        colocaCartaOtroJugador();
         break;
       case "Seleccionar Zona Batalla":
-        standBySeleccionarZonaBatalla(message);
+        standBySeleccionarZonaBatalla();
         break;
       case "Seleccionar Mano":
-        seleccionarMano(message);
+        seleccionarMano();
         break;
       case "Atacar Carta":
-        atacarCarta(message);
+        atacarCarta();
         break;
       case "Atacar Barrera":
-        atacarBarrera(message);
+        atacarBarrera();
         break;
       case "Atacan Tu Carta":
-        atacanTuCarta(message);
+        atacanTuCarta();
         break;
       case "Atacan Tu Barrera":
-        atacanTuBarrera(message);
+        atacanTuBarrera();
         break;
       case "Cambiar Posicion":
-        cambiarPosicion(message);
+        cambiarPosicion();
         break;
       case "Cambia Posicion Enemigo":
-        cambiaPosicionEnemigo(message);
+        cambiaPosicionEnemigo();
         break;
       case "Terminar Turno":
-        terminarTurno(message);
+        terminarTurno();
         break;
     }
   };
@@ -495,7 +495,7 @@ btnUnirASala.addEventListener("click", () => {
 });
 btnIniciarJuego.addEventListener("click", () => {
   message = { event: "Iniciar juego" };
-  sendMessage(message);
+  sendMessage();
 });
 resultadoAtaque.addEventListener("click", () => {
   resultadoAtaque.setAttribute("mostrar","false")
@@ -537,7 +537,7 @@ btnAtacarBarrera.addEventListener("click",()=>{
       idZonaBatalla: idCartaZBSeleccionada
     }
   }
-  sendMessage(message)
+  sendMessage()
 })
 btnCambiarPosicion.addEventListener("click", () => {
   if (stepAccion === "SELECCIONAR ZONA BATALLA") {
@@ -550,12 +550,12 @@ btnCambiarPosicion.addEventListener("click", () => {
         idZonaBatalla: idCartaZBSeleccionada
       }
     }
-    sendMessage(message)
+    sendMessage()
   }
 });
 btnTerminarTurno.addEventListener("click", () => {
   message = { event: "Terminar Turno" };
-  sendMessage(message);
+  sendMessage();
 });
 
 manoYo.addEventListener("click", function (e) {
@@ -576,7 +576,7 @@ manoYo.addEventListener("click", function (e) {
         idMano: idCartaManoSeleccionada,
       },
     };
-    sendMessage(message);
+    sendMessage();
   }
 });
 /**
@@ -584,9 +584,9 @@ manoYo.addEventListener("click", function (e) {
  * @param {*} data
  */
 
-function colocarSeleccionarZonaBatalla(data) {
-  if (encuentraError(data)) return;
-  if (data.payload.respuesta === "Carta colocada") {
+function colocarSeleccionarZonaBatalla(message) {
+  if (encuentraError()) return;
+  if (message.payload.respuesta === "Carta colocada") {
     ocultarBotones();
     quitarSeleccionEnCartas()
     mensajeBotones.innerText = "";
@@ -619,7 +619,7 @@ function colocarSeleccionarZonaBatalla(data) {
 }
 
 function colocaCartaOtroJugador() {
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   let { posicion, idZonaBatalla, idMano, respuesta, carta } = message.payload;
   if (respuesta === "Carta colocada") {
     ocultarBotones();
@@ -643,7 +643,7 @@ function colocaCartaOtroJugador() {
 }
 
 function standBySeleccionarZonaBatalla() {
-  if (encuentraError(message)) return;
+  if (encuentraError()) return;
   let {
     existeCarta,
     puedeAtacarCarta,
@@ -694,7 +694,7 @@ zonaBatallaYo.addEventListener("click", function (e) {
           idMano: idCartaManoSeleccionada,
         },
       };
-      sendMessage(message);
+      sendMessage();
     }
   } else {
     if (
@@ -712,7 +712,7 @@ zonaBatallaYo.addEventListener("click", function (e) {
           idZonaBatalla: idCartaZBSeleccionada,
         },
       };
-      sendMessage(message);
+      sendMessage();
     }
   }
 });
@@ -736,7 +736,7 @@ zonaBatallaEnemiga.addEventListener("click", function (e) {
           idZonaBatallaEnemiga: idCartaZBEnemigaSeleccionada,
         },
       };
-      sendMessage(message);
+      sendMessage();
     }
   }
 });
