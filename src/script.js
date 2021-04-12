@@ -35,6 +35,18 @@ const barreraEnemiga = document.getElementById("barreraEnemiga");
 const jugYo = document.getElementById("jugYo");
 const jugEnemigo = document.getElementById("jugEnemigo");
 
+const Estado = {
+  NO_HAY_CARTA: "No hay carta",
+  POS_BATALLA_ATAQUE: "Posición de batalla: Ataque",
+  POS_BATALLA_DEF_ARRIBA: "Posición de batalla: Defensa cara arriba",
+  POS_BATALLA_DEF_ABAJO: "Posición de batalla: Defensa cara abajo",
+  YA_ESTA_EN_POSICION_SOLICITADA: "Ya se está en la posición solicitada",
+  ATAQUE_NO_DISPONIBLE: "Atacar carta no disponible",
+  ATAQUE_DISPONIBLE: "Atacar carta disponible",
+  CAMBIO_POS_NO_DISPONIBLE: "Cambio de posición no disponible",
+  CAMBIO_POS_DISPONIBLE: "Cambio de posición disponible",
+};
+
 console.log(location.host);
 let url = `${process.env.WEBSOCKET_URL}/ws`;
 
@@ -508,7 +520,7 @@ btnColocarEnAtaque.addEventListener("click", () => {
   if (stepAccion === "SELECCIONAR MANO") {
     stepAccion = "COLOCAR CARTA";
     console.log("stepAccion: " + stepAccion);
-    posicionBatalla = "ATAQUE";
+    posicionBatalla = Estado.POS_BATALLA_ATAQUE
     console.log("posicionBatalla: " + posicionBatalla);
     colocarCarta();
   }
@@ -517,7 +529,7 @@ btnColocarEnDefensa.addEventListener("click", () => {
   if (stepAccion === "SELECCIONAR MANO") {
     stepAccion = "COLOCAR CARTA";
     console.log("stepAccion: " + stepAccion);
-    posicionBatalla = "DEFENSA";
+    posicionBatalla = Estado.POS_BATALLA_DEF_ABAJO
     console.log("posicionBatalla: " + posicionBatalla);
     colocarCarta();
   }
@@ -583,7 +595,7 @@ manoYo.addEventListener("click", function (e) {
 
 function colocarSeleccionarZonaBatalla() {
   if (encuentraError()) return;
-  if (message.payload.respuesta === "Carta colocada") {
+  if (message.payload.resultado === "Carta colocada") {
     ocultarBotones();
     quitarSeleccionEnCartas()
     mensajeBotones.innerText = "";
@@ -607,8 +619,7 @@ function colocarSeleccionarZonaBatalla() {
     zonaBatallaYo.children[
       idCartaZBSeleccionada
     ].children[1].innerText = manoElementoCarta;
-    if (posicionBatalla === "ATAQUE")
-      zonaBatallaYo.children[idCartaZBSeleccionada].classList.add("ataque");
+    if (posicionBatalla === Estado.POS_BATALLA_ATAQUE) zonaBatallaYo.children[idCartaZBSeleccionada].classList.add("ataque");
     else zonaBatallaYo.children[idCartaZBSeleccionada].classList.add("defensa");
     stepAccion = "STAND BY";
     console.log("CARTA COLOCADA");
@@ -617,11 +628,11 @@ function colocarSeleccionarZonaBatalla() {
 
 function colocaCartaOtroJugador() {
   if (encuentraError()) return;
-  let { posicion, idZonaBatalla, idMano, respuesta, carta } = message.payload;
-  if (respuesta === "Carta colocada") {
+  let { posicion, idZonaBatalla, idMano, resultado, carta } = message.payload;
+  if (resultado === "Carta colocada") {
     ocultarBotones();
     manoEnemigo.children[idMano].classList.remove("oculto");
-    if (posicion === "ATAQUE") {
+    if (posicion === Estado.POS_BATALLA_ATAQUE) {
       zonaBatallaEnemiga.children[idZonaBatalla].classList.add("ataque");
       let manoNumeroCarta = carta.valor;
       let manoElementoCarta = String.fromCharCode(carta.elemento);
