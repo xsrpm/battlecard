@@ -145,21 +145,11 @@ class Juego {
  * @param {number} idCartaMano 
  * @returns String
  */
-  colocarCartaEnAtaque(idPosZB, idCartaMano) {
-    return this.jugadorActual.accionColocarCartaEnAtaque(
+  colocarCarta(idPosZB, idCartaMano,posCarta) {
+    return this.jugadorActual.accionColocarCarta(
       idPosZB,
-      idCartaMano
-    );
-  }
-/**
- * 
- * @param {number} idPosZB 
- * @param {number} idCartaMano 
- */
-  colocarCartaEnDefensa(idPosZB, idCartaMano) {
-    return this.jugadorActual.accionColocarCartaEnDefensa(
-      idPosZB,
-      idCartaMano
+      idCartaMano,
+      posCarta
     );
   }
 

@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const {Jugador,ResultadoAtaque} = require("../clases/jugador");
+const {Jugador} = require("../clases/jugador");
 const Carta = require("../clases/carta");
 const CeldaBatalla = require("../clases/celdaBatalla/");
 

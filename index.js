@@ -164,16 +164,8 @@ function iniciarJuego(ws, message) {
 
 function colocarCarta(ws, message) {
   if (accionAutorizada(ws, message) === false) return;
-  let posicion, idZonaBatalla, idMano, resp;
-  ({ posicion, idZonaBatalla, idMano } = message.payload);
-  if (posicion === "ATAQUE") {
-    resp = juego.colocarCartaEnAtaque(idZonaBatalla, idMano);
-    message.payload.carta =
-      juego.jugadorActual.zonaBatalla[idZonaBatalla].carta;
-  } else {
-    resp = juego.colocarCartaEnDefensa(idZonaBatalla, idMano);
-  }
-  message.payload.respuesta = resp;
+  let { posicion, idZonaBatalla, idMano } = message.payload;
+  message.payload = juego.colocarCarta(idZonaBatalla, idMano, posicion)
   message.payload.mano = juego.jugadorActual.mano
   sendMessage(ws, message);
   delete message.payload.mano
@@ -236,6 +228,11 @@ function seleccionarMano(ws,message){
   sendMessage(ws,message)
 }
 
+/**
+ *
+ * @param {WebSocket} ws
+ * @param {*} message
+ */
 function atacarCarta(ws,message){
   if (accionAutorizada(ws, message) === false) return;
   let {idZonaBatalla,idZonaBatallaEnemiga} = message.payload
@@ -254,8 +251,7 @@ function atacarCarta(ws,message){
 function atacarBarrera(ws,message){
   if (accionAutorizada(ws, message) === false) return;
   let {idZonaBatalla} = message.payload
-  let res = juego.atacarBarrera(idZonaBatalla)
-  message.payload = res
+  message.payload = juego.atacarBarrera(idZonaBatalla)
   sendMessage(ws,message)
   message.event ="Atacan Tu Barrera"
   sendMessageToOthers(ws,message)
@@ -267,8 +263,7 @@ function atacarBarrera(ws,message){
 function cambiarPosicion(ws,message){
   if (accionAutorizada(ws, message) === false) return;
   let { idZonaBatalla} = message.payload
-  let res = juego.cambiarPosicionBatalla(idZonaBatalla)
-  message.payload = res
+  message.payload = juego.cambiarPosicionBatalla(idZonaBatalla)
   sendMessage(ws,message)
   message.event ="Cambia Posicion Enemigo"
   message.payload.idZonaBatalla = idZonaBatalla

@@ -172,46 +172,22 @@ class Jugador {
    * @returns {string}
    */
   accionColocarCarta(idPosZB, idCartaMano, posBatalla) {
-    let respuesta = this.posibilidadColocarCartaEnPosicion(
+    let rpta = {}
+    rpta.resultado = this.posibilidadColocarCartaEnPosicion(
       idPosZB,
       idCartaMano
     );
-    if (respuesta === "Posible") {
-      let carta = this.mano[idCartaMano];
+    if (rpta.resultado === "Posible") {
+      rpta.carta = this.mano[idCartaMano];
       this.mano.splice(idCartaMano, 1);
       this.puedeColocarCartaEnZB = false;
       if (posBatalla === CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
         this.nAtaquesDisponibles++;
-      this.zonaBatalla[idPosZB].agregarCarta(carta, posBatalla);
+      this.zonaBatalla[idPosZB].agregarCarta(rpta.carta, posBatalla);
       this.nCartasEnZB++;
-      respuesta = "Carta colocada";
+      rpta.resultado = "Carta colocada";
     }
-    return respuesta;
-  }
-
-  /**
-   *
-   * @param {number} idPosZB
-   * @param {number} idCartaMano
-   */
-  accionColocarCartaEnAtaque(idPosZB, idCartaMano) {
-    return this.accionColocarCarta(
-      idPosZB,
-      idCartaMano,
-      CeldaBatalla.Estado.POS_BATALLA_ATAQUE
-    );
-  }
-  /**
-   *
-   * @param {number} idPosZB
-   * @param {number} idCartaMano
-   */
-  accionColocarCartaEnDefensa(idPosZB, idCartaMano) {
-    return this.accionColocarCarta(
-      idPosZB,
-      idCartaMano,
-      CeldaBatalla.Estado.POS_BATALLA_DEF_ABAJO
-    );
+    return rpta;
   }
 
   /**
