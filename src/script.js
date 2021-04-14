@@ -105,7 +105,7 @@ function mostrarCartaCogida(){
 }
 
 
-function mostrarEnTurno() {
+function mostrarJugadorEnTurno() {
   if (encuentraError()) return;
   if (message.payload.jugador.enTurno) {
     jugYo.setAttribute("en-turno","true")
@@ -156,8 +156,6 @@ function inicializarJuego() {
   btnFinDeJuego.classList.add("ocultar");
   info.classList.remove("mostrarResultado")
   resultadoAtaque.setAttribute("mostrar","false")
-  mostrarEnTurno();
-  ocultarBotones();
   sinBarrerasFlag = false
 }
 
@@ -183,15 +181,29 @@ function unirASala() {
 function iniciarJuego() {
   if (encuentraError()) return;
   inicializarJuego();
+  mostrarJugadorEnTurno();
+  habilitacionBotonera();
   cambiarPantalla(juego);
 }
 
-function ocultarBotones() {
-  btnColocarEnAtaque.classList.add("ocultar");
-  btnColocarEnDefensa.classList.add("ocultar");
-  btnAtacarCarta.classList.add("ocultar");
-  btnAtacarBarrera.classList.add("ocultar");
-  btnCambiarPosicion.classList.add("ocultar");
+function habilitacionBotonera() {
+  if(jugYo.getAttribute("en-turno") === "true"){
+      btnColocarEnAtaque.classList.add("ocultar");
+      btnColocarEnDefensa.classList.add("ocultar");
+      btnAtacarCarta.classList.add("ocultar");
+      btnAtacarBarrera.classList.add("ocultar");
+      btnCambiarPosicion.classList.add("ocultar");
+      btnTerminarTurno.classList.remove("ocultar");
+  }
+  else{
+    btnColocarEnAtaque.classList.add("ocultar");
+    btnColocarEnDefensa.classList.add("ocultar");
+    btnAtacarCarta.classList.add("ocultar");
+    btnAtacarBarrera.classList.add("ocultar");
+    btnCambiarPosicion.classList.add("ocultar");
+    btnTerminarTurno.classList.add("ocultar");
+  }
+  mensajeBotones.textContent=""
 }
 
 function sendMessage() {
@@ -201,7 +213,7 @@ function sendMessage() {
 }
 
 function colocarCarta() {
-  ocultarBotones();
+  habilitacionBotonera();
   mensajeBotones.innerText = "Seleccione ubicación en zona de batalla...";
   for (let celda of zonaBatallaYo.children) {
     if (
@@ -225,7 +237,8 @@ function quitarSeleccionEnCartas(){
 
 function terminarTurno() {
   if (encuentraError()) return;
-  mostrarEnTurno();
+  mostrarJugadorEnTurno();
+  habilitacionBotonera()
   quitarSeleccionEnCartas()
   mostrarCartaCogida();
 }
@@ -234,7 +247,7 @@ function seleccionarMano() {
   if (encuentraError()) return;
   let { existeCarta, puedeColocarCarta } = message.payload;
   if (existeCarta) {
-    ocultarBotones();
+    habilitacionBotonera();
     quitarSeleccionEnCartas()
     cartaManoSeleccionada.classList.add("seleccionado");
     if (puedeColocarCarta === "Posible") {
@@ -381,8 +394,7 @@ function atacarBarrera(){
       zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove(
         "seleccionado"
       );
-      mensajeBotones.innerText=""
-      ocultarBotones();
+      habilitacionBotonera();
       info.classList.add("mostrarResultado")
   }
 }
@@ -538,7 +550,7 @@ btnAtacarCarta.addEventListener("click", () => {
   if (stepAccion === "SELECCIONAR ZONA BATALLA") {
     console.log("ATACAR CARTA");
     stepAccion = "ATACAR CARTA SELECCIONAR ZB ENEMIGA";
-    ocultarBotones();
+    habilitacionBotonera();
     mensajeBotones.innerText = "Seleccione objetivo...";
   }
 });
@@ -555,7 +567,7 @@ btnCambiarPosicion.addEventListener("click", () => {
   if (stepAccion === "SELECCIONAR ZONA BATALLA") {
     console.log("CAMBIAR POSICION");
     stepAccion = "CAMBIAR POSICION";
-    ocultarBotones();
+    habilitacionBotonera();
     message = {
       event: "Cambiar Posicion",
       payload: {
@@ -571,6 +583,7 @@ btnTerminarTurno.addEventListener("click", () => {
 });
 
 manoYo.addEventListener("click", function (e) {
+  if(jugYo.getAttribute("en-turno") === "false") return;
   /**
    * @type {HTMLElement}
    */
@@ -596,9 +609,8 @@ manoYo.addEventListener("click", function (e) {
 function colocarSeleccionarZonaBatalla() {
   if (encuentraError()) return;
   if (message.payload.resultado === "Carta colocada") {
-    ocultarBotones();
+    habilitacionBotonera();
     quitarSeleccionEnCartas()
-    mensajeBotones.innerText = "";
     let manoNumeroCarta =
       manoYo.children[idCartaManoSeleccionada].children[0].innerText;
     let manoElementoCarta =
@@ -630,7 +642,7 @@ function colocaCartaOtroJugador() {
   if (encuentraError()) return;
   let { posicion, idZonaBatalla, idMano, resultado, carta } = message.payload;
   if (resultado === "Carta colocada") {
-    ocultarBotones();
+    habilitacionBotonera();
     manoEnemigo.children[idMano].classList.remove("oculto");
     if (posicion === Estado.POS_BATALLA_ATAQUE) {
       zonaBatallaEnemiga.children[idZonaBatalla].classList.add("ataque");
@@ -659,7 +671,7 @@ function standBySeleccionarZonaBatalla() {
     puedeCambiarPosicion,
   } = message.payload;
   if (existeCarta) {
-    ocultarBotones();
+    habilitacionBotonera();
     quitarSeleccionEnCartas()
     cartaZBSeleccionada.classList.add("seleccionado");
     if (
@@ -679,6 +691,7 @@ function standBySeleccionarZonaBatalla() {
 }
 
 zonaBatallaYo.addEventListener("click", function (e) {
+  if(jugYo.getAttribute("en-turno") === "false") return;
   let target = e.target;
   if (target.id === this.id) return;
   while (!target.classList.contains("slot")) target = target.parentElement;
