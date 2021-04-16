@@ -142,9 +142,17 @@ class Jugador {
     }
   }
 
-  puedeColocarCartaDesdeId(idCartaMano) {
+  puedeColocarCartas(){
     if (!this.puedeColocarCartaEnZB)
-      return "No está habilitado para colocar carta";
+      return "Ya colocó cartas en este turno";
+    if(this.nCartasEnZB === Jugador.MAX_ZONA_BATALLA_CARDS)
+      return "La zona de batalla está llena"
+    return "Posible"
+  }
+
+  puedeColocarCartaDesdeId(idCartaMano) {
+    let resp = this.puedeColocarCartas()
+    if (resp !== "Posible") return resp;
     if (!this.existeCartaEnMano(idCartaMano))
       return "No hay carta en la mano para esa posicion";
     return "Posible";
