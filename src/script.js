@@ -255,7 +255,7 @@ function seleccionarMano() {
       btnColocarEnDefensa.classList.remove("ocultar");
       mensajeBotones.innerText = "Colocar carta en posición...";
     } else {
-      mensajeBotones.innerText = "No puede colocar mas cartas...";
+      mensajeBotones.innerText = puedeColocarCarta;
     }
   }
 }
@@ -589,7 +589,7 @@ manoYo.addEventListener("click", function (e) {
    * @type {HTMLElement}
    */
   let target = e.target;
-  while (!target.classList.contains("slot")) target = target.parentElement;
+
   idCartaManoSeleccionada = target.dataset.id;
   cartaManoSeleccionada = target;
   if (target.classList.contains("mano")) {
