@@ -51,21 +51,18 @@ function cerrarSala(){
 function unirASala(ws, message) {
   let nombreJugador = message.payload.nombreJugador;
   const resp = juego.unirASala(nombreJugador);
-  if (resp === "Sala llena, no pueden entrar jugadores") {
-    message.error = resp;
+  if(resp.resultado === "Exito"){
+    ws.jugador = resp.jugador;
+    delete resp.jugador;
+    message.payload = resp;
+    sendMessage(ws, message);
+    sendMessageToOthers(ws, message);
+  }
+  else{
+    message.error = resp.resultado;
     sendMessage(ws, message);
     ws.close();
-    return;
   }
-  ws.jugador = resp;
-  message.payload = {
-    jugadores: juego.obtenerNombreJugadores()
-  };
-  juego.obtenerEstadoSala() === "SALA CERRADA"
-    ? message.payload.iniciar = true
-    : message.payload.iniciar = false;
-  sendMessage(ws, message);
-  sendMessageToOthers(ws, message);
 }
 /**
  *

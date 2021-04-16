@@ -37,19 +37,22 @@ class Juego {
    * @param {string} nombreJugador
    */
   unirASala(nombreJugador) {
-    if (this.estadoSala === "SALA ABIERTA") {
+    let rpta = {}
+    if(this.estadoSala !== "SALA ABIERTA") rpta.resultado= "Sala llena, no pueden entrar jugadores";
+    else if(nombreJugador === "") return "No indicó nombre de jugador"
+    else if(this.jugador.filter((j)=> j.nombre === nombreJugador).length >= 1)  rpta.resultado= "Nombre de Usuario/Nick en uso";
+    else{
+      rpta.resultado= "Exito";
       let jug = new Jugador(nombreJugador);
       this.jugador.push(jug);
+      rpta.jugador = jug
       this.jugador.length < 2 ? this.estadoSala = "SALA ABIERTA" : this.estadoSala = "SALA CERRADA"
+      this.estadoSala === "SALA CERRADA" ? rpta.iniciar = true : rpta.iniciar = false;
       this.pantalla = Juego.Pantalla.EN_SALA_DE_ESPERA;
-      return jug;
-    } else {
-      return "Sala llena, no pueden entrar jugadores";
+      rpta.jugadores = this.obtenerNombreJugadores()
+      rpta.estadoSala
     }
-  }
-
-  obtenerEstadoSala() {
-    return this.estadoSala
+    return rpta;
   }
 
   obtenerNombreJugadores(){
