@@ -16,9 +16,10 @@
 |Termino de juego al quedarse sin barreras al atacar directamente | OK |
 |Refactoring|OK|
 |Quitar botones cuando no es su turno | OK |
-|Luego de jugar un tiempo, se queda bloqueadas celdas donde no se puede colocar cartas a pesar que se ven vacias y no se puede atacar cartas a celdas que aparece con alguna carta (conectividad?) | Pendiente |
-|Obligatorio ingresar con un nombre y que no se repita | Pendiente |
+|Obligatorio ingresar con un nombre a la sala y que no se repita | OK |
 | No ofrecer colocar cartas cuando no se tiene espacio en la zona de batalla | Pendiente |
 | Opciones de botones siguien activos aun despues de terminar turno | Pendiente |
 | Sistema de notificaciones con historico con lo mas reciente arriba, minimizable, mostrandose la mas reciente en pantalla y desvaneciendose (inferior derecha) | Pendiente |
 |Readme.md|Pendiente|
+|Luego de jugar un tiempo, se queda bloqueadas celdas donde no se puede colocar cartas a pesar que se ven vacias y no se puede atacar cartas a celdas que aparece con alguna carta (conectividad?) | Pendiente |
+

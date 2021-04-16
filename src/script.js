@@ -452,6 +452,7 @@ btnJugar.addEventListener("click", () => {
   cambiarPantalla(recepcion);
 });
 btnUnirASala.addEventListener("click", () => {
+  if(inNombreJugador.value ==="") return;
   socket = new WebSocket(url);
   socket.onopen = (e) => {
     message = {
