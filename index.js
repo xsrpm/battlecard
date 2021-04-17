@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-console */
 const WebSocket = require("ws");
+const { Pantalla } = require("./clases/juego.js");
 const Juego = require("./clases/juego.js");
 /**
  * @type {Juego}
@@ -309,6 +310,25 @@ function procesarAccion(ws, message) {
       break;
   }
 }
+/**
+ * 
+ * @param {Jugador} jugador 
+ */
+function finalizarPorDesconexion(ws){
+  if(juego.jugador.length ===2 && juego.pantalla === Pantalla.EN_JUEGO){
+    let message = {
+      event:"Enemigo Desconectado",
+      payload:{
+        nombreJugadorDerrotado: ws.jugador.nombre,
+        nombreJugadorVictorioso:juego.jugadorEnemigo(ws.jugador).nombre,
+        resultado:`${ws.jugador.nombre} se desconectó del juego`
+      }
+    } 
+    sendMessageToOthers(ws,message)
+    juego.finalizarJuego() 
+    cerrarSala()
+  }
+}
 
 wss.on("connection", (ws) => {
   ws.on("message", (data) => {
@@ -318,6 +338,7 @@ wss.on("connection", (ws) => {
     console.log(event);
   });
   ws.on("close", (code, reason) => {
-    console.info(`close ws code:${code}, reason: ${reason}`);
+    console.info(`close ws code:${code}, player: ${ws.jugador.nombre}`);
+    finalizarPorDesconexion(ws)
   });
 });

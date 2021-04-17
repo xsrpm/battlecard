@@ -50,7 +50,6 @@ class Juego {
       this.estadoSala === "SALA CERRADA" ? rpta.iniciar = true : rpta.iniciar = false;
       this.pantalla = Juego.Pantalla.EN_SALA_DE_ESPERA;
       rpta.jugadores = this.obtenerNombreJugadores()
-      rpta.estadoSala
     }
     return rpta;
   }
@@ -202,6 +201,10 @@ class Juego {
 
   cambiarPosicionBatalla(idCarta) {
     return this.jugadorActual.cambiarPosicionBatalla(idCarta)
+  }
+
+  jugadorEnemigo(jugador){
+    return this.jugador.filter(j => j.nombre !== jugador.nombre)[0]
   }
 }
 
