@@ -448,6 +448,16 @@ function cambiaPosicionEnemigo(){
   }
 }
 
+function enemigoDesconectado(){
+  if (encuentraError()) return;
+  nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
+  nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
+  info.children[0].innerText=message.payload.resultado
+  btnFinDeJuego.classList.remove("ocultar")
+  btnTerminarTurno.classList.add("ocultar")
+  info.classList.add("mostrarResultado")
+}
+
 btnJugar.addEventListener("click", () => {
   cambiarPantalla(recepcion);
 });
@@ -504,6 +514,9 @@ btnUnirASala.addEventListener("click", () => {
         break;
       case "Terminar Turno":
         terminarTurno();
+        break;
+      case "Enemigo Desconectado":
+        enemigoDesconectado();
         break;
     }
   };
