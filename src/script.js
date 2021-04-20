@@ -275,7 +275,7 @@ function atacarCarta() {
     bonifCartaAtacada
   } = message.payload;
   if (estadoAtaque === "Ataque realizado") {
-    resultadoAtaque.querySelector("span[slot='valor-atacante']").textContent = cartaAtacada.valor;
+    resultadoAtaque.querySelector("span[slot='valor-atacante']").textContent = cartaAtacante.valor;
     resultadoAtaque.querySelector("span[slot='elemento-atacante']").textContent = String.fromCharCode(cartaAtacante.elemento);
     resultadoAtaque.querySelector("span[slot='valor-atacado']").textContent = cartaAtacada.valor;
     resultadoAtaque.querySelector("span[slot='elemento-atacado']").textContent = String.fromCharCode(cartaAtacada.elemento);
@@ -602,7 +602,7 @@ manoYo.addEventListener("click", function (e) {
    * @type {HTMLElement}
    */
   let target = e.target;
-
+  while (!target.classList.contains("slot")) target = target.parentElement;
   idCartaManoSeleccionada = target.dataset.id;
   cartaManoSeleccionada = target;
   if (target.classList.contains("mano")) {
@@ -707,7 +707,6 @@ function standBySeleccionarZonaBatalla() {
 zonaBatallaYo.addEventListener("click", function (e) {
   if(jugYo.getAttribute("en-turno") === "false") return;
   let target = e.target;
-  if (target.id === this.id) return;
   while (!target.classList.contains("slot")) target = target.parentElement;
   idCartaZBSeleccionada = target.dataset.id;
   cartaZBSeleccionada = target;
@@ -753,7 +752,7 @@ zonaBatallaYo.addEventListener("click", function (e) {
 });
 zonaBatallaEnemiga.addEventListener("click", function (e) {
   let target = e.target;
-  if (target.id === this.id) return;
+   
   while (!target.classList.contains("slot")) target = target.parentElement;
   if (stepAccion === "ATACAR CARTA SELECCIONAR ZB ENEMIGA") {
     if (

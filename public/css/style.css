@@ -28,6 +28,11 @@
     background-color: blue;
   }
   
+
+  #recepcion h1{
+    color:white;
+  }
+
   #sala{
     display:flex;
     flex-direction: row;
