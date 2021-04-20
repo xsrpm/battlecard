@@ -234,14 +234,13 @@ function seleccionarMano(ws,message){
 function atacarCarta(ws,message){
   if (accionAutorizada(ws, message) === false) return;
   let {idZonaBatalla,idZonaBatallaEnemiga} = message.payload
-  let res = juego.atacarCarta(idZonaBatalla,idZonaBatallaEnemiga)
-  message.payload = res
+  message.payload = juego.atacarCarta(idZonaBatalla,idZonaBatallaEnemiga)
   sendMessage(ws,message)
   message.event ="Atacan Tu Carta"
   message.payload.idCartaAtacante = idZonaBatalla
   message.payload.idCartaAtacada = idZonaBatallaEnemiga
   sendMessageToOthers(ws,message)
-  if(res.sinBarreras){
+  if(message.payload.sinBarreras){
     cerrarSala()
   }
 }
@@ -253,7 +252,7 @@ function atacarBarrera(ws,message){
   sendMessage(ws,message)
   message.event ="Atacan Tu Barrera"
   sendMessageToOthers(ws,message)
-  if(res.sinBarreras){
+  if(message.payload.sinBarreras){
     cerrarSala()
   }
 }

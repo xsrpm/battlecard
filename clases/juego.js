@@ -63,6 +63,10 @@ class Juego {
   }
 
   iniciarJuego() {
+    if(this.estadoSala === "SALA ABIERTA" &&
+    this.pantalla === Pantalla.EN_SALA_DE_ESPERA){
+      return "No se tienen 2 jugadores para empezar";
+    }
     if (this.estadoSala === "SALA CERRADA" &&
     this.pantalla === Pantalla.EN_SALA_DE_ESPERA) {
       this.estadoSala = "SALA INICIADA"
@@ -76,15 +80,6 @@ class Juego {
       this.pantalla = Pantalla.EN_JUEGO;
       return "JUEGO INICIADO";
     } 
-    /*
-    else if(this.estadoSala === "SALA INICIADA" && 
-    this.pantalla === Pantalla.EN_SALA_DE_ESPERA){
-      return "La sala está iniciandose"
-    }*/
-    else if(this.estadoSala === "SALA ABIERTA" &&
-    this.pantalla === Pantalla.EN_SALA_DE_ESPERA){
-      return "No se tienen 2 jugadores para empezar";
-    }
     else{
       return "Condición no manejada al iniciarJuego"
     }
