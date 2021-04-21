@@ -62,6 +62,7 @@ let message;
 let nombreJugadorDerrotado
 let nombreJugadorVictorioso
 let sinBarrerasFlag;
+let juegoFinalizado;
 
 
 //Visual Life Cicle (App)
@@ -110,15 +111,13 @@ function mostrarJugadorEnTurno() {
   if (message.payload.jugador.enTurno) {
     jugYo.setAttribute("en-turno","true")
     jugEnemigo.setAttribute("en-turno","false")
-    jugYo.querySelector("span[slot='nCartas']").textContent=message.payload.jugador.nDeck
-    jugEnemigo.querySelector("span[slot='nCartas']").textContent=message.payload.jugadorEnemigo.nDeck
   }
   else{
     jugEnemigo.setAttribute("en-turno","true")
     jugYo.setAttribute("en-turno","false")
-    jugYo.querySelector("span[slot='nCartas']").textContent=message.payload.jugadorEnemigo.nDeck
-    jugEnemigo.querySelector("span[slot='nCartas']").textContent=message.payload.jugador.nDeck
   }
+  jugYo.querySelector("span[slot='nCartas']").textContent=message.payload.jugador.nDeck
+  jugEnemigo.querySelector("span[slot='nCartas']").textContent=message.payload.jugadorEnemigo.nDeck
 }
 
 function inicializarJuego() {
@@ -157,6 +156,7 @@ function inicializarJuego() {
   info.classList.remove("mostrarResultado")
   resultadoAtaque.setAttribute("mostrar","false")
   sinBarrerasFlag = false
+  juegoFinalizado= false
 }
 
 function encuentraError() {
@@ -292,6 +292,7 @@ function atacarCarta() {
         info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin barreras`
         btnFinDeJuego.classList.remove("ocultar")
         btnTerminarTurno.classList.add("ocultar")
+        juegoFinalizado= true
       }
     } else
         resultadoAtaque.querySelector("span[slot='detalle-resultado']").textContent = "";
@@ -310,6 +311,8 @@ function atacarCarta() {
       ) {
         zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].classList.remove("oculto");
         zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].classList.add("defensa");
+        zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].children[0].innerText=cartaAtacada.valor;
+        zonaBatallaEnemiga.children[idCartaZBEnemigaSeleccionada].children[1].innerText=String.fromCharCode(cartaAtacada.elemento)
       }
     }
     zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove("seleccionado");
@@ -334,7 +337,7 @@ function atacanTuCarta(){
     bonifCartaAtacada
   } = message.payload;
   if (estadoAtaque === "Ataque realizado") {
-    resultadoAtaque.querySelector("span[slot='valor-atacante']").textContent = cartaAtacada.valor;
+    resultadoAtaque.querySelector("span[slot='valor-atacante']").textContent = cartaAtacante.valor;
     resultadoAtaque.querySelector("span[slot='elemento-atacante']").textContent = String.fromCharCode(cartaAtacante.elemento);
     resultadoAtaque.querySelector("span[slot='valor-atacado']").textContent = cartaAtacada.valor;
     resultadoAtaque.querySelector("span[slot='elemento-atacado']").textContent = String.fromCharCode(cartaAtacada.elemento);
@@ -351,6 +354,7 @@ function atacanTuCarta(){
         info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin barreras`
         btnFinDeJuego.classList.remove("ocultar")
         btnTerminarTurno.classList.add("ocultar")
+        juegoFinalizado= true
       }
     } else
         resultadoAtaque.querySelector("span[slot='detalle-resultado']").textContent = "";
@@ -387,14 +391,15 @@ function atacarBarrera(){
         info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin barreras`
         btnFinDeJuego.classList.remove("ocultar")
         btnTerminarTurno.classList.add("ocultar")
+        juegoFinalizado= true
       }
       else{
         info.children[0].innerText=`Barrera destruida`
+        habilitacionBotonera();
       }
       zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove(
         "seleccionado"
       );
-      habilitacionBotonera();
       info.classList.add("mostrarResultado")
   }
 }
@@ -414,6 +419,7 @@ function atacanTuBarrera(){
         info.children[0].innerText=`${nombreJugadorDerrotado} se ha queda sin barreras`
         btnFinDeJuego.classList.remove("ocultar")
         btnTerminarTurno.classList.add("ocultar")
+        juegoFinalizado= true
       }
       else{
         info.children[0].innerText=`Barrera destruida`
@@ -456,6 +462,7 @@ function enemigoDesconectado(){
   btnFinDeJuego.classList.remove("ocultar")
   btnTerminarTurno.classList.add("ocultar")
   info.classList.add("mostrarResultado")
+  juegoFinalizado= true
 }
 
 btnJugar.addEventListener("click", () => {
@@ -597,6 +604,7 @@ btnTerminarTurno.addEventListener("click", () => {
 });
 
 manoYo.addEventListener("click", function (e) {
+  if(juegoFinalizado) return;
   if(jugYo.getAttribute("en-turno") === "false") return;
   /**
    * @type {HTMLElement}
@@ -705,6 +713,7 @@ function standBySeleccionarZonaBatalla() {
 }
 
 zonaBatallaYo.addEventListener("click", function (e) {
+  if(juegoFinalizado) return;
   if(jugYo.getAttribute("en-turno") === "false") return;
   let target = e.target;
   while (!target.classList.contains("slot")) target = target.parentElement;
@@ -751,8 +760,8 @@ zonaBatallaYo.addEventListener("click", function (e) {
   }
 });
 zonaBatallaEnemiga.addEventListener("click", function (e) {
+  if(juegoFinalizado) return;
   let target = e.target;
-   
   while (!target.classList.contains("slot")) target = target.parentElement;
   if (stepAccion === "ATACAR CARTA SELECCIONAR ZB ENEMIGA") {
     if (
