@@ -196,9 +196,11 @@ function terminarTurno(ws, message) {
   if (accionAutorizada(ws, message) === false) return;
   let res = juego.terminarTurno()
   message.payload = JSON.parse(JSON.stringify(res))
+  delete message.payload.carta
   sendMessage(ws, message);
-  message.payload.jugador.enTurno= res.jugadorEnemigo.enTurno
-  message.payload.jugadorEnemigo.enTurno= res.jugador.enTurno
+  message.payload.carta = res.carta
+  message.payload.jugador= res.jugadorEnemigo
+  message.payload.jugadorEnemigo= res.jugador
   sendMessageToOthers(ws, message);
   if(res.resultado === "DECK VACIO"){
     cerrarSala()
