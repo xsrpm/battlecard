@@ -385,6 +385,7 @@ function atacarBarrera(){
   if(resultado === "Barrera destruida"){
     barreraEnemiga.children[idBarreraEliminada].classList.remove("barrera");
       sinBarrerasFlag = message.payload.sinBarreras
+      habilitacionBotonera();
       if(sinBarrerasFlag){
         nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
         nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
@@ -395,7 +396,6 @@ function atacarBarrera(){
       }
       else{
         info.children[0].innerText=`Barrera destruida`
-        habilitacionBotonera();
       }
       zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove(
         "seleccionado"
