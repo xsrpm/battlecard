@@ -567,6 +567,7 @@ class Jugador {
           CeldaBatalla.Estado.POS_BATALLA_ATAQUE;
         this.zonaBatalla[idCarta].dispAtaque =
           CeldaBatalla.Estado.ATAQUE_DISPONIBLE;
+        this.nAtaquesDisponibles++
       } else {
         this.zonaBatalla[idCarta].posBatalla =
           CeldaBatalla.Estado.POS_BATALLA_DEF_ARRIBA;
