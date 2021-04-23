@@ -153,7 +153,7 @@ class Jugador {
   puedeColocarCartaDesdeId(idCartaMano) {
     let resp = this.puedeColocarCartas()
     if (resp !== "Posible") return resp;
-    if (!this.existeCartaEnMano(idCartaMano))
+    if (!this.tieneCartaEnMano(idCartaMano))
       return "No hay carta en la mano para esa posicion";
     return "Posible";
   }
@@ -167,7 +167,7 @@ class Jugador {
     let resp = this.puedeColocarCartaDesdeId(idCartaMano);
     if (resp !== "Posible") return resp;
     if (
-      this.zonaBatalla[idPosZB].posBatalla !== CeldaBatalla.Estado.NO_HAY_CARTA
+      this.tieneCartaColocada(idPosZB)
     )
       return "Posición en zona de batalla está ocupada";
     return "Posible";
@@ -300,11 +300,15 @@ class Jugador {
 
   /**
    *
-   * @param {number} idMano
+   * @param {number} idPosicionMano
    * @returns
    */
-  existeCartaEnMano(idMano) {
-    return this.mano[idMano] !== null && this.mano[idMano] !== undefined;
+  tieneCartaEnMano(idPosicionMano) {
+    return this.mano[idPosicionMano] !== null && this.mano[idPosicionMano] !== undefined;
+  }
+
+  tieneCartaColocada(idPosicionManoZB){
+      return this.zonaBatalla[idPosicionManoZB].carta !== null 
   }
 
   /**
@@ -507,7 +511,7 @@ class Jugador {
           jugadorAtacado.nCartasEnZB--;
         } else if (rsAtaque.veredicto === VeredictoAtaque.PIERDE_ATACANTE) {
           //pierde atacante
-          this.zonaBatalla[idCartaAtacada].quitarCarta();
+          this.zonaBatalla[idCartaAtacante].quitarCarta();
           rsAtaque.estadoCartaAtacante = EstadoCarta.DESTRUIDA;
           rsAtaque.estadoCartaAtacada = EstadoCarta.ACTIVA;
           rsAtaque.estadoBarrera = EstadoCarta.ACTIVA;

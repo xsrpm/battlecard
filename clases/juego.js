@@ -161,7 +161,7 @@ class Juego {
 
   opcionesSeleccionarMano(idMano){
     return {
-      existeCarta: this.jugadorActual.existeCartaEnMano(idMano),
+      existeCarta: this.jugadorActual.tieneCartaEnMano(idMano),
       puedeColocarCarta:this.jugadorActual.puedeColocarCartaDesdeId(idMano)
     } 
   }
