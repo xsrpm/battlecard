@@ -4,13 +4,13 @@
 
 Juego de cartas basado en Yu-Gi-Oh! Trading Card Game usando cartas inglesas.
 
-<p style="text-align: center;">![Pantalla Bienvenida](images/pant5.png)</p>
+![Pantalla Bienvenida](images/pant5.png)
 
 
 # Contenido del artículo
 - <a href="#juego">El juego.</a>
 - <a href="#screen-capture">Capturas de pantalla.</a>
-- <a href="#desarrollo">Desarrollo.</a>
+- <a href="#development">Desarrollo.</a>
 - <a href="#reference">Referencia.</a>
 
 <h1 id="juego">El juego</h1>
@@ -64,7 +64,7 @@ Durante cada turno el jugador puede colocar cartas en zona de batalla (para defe
 - Seleccionar una carta en la zona de batalla enemiga.
 - Se visualizará el resultado del ataque. Indicando el ganador, el bonus de ataque/defensa y si se destruye una barrera como producto del ataque.
 
-<p style="text-align: center;">![Resumen de ataque realizado](images/pant10.png)</p>
+![Resumen de ataque realizado](images/pant10.png)
 
 **Bonificación de ataque/defensa**
 
@@ -74,7 +74,7 @@ Segun el grafico visualizado: cuando una carta del palo de espadas se enfrenta a
 
 El grafico siguiente resume todas las posibilidades de bonificación de ataque al enfrentarse cartas de diferentes palos
 
-<p style="text-align: center;">![Bonificación de ataque](images/bonificacion-ataque.png)</p>
+![Bonificación de ataque](images/bonificacion-ataque.png)
 
 ### Cambiar posición de una carta en tu zona de batalla
 - Seleccionar una carta en tu zona de batalla.
@@ -91,8 +91,7 @@ El juego termina bajo cualquiera de las siguientes condiciones:
 - Un jugador se queda sin cartas de barrera (derrota para el jugador)
 - A un jugador no le queda en su baraja mas cartas que colocar en su mano al iniciar su turno (derrota para el jugador).
 
-
-<h1 id="captures"></h1>
+<h1 id="screen-capture"></h1>
 
 ## Bienvenida
 ![Pantalla Bienvenida](images/pant1.png)
