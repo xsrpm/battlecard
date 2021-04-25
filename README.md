@@ -9,7 +9,7 @@ Juego de cartas basado en Yu-Gi-Oh! Trading Card Game usando cartas inglesas.
 
 # Contenido del artículo
 - <a href="#juego">El juego.</a>
-- <a href="#screen-capture">Capturas de pantalla.</a>
+- <a href="#screen-capture">Capturas del juego.</a>
 - <a href="#development">Desarrollo.</a>
 - <a href="#reference">Referencia.</a>
 
@@ -91,7 +91,7 @@ El juego termina bajo cualquiera de las siguientes condiciones:
 - Un jugador se queda sin cartas de barrera (derrota para el jugador)
 - A un jugador no le queda en su baraja mas cartas que colocar en su mano al iniciar su turno (derrota para el jugador).
 
-<h1 id="screen-capture"></h1>
+<h1 id="screen-capture">Capturas del juego</h1>
 
 ## Bienvenida
 ![Pantalla Bienvenida](images/pant1.png)
