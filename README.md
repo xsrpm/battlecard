@@ -123,7 +123,7 @@ Este proyecto hace uso de [WebSockets](https://developer.mozilla.org/es/docs/Web
 
 El presente proyecto está dockerizado.
 
-[Lista de implementaciones/pendientes](docs/issues.md)
+[Lista de implementaciones/mejoras](docs/issues.md)
 
 <h1 id="reference">Referencia</h1>
 
