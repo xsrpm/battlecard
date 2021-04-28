@@ -33,84 +33,92 @@
       <button id="btnIniciarJuego" disabled>Iniciar Juego</button>
     </div>
     <div id="juego">
-      <div class="jugadores">
-        <jugador-panel id="jugEnemigo" en-turno="false">
-          <span slot="jugadorNombre">JugadorEnemigo</span>
-          <span slot="nCartas">20</span>
-        </jugador-panel>
-        <jugador-panel id="jugYo" en-turno=false>
-          <span slot="jugadorNombre">Jugador (Yo)</span>
-          <span slot="nCartas">20</span>
-        </jugador-panel> 
-      </div>
       <div class="tablero">
-        <div class="enemigo">
-          <div id="zonaBatallaEnemiga">
-            <div class="slot" data-id="0"><span></span><span></span></div>
-            <div class="slot" data-id="1"><span></span><span></span></div>
-            <div class="slot" data-id="2"><span></span><span></span></div>
+        <div></div>
+        <div class="jugador">
+          <jugador-panel id="jugEnemigo" en-turno="false">
+            <span slot="jugadorNombre">Jugador Enemigo</span>
+            <span slot="nCartas">20</span>
+          </jugador-panel>
+          <div class="rotar180">
+            <div id="zonaBatallaEnemiga">
+              <div class="slot" data-id="0"><span></span><span></span></div>
+              <div class="slot" data-id="1"><span></span><span></span></div>
+              <div class="slot" data-id="2"><span></span><span></span></div>
+            </div>
+            <div id="barreraEnemiga">
+              <div class="slot" data-id="0"></div>
+              <div class="slot" data-id="1"></div>
+              <div class="slot" data-id="2"></div>
+              <div class="slot" data-id="3"></div>
+              <div class="slot" data-id="4"></div>
+            </div>
+            <div id="manoEnemigo">
+              <div class="slot oculto" data-id="0">
+                <span></span><span></span>
+              </div>
+              <div class="slot oculto" data-id="1">
+                <span></span><span></span>
+              </div>
+              <div class="slot oculto" data-id="2">
+                <span></span><span></span>
+              </div>
+              <div class="slot oculto" data-id="3">
+                <span></span><span></span>
+              </div>
+              <div class="slot oculto" data-id="4">
+                <span></span><span></span>
+              </div>
+            </div>
           </div>
-          <div id="barreraEnemiga">
-            <div class="slot" data-id="0"></div>
-            <div class="slot" data-id="1"></div>
-            <div class="slot" data-id="2"></div>
-            <div class="slot" data-id="3"></div>
-            <div class="slot" data-id="4"></div>
+          <!--
+          <div class="ayuda-tablero">
+            <p>Mano enemiga</p>
+            <p>Barrera enemiga</p>
+            <p>Zona de batalla enemiga</p>
           </div>
-          <div id="manoEnemigo">
-            <div class="slot oculto" data-id="0">
-              <span></span><span></span>
-            </div>
-            <div class="slot oculto" data-id="1">
-              <span></span><span></span>
-            </div>
-            <div class="slot oculto" data-id="2">
-              <span></span><span></span>
-            </div>
-            <div class="slot oculto" data-id="3">
-              <span></span><span></span>
-            </div>
-            <div class="slot oculto" data-id="4">
-              <span></span><span></span>
-            </div>
-          </div>
+          -->
         </div>
-        <div class="yo">
-          <div id="zonaBatallaYo">
-            <div class="slot" data-id="0"><span></span><span></span></div>
-            <div class="slot" data-id="1"><span></span><span></span></div>
-            <div class="slot" data-id="2"><span></span><span></span></div>
+        <div class="jugador">
+          <jugador-panel id="jugYo" en-turno=false>
+            <span slot="jugadorNombre">Jugador (Yo)</span>
+            <span slot="nCartas">20</span>
+          </jugador-panel> 
+          <div>
+            <div id="zonaBatallaYo">
+              <div class="slot" data-id="0"><span></span><span></span></div>
+              <div class="slot" data-id="1"><span></span><span></span></div>
+              <div class="slot" data-id="2"><span></span><span></span></div>
+            </div>
+            <div id="barreraYo">
+              <div class="slot" data-id="0"></div>
+              <div class="slot" data-id="1"></div>
+              <div class="slot" data-id="2"></div>
+              <div class="slot" data-id="3"></div>
+              <div class="slot" data-id="4"></div>
+            </div>
+            <div id="manoYo">
+              <div class="slot" data-id="0"><span></span><span></span></div>
+              <div class="slot" data-id="1"><span></span><span></span></div>
+              <div class="slot" data-id="2"><span></span><span></span></div>
+              <div class="slot" data-id="3"><span></span><span></span></div>
+              <div class="slot" data-id="4"><span></span><span></span></div>
+            </div>
           </div>
-          <div id="barreraYo">
-            <div class="slot" data-id="0"></div>
-            <div class="slot" data-id="1"></div>
-            <div class="slot" data-id="2"></div>
-            <div class="slot" data-id="3"></div>
-            <div class="slot" data-id="4"></div>
+          <!--
+          <div class="ayuda-tablero">
+            <p>Tu zona de batalla</p>
+            <p>Tu barrera</p>
+            <p>Tu mano</p>
           </div>
-          <div id="manoYo">
-            <div class="slot" data-id="0"><span></span><span></span></div>
-            <div class="slot" data-id="1"><span></span><span></span></div>
-            <div class="slot" data-id="2"><span></span><span></span></div>
-            <div class="slot" data-id="3"><span></span><span></span></div>
-            <div class="slot" data-id="4"><span></span><span></span></div>
-          </div>
+          -->
         </div>
-        <resultado-ataque mostrar="false">
-          <span slot="nombre-atacante">Atacante</span>
-          <span slot="valor-atacante"></span>
-          <span slot="elemento-atacante"></span>
-          <span slot="bonus-atacante"></span>
-          <span slot="resultado">Gana Atacante</span>
-          <span slot="detalle-resultado">Destruye Barrera</span>
-          <span slot="nombre-atacado">Atacado</span>
-          <span slot="valor-atacado"></span>
-          <span slot="elemento-atacado"></span>
-          <span slot="bonus-atacado"></span>
-        </resultado-ataque>
-        <div class="info">
-          <h1></h1>
+        <div></div>
+        <!--
+        <div id="ayuda-calculo-daño" class="leyenda">
+
         </div>
+        -->
       </div>
       <div class="botonera">
         <p id="mensajeBotones"></p>
@@ -119,9 +127,26 @@
         <button id="btnAtacarCarta" class="ocultar">Atacar carta</button>
         <button id="btnAtacarBarrera" class="ocultar">Atacar barrera</button>
         <button id="btnCambiarPosicion" class="ocultar">Cambiar posición</button>
-        <button id="btnTerminarTurno">Terminar Turno</button>
+        <button id="btnTerminarTurno">Terminar turno</button>
         <button id="btnFinDeJuego" class="ocultar">Fin de Juego</button>
       </div>
+      
+      <resultado-ataque mostrar="false">
+        <span slot="nombre-atacante">Atacante</span>
+        <span slot="valor-atacante"></span>
+        <span slot="elemento-atacante"></span>
+        <span slot="bonus-atacante"></span>
+        <span slot="resultado">Gana Atacante</span>
+        <span slot="detalle-resultado">Destruye Barrera</span>
+        <span slot="nombre-atacado">Atacado</span>
+        <span slot="valor-atacado"></span>
+        <span slot="elemento-atacado"></span>
+        <span slot="bonus-atacado"></span>
+      </resultado-ataque>
+      <div class="info">
+        <h1></h1>
+      </div>
+      
     </div>
     <div id="finDeJuego">
       <div class="victoria">

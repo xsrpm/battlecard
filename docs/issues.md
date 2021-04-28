@@ -25,9 +25,14 @@
 |Corrección de Defecto al atacar cartas y destruirse carta atacante | OK |
 |Fixes funcionales del juego| OK|
 |Implementación de Readme.md|OK|
-|Sistema de notificaciones con historico con lo mas reciente arriba, minimizable, mostrandose la mas reciente en pantalla y desvaneciendose (inferior derecha) | Pendiente |
+|Mobile First implementación en css|Pendiente|
 |Ayuda de tablero de juego popup|Pendiente|
 |Ayuda con el calculo de daño de ataque popup|Pendiente|
 |Ocultar bonus en resultado ataque cuando el valor es +0 |Pendiente|
 |Cambiar K, Q, J y A en lugar de 11,12,13 y 1|Pendiente|
-|Mejoras visual de la interfaz|Pendiente|
+|Mostrar Terminar Turno, solo cuando no queden acciones que realizar|Pendiente|
+|Sistema de notificaciones con histórico con lo mas reciente arriba, minimizable, mostrandose la mas reciente en pantalla y desvaneciendose (inferior derecha) | Pendiente |
+|Cambio de JS a Typescript |Pendiente|
+|Mejoras visuales de la interfaz|Pendiente|
+|Pantalla resultado, quien es el atacado y atacante|Pendiente|
+

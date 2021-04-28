@@ -115,11 +115,13 @@ Este proyecto hace uso de Node.js para mejor manejo del proyecto.
 - Bundelizado de proyecto.
 - Posterior migración a Typescript (recomendado para proyectos de este tamaño).
 
-Por supuesto de los estandares de la web (HTML,CSS, JS).
+Por supuesto, hace uso de los estandares de la web (HTML, CSS, JS).
 
 Este proyecto hace unas pequeñas implementaciones de web components, con el estandar [Web Components](https://developer.mozilla.org/es/docs/Web/Web_Components) a modo de prueba.
 
-Este proyecto está dockerizado.
+Este proyecto hace uso de [WebSockets](https://developer.mozilla.org/es/docs/Web/API/WebSockets_API) para comunicarse en tiempo real con su backend. El backend es mantenido en el proyecto: [BattleCard Backend](https://github.com/xsrpm/battlecard-back)
+
+El presente proyecto está dockerizado.
 
 [Lista de implementaciones/pendientes](docs/issues.md)
 

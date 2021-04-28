@@ -1,308 +1,320 @@
-*{
-  /*  padding:0;
-    margin:0;
-    */
-    cursor: default;
-    box-sizing: border-box;
-  }
-  
-  #bienvenida{
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width:100vw;
-    height:100vh;
-    position: absolute;
-    background-color: yellow;
-  }
-  
-  #recepcion{
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width:100vw;
-    height:100vh;
-    position: absolute;
-    background-color: blue;
-  }
-  
+* {
+  padding: 0;
+  margin: 0;
+  cursor: default;
+  box-sizing: border-box;
+}
 
-  #recepcion h1{
-    color:white;
-  }
+#bienvenida {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background-color: yellow;
+}
 
-  #sala{
-    display:flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width:100vw;
-    height:100vh;
-    position: absolute;
-    background-color: green;
-  }
-  
-  #sala h1{
-    position: absolute;
-    top: 10vh;
-    background-color: greenyellow;
-    opacity: 0.5;
-  }
-  
-  #sala div{
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 50vw;
-    height: 100vh;
-  }
-  
-  #sala :nth-child(2){
-    background-color: red;
-  }
-  #sala :nth-child(3){
-    background-color: pink;
-  }
-  
-  #sala button{
-    position: absolute;
-    bottom: 10vh;
-  }
-  
-  #juego{
-    display: grid;
-    grid-template-columns:1fr 1fr 1fr;
-    grid-template-areas:"jugadores tablero botonera";
-    justify-items: center;
-    align-items: center;
-    width:100vw;
-    height:100vh;
-    position: absolute;
-    background-color: rgb(174, 235, 235);
-  }
-  
-  .jugadores{
-    display: grid;
-    grid-area: jugadores;
-    justify-self:right;
-    background-color: rgb(236, 236, 192);
-    text-align: center;
-    word-wrap: break-word;
-  }
-  
-  .botonera{
-    display: grid;
-    grid-area: botonera;
-    justify-self:left;
-    width:15vw;
-    text-align: center;
-  }
-  
-  .botonera button{
-    /*width:10vw;*/
-    font-size:1rem;
-  }
-  
-  #btnColocarEnAtaque{
-    background-color: red;
-  }
-  
-  #btnColocarEnDefensa{
-    background-color: green;
-  }
-  
-  .info{
-    display: grid;
-    text-align: center;
-    justify-items: center;
-    align-items: center;
-    visibility: hidden;
-    position: absolute;
-    background-color: orange;
-    width:30%;
-    opacity: 0.8;
-  }
-  .info.mostrarResultado{
-    visibility: visible;
-  }
-  
-  #juego .tablero{
-    grid-area: tablero;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  .enemigo{
-    transform: rotate(-180deg);
-  }
-  
-  .slot{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 4.5vw;
-    height: 13vh;
-    border-style: dotted;
-    border-color: black;
-    border-width: 0.2em;
-  }
-  
-  .slot.seleccionado{
-    border-style: double;
-    border-color:rgba(20, 202, 90, 0.863);
-    border-width: 0.4em;
-  }
-  
-  .barrera{
-    border-style: solid;
-    border-color: black;
-    background-color:rgb(80, 61, 53);
-  }
-  
-  .ataque{
-    border-style: double;
-    border-color:black;
-    background-color: red;
-  }
-  
-  .ataque.seleccionado{
-    border-style: double;
-    border-color:blue;
-    border-width: 0.4em;
-  }
-  
-  .defensa{
-    border-style: double;
-    border-color:black;
-    background-color: green;
-  }
-  
-  .defensa.seleccionado{
-    border-style: double;
-    border-color:blue;
-    border-width: 0.4em;
-  }
-  
-  .mano{
-    border-style: solid;
-    border-color:rgb(71, 93, 192);
-    background-color:white;
-  }
-  
-  .mano.seleccionado{
-    border-style: double;
-    border-color:rgba(230, 161, 14, 0.863);
-    border-width: 0.4em;
-  }
-  
-  #manoEnemigo{
-    display: flex;
-  }
-  
-  #barreraEnemiga{
-    display: flex;
-  }
-  
-  #zonaBatallaEnemiga{
-    display: flex;
-  }
-  
-  #zonaBatallaEnemiga .slot{
-    transform: rotate(-180deg);
-  }
-  
-  .tablero .oculto{
-    border-style: double;
-    border-color:white;
-    background-color:black;
-  }
-  
-  .enemigo > div{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .yo > div{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .tablero .zonaBatallaYo{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .tablero .barreraYo{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .tablero .manoYo{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .mostrarPantalla{
-    z-index: 1;
-  }
-  
-  .sombrear{ 
-    border: 5px solid rgb(238, 223, 8)
-  }
-  
-  .ocultar{
-    display:none;
-  }
+#recepcion {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background-color: blue;
+}
 
-  #finDeJuego{
-    display: grid;
-    justify-items: center;
-    align-items: center;
-    width:100vw;
-    height:100vh;
-    position: absolute;
-    background-color: rgb(19, 192, 149);
-  }
+#recepcion h1 {
+  color: white;
+}
 
-  #finDeJuego .victoria{
-    display: grid;
-    justify-items: center;
-    align-items: center;
-    background-color: red;
-    width:100vw;
-    height:47.5vh;
-  }
+#sala {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background-color: green;
+}
 
-  #finDeJuego .derrota{
-    display: grid;
-    justify-items: center;
-    align-items: center;
-    background-color: rgb(255, 196, 0);
-    width:100vw;
-    height:47.5vh;
-  }
+#sala h1 {
+  position: absolute;
+  top: 10vh;
+  background-color: greenyellow;
+  opacity: 0.5;
+}
 
-  #finDeJuego .btnVolverInicio{
-    display: grid;
-    justify-items: center;
-    align-items: center;
-    width:100vw;
-    height:5vh;
-  }
+#sala div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50vw;
+  height: 100vh;
+}
+
+#sala :nth-child(2) {
+  background-color: red;
+}
+#sala :nth-child(3) {
+  background-color: pink;
+}
+
+#sala button {
+  position: absolute;
+  bottom: 10vh;
+}
+
+#juego {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background-color: rgb(174, 235, 235);
+}
+
+.tablero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 75%;
+}
+
+.tablero > div:first-child {
+  height: 10%;
+}
+
+.tablero > div:last-child {
+  height: 10%;
+}
+
+jugador-panel{
+  width:25vw;
+}
+
+.jugador {
+  display: flex;
+  height: 40%;
+  justify-content: center;
+}
+
+.jugador > div > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 33.33%;
+}
+
+.jugador > div > div > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 8vw;
+  height: 100%;
+}
+
+.rotar180 {
+  transform: rotate(-180deg);
+}
+
+.slot {
+  border-style: dotted;
+  border-color: black;
+  border-width: 0.2em;
+}
+
+.rotar180 .slot {
+  transform: rotate(-180deg);
+}
+
+.slot.seleccionado {
+  border-style: double;
+  border-color: rgba(20, 202, 90, 0.863);
+  border-width: 0.4em;
+}
+
+.barrera {
+  border-style: solid;
+  border-color: black;
+  background-color: rgb(80, 61, 53);
+}
+
+.ataque {
+  border-style: double;
+  border-color: black;
+  background-color: red;
+}
+
+.ataque.seleccionado {
+  border-style: double;
+  border-color: blue;
+  border-width: 0.4em;
+}
+
+.defensa {
+  border-style: double;
+  border-color: black;
+  background-color: green;
+}
+
+.defensa.seleccionado {
+  border-style: double;
+  border-color: blue;
+  border-width: 0.4em;
+}
+
+.mano {
+  border-style: solid;
+  border-color: rgb(71, 93, 192);
+  background-color: white;
+}
+
+.oculto {
+  border-style: double;
+  border-color: white;
+  background-color: black;
+}
+
+.mano.seleccionado {
+  border-style: double;
+  border-color: rgba(230, 161, 14, 0.863);
+  border-width: 0.4em;
+}
+
+.tablero .zonaBatallaYo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.tablero .barreraYo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.tablero .manoYo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.botonera {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  width: 20%;
+  position: absolute;
+  right: 2vw;
+}
+
+.botonera button {
+  /*width:10vw;*/
+  font-size: 1rem;
+}
+
+#btnColocarEnAtaque {
+  background-color: red;
+}
+
+#btnColocarEnDefensa {
+  background-color: green;
+}
+
+#btnAtacarBarrera{
+  background-color: rgb(80, 61, 53);
+  color:white;
+}
+
+.info {
+  display: grid;
+  text-align: center;
+  justify-items: center;
+  align-items: center;
+  visibility: hidden;
+  position: absolute;
+  background-color: orange;
+  width: 30%;
+  opacity: 0.8;
+}
+.info.mostrarResultado {
+  visibility: visible;
+}
+
+.mostrarPantalla {
+  z-index: 1;
+}
+
+.sombrear {
+  border: 5px solid rgb(238, 223, 8);
+}
+
+.ocultar {
+  display: none;
+}
+
+.ayuda-tablero {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  justify-items: center;
+  align-items: center;
+  visibility: hidden;
+  position: relative;
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  z-index: 3;
+}
+
+#finDeJuego {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background-color: rgb(19, 192, 149);
+}
+
+#finDeJuego .victoria {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  background-color: red;
+  width: 100vw;
+  height: 47.5vh;
+}
+
+#finDeJuego .derrota {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  background-color: rgb(255, 196, 0);
+  width: 100vw;
+  height: 47.5vh;
+}
+
+#finDeJuego .btnVolverInicio {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  width: 100vw;
+  height: 5vh;
+}

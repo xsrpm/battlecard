@@ -30,9 +30,18 @@ class JugadorPanel extends HTMLElement{
       getStyles() {
         return `
           <style>
+            :host{
+                
+            }
             div{
+                display:flex;
+                flex-direction:column;
+                justify-content: center;
+                word-wrap: break-word;
+                text-align: center;
                 opacity:0.5;
-                width:15vw;
+                height:100%;
+                background-color: rgb(236, 236, 192);
             }
             div p{
                 visibility: hidden
