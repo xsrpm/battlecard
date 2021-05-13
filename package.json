@@ -12,7 +12,7 @@
 		"test": "jest",
 		"test:coverage": "jest --coverage",
 		"test:watch": "jest --watch",
-		"nodemon" :"nodemon --exec"
+		"nodemon": "nodemon --exec"
 	},
 	"devDependencies": {
 		"eslint": "^7.12.0",
