@@ -1,11 +1,18 @@
 
-# Jest
+# Apuntes de desarrollo
+
+## Jest
+https://jestjs.io/docs/
 
 Issue con reporte html de coverage y warnings en consola al correr 'npm run test:coverage' con version de "jest": "^22.4.3", y su solucion es añadir como dev dependency: "handlebars": "~4.5.3"
 https://github.com/facebook/jest/issues/9396
 https://github.com/facebook/jest/issues/9388
 
-# Nodemon
+para test especifico de clase
+
+    npm run test tests/carta.test.js   
+
+## Nodemon
 
 Inicia y autodespliega servidor luego de cambios en el codigo fuente.
 
@@ -15,3 +22,4 @@ Inicia y autodespliega servidor luego de cambios en el codigo fuente.
 para instalaciones globales:
 
     nodemon --exec "npm start"
+ 

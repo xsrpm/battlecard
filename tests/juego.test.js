@@ -16,7 +16,6 @@ describe("Juego objeto", () => {
       expect(juego.jugador).toEqual([]);
       expect(juego.jugadorActual).toBeNull();
       expect(juego.jugadorAnterior).toBeNull();
-      expect(juego.jugadorVictorioso).toBeNull();
       expect(juego.idCartaManoSel).toBe(0);
       expect(juego.idCartaZonaBSel).toBe(0);
       expect(juego.idCartaZonaBSelEnemigo).toBe(0);
@@ -27,12 +26,12 @@ describe("Juego objeto", () => {
   
   describe("obtener estado sala", () => {
     test("abierta", () => {
-      expect(juego.obtenerEstadoSala()).toBe("SALA ABIERTA");
+      expect(juego.estadoSala).toBe("SALA ABIERTA");
     });
     test("cerrada", () => {
       juego.unirASala("Cesar")
       juego.unirASala("Marco")
-      expect(juego.obtenerEstadoSala()).toBe("SALA CERRADA");
+      expect(juego.estadoSala).toBe("SALA CERRADA");
     });
   });
 

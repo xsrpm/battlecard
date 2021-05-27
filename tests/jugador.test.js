@@ -114,15 +114,28 @@ describe("Jugador objeto", () => {
   describe("coge una carta del deck", () => {
     test("mano llena", () => {
       for (let i = 0; i < 5; i++) jugador.mano.push(carta);
-      expect(jugador.cogerUnaCartaDelDeck()).toBe("MANO LLENA");
+      expect(jugador.cogerUnaCartaDelDeck()).toEqual({ resultado: ResultadoCojerUnaCarta.MANO_LLENA })
     });
     test("deck vacio", () => {
-      expect(jugador.cogerUnaCartaDelDeck()).toBe("DECK VACIO");
+      expect(jugador.cogerUnaCartaDelDeck()).toBe({ resultado: ResultadoCojerUnaCarta.DECK_VACIO });
     });
     test("válido", () => {
       jugador.deck.push(carta);
-      expect(jugador.cogerUnaCartaDelDeck()).toBe("EXITO");
-      expect(jugador.mano[0]).toEqual(carta);
+      let res= jugador.cogerUnaCartaDelDeck()
+      expect(res.resultado).toBe("EXITO");
+      expect(res.carta).toEqual(carta);
+    });
+  });
+
+  describe('puede colocar cartas', () => {
+    test('Ya colocó cartas en este turno', () => {
+      //TODO
+    });
+    test('La zona de batalla está llena', () => {
+      //TODO
+    });
+    test('Posible', () => {
+      //TODO
     });
   });
   
