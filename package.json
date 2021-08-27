@@ -7,13 +7,13 @@
     "api",
     "app"
   ],
-  "engines":{
-    "npm":"7.9.0"
+  "engines": {
+    "npm": "7.9.0"
   },
   "main": "index.js",
   "scripts": {
     "build": "npm run build --workspace=app",
-    "start": "npm run build && npm run dev --workspace=api",
+    "start": "npm run build && npm start --workspace=api",
     "dev:api": "npm run dev --workspace=api",
     "dev:app": "npm run dev --workspace=app"
   },
