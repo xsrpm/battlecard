@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const WebSocket = require('ws')
@@ -343,7 +344,7 @@ wss.on('connection', (ws) => {
   })
 })
 
-const server = app.listen(8080)
+const server = app.listen(process.env.PORT || 8080)
 
 server.on('upgrade', (request, socket, head) => {
   wss.handleUpgrade(request, socket, head, (socket) => {
