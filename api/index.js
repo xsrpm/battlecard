@@ -1,3 +1,4 @@
+const express = require('express')
 const WebSocket = require('ws')
 const { Pantalla } = require('./clases/juego.js')
 const Juego = require('./clases/juego.js')
@@ -6,7 +7,8 @@ const Juego = require('./clases/juego.js')
  */
 const juego = new Juego()
 
-const wss = new WebSocket.Server({ port: 8080 })
+const app = express()
+const wss = new WebSocket.Server({ noServer: true })
 
 /**
  *
@@ -335,5 +337,13 @@ wss.on('connection', (ws) => {
   ws.on('close', (code, reason) => {
     console.info(`close ws code:${code}, player: ${ws.jugador.nombre}`)
     finalizarPorDesconexion(ws)
+  })
+})
+
+const server = app.listen(8080)
+
+server.on('upgrade', (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, (socket) => {
+    wss.emit('connection', socket, request)
   })
 })
