@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "rm -rf ./development && rm -rf ./.cache && parcel public/index.html --out-dir development -p 3000",
-    "build": "parcel build public/index.html --dist-dir build --public-url ./ ",
+    "dev": "rm -rf ./development && rm -rf ./.cache && parcel serve public/index.html --dist-dir development --cache-dir parcel-cache -p 3000",
+    "build": "parcel build public/index.html --dist-dir build --public-url ./ --cache-dir parcel-cache",
     "dev:react": "react-scripts start"
   },
   "repository": {

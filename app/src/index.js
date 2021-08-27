@@ -45,11 +45,19 @@ const Estado = {
   CAMBIO_POS_DISPONIBLE: 'Cambio de posición disponible'
 }
 
-console.log(location.origin)
-const url =
-  process.env.WEBSOCKET_URL ||
-  `ws://${location.host}/ws` ||
-  `wss://${location.host}/ws`
+console.log({ location })
+console.log(process.env.NODE_ENV)
+
+let url
+if (process.env.NODE_ENV !== 'production') {
+  url = 'ws://localhost:8080'
+} else {
+  if (location.protocol === 'http:' && location.hostname === 'localhost') {
+    url = `ws://${location.host}/ws`
+  } else {
+    url = `wss://${location.host}/ws`
+  }
+}
 
 let socket
 let idCartaManoSeleccionada
