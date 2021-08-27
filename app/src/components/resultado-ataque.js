@@ -1,23 +1,23 @@
-class ResultadoAtaque extends HTMLElement{
-    constructor(){
-        super()
-        this.attachShadow({ mode: "open" });
-        this.render()
+class ResultadoAtaque extends HTMLElement {
+  constructor () {
+    super()
+    this.attachShadow({ mode: 'open' })
+    this.render()
+  }
+
+  static get observedAttributes () {
+    return ['mostrar']
+  }
+
+  attributeChangedCallback (attr, oldVal, newVal) {
+    if (attr === 'mostrar') {
+      if (newVal === 'true') { this.shadowRoot.children[0].classList.add('mostrar') } else { this.shadowRoot.children[0].classList.remove('mostrar') }
     }
-    static get observedAttributes() {
-        return ["mostrar"];
-    }
-    attributeChangedCallback(attr, oldVal, newVal) {
-        if (attr === "mostrar") {
-            if(newVal === "true")
-                this.shadowRoot.children[0].classList.add("mostrar")
-            else
-                this.shadowRoot.children[0].classList.remove("mostrar")
-        }
-    }
-    getTemplate() {
-        const template = document.createElement("template");
-        template.innerHTML = `
+  }
+
+  getTemplate () {
+    const template = document.createElement('template')
+    template.innerHTML = `
             <div class="resultadoAtaque">
                 <div class="atacante">
                     <slot name="nombre-atacante"></slot>
@@ -48,10 +48,11 @@ class ResultadoAtaque extends HTMLElement{
                 </div>
             </div>
           ${this.getStyles()}
-        `;
-        return template;
-    }
-    getStyles() {
+        `
+    return template
+  }
+
+  getStyles () {
     return `
         <style>
             :host{
@@ -124,11 +125,12 @@ class ResultadoAtaque extends HTMLElement{
                 background-color:white;
             }
         </style>
-    `;
-    }
-    render() {
-    this.shadowRoot.appendChild(this.getTemplate().content.cloneNode(true));
-    }
+    `
+  }
+
+  render () {
+    this.shadowRoot.appendChild(this.getTemplate().content.cloneNode(true))
+  }
 }
 
-customElements.define("resultado-ataque", ResultadoAtaque);
+customElements.define('resultado-ataque', ResultadoAtaque)

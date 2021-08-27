@@ -1,34 +1,35 @@
-class JugadorPanel extends HTMLElement{
-    constructor(){
-        super()
-        this.attachShadow({ mode: "open" });
-        this.render()
+class JugadorPanel extends HTMLElement {
+  constructor () {
+    super()
+    this.attachShadow({ mode: 'open' })
+    this.render()
+  }
+
+  static get observedAttributes () {
+    return ['en-turno']
+  }
+
+  attributeChangedCallback (attr, oldVal, newVal) {
+    if (attr === 'en-turno') {
+      if (newVal === 'true') { this.shadowRoot.children[0].classList.add('jugEnTurno') } else { this.shadowRoot.children[0].classList.remove('jugEnTurno') }
     }
-    static get observedAttributes() {
-        return ["en-turno"];
-    }
-    attributeChangedCallback(attr, oldVal, newVal) {
-        if (attr === "en-turno") {
-            if(newVal === "true")
-                this.shadowRoot.children[0].classList.add("jugEnTurno")
-            else
-                this.shadowRoot.children[0].classList.remove("jugEnTurno")
-        }
-    }
-    getTemplate() {
-        const template = document.createElement("template");
-        template.innerHTML = `
+  }
+
+  getTemplate () {
+    const template = document.createElement('template')
+    template.innerHTML = `
             <div>
                 <h2><slot name="jugadorNombre">Jugador Enemigo</slot></h2>
                 <h3>Deck: <span><slot name="nCartas">20</slot></span></h3>
                 <p>En turno</p>
             </div>
           ${this.getStyles()}
-        `;
-        return template;
-      }
-      getStyles() {
-        return `
+        `
+    return template
+  }
+
+  getStyles () {
+    return `
           <style>
             :host{
                 
@@ -56,11 +57,12 @@ class JugadorPanel extends HTMLElement{
                 font-weight: bolder;
             }
           </style>
-        `;
-      }
-      render() {
-        this.shadowRoot.appendChild(this.getTemplate().content.cloneNode(true));
-      }
+        `
+  }
+
+  render () {
+    this.shadowRoot.appendChild(this.getTemplate().content.cloneNode(true))
+  }
 }
 
-customElements.define("jugador-panel", JugadorPanel);
+customElements.define('jugador-panel', JugadorPanel)

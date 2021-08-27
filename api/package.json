@@ -11,7 +11,7 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
-    "nodemon": "nodemon --exec"
+    "dev": "nodemon --exec"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
