@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "private": "true",
+  "workspaces": [
+    "api",
+    "app"
+  ],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,5 +21,16 @@
   "bugs": {
     "url": "https://github.com/xsrpm/battlecard-back/issues"
   },
-  "homepage": "https://github.com/xsrpm/battlecard-back#readme"
+  "homepage": "https://github.com/xsrpm/battlecard-back#readme",
+  "devDependencies": {
+    "standard": "^16.0.3",
+    "handlebars": "~4.5.3",
+    "jest": "^22.4.3"
+  },
+  "eslintConfig": {
+    "extends": "standard",
+    "env": {
+      "jest": true
+    }
+  }
 }
