@@ -46,8 +46,8 @@ const Estado = {
 }
 
 console.log(window.location.host)
-console.log(`${process.env.WEBSOCKET_URL}`)
-const url = '/ws'
+console.log(`${process.env.NODE_ENV}`)
+const url = `${process.env.WEBSOCKET_URL}/ws`
 
 let socket
 let idCartaManoSeleccionada
