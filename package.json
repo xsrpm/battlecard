@@ -23,9 +23,9 @@
   },
   "homepage": "https://github.com/xsrpm/battlecard-back#readme",
   "devDependencies": {
-    "standard": "^16.0.3",
     "handlebars": "~4.5.3",
-    "jest": "^22.4.3"
+    "jest": "^22.4.3",
+    "standard": "^16.0.3"
   },
   "eslintConfig": {
     "extends": "./node_modules/standard/eslintrc.json",

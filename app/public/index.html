@@ -13,7 +13,7 @@
     <link href="css/style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <div id="bienvenida" class="mostrarPantalla" >
+    <div id="bienvenida" class="mostrarPantalla">
       <h1>BattleCard</h1>
       <button id="btnJugar">Jugar</button>
     </div>
@@ -80,10 +80,10 @@
           -->
         </div>
         <div class="jugador">
-          <jugador-panel id="jugYo" en-turno=false>
+          <jugador-panel id="jugYo" en-turno="false">
             <span slot="jugadorNombre">Jugador (Yo)</span>
             <span slot="nCartas">20</span>
-          </jugador-panel> 
+          </jugador-panel>
           <div>
             <div id="zonaBatallaYo">
               <div class="slot" data-id="0"><span></span><span></span></div>
@@ -126,11 +126,13 @@
         <button id="btnColocarEnDefensa" class="ocultar">de defensa</button>
         <button id="btnAtacarCarta" class="ocultar">Atacar carta</button>
         <button id="btnAtacarBarrera" class="ocultar">Atacar barrera</button>
-        <button id="btnCambiarPosicion" class="ocultar">Cambiar posición</button>
+        <button id="btnCambiarPosicion" class="ocultar">
+          Cambiar posición
+        </button>
         <button id="btnTerminarTurno">Terminar turno</button>
         <button id="btnFinDeJuego" class="ocultar">Fin de Juego</button>
       </div>
-      
+
       <resultado-ataque mostrar="false">
         <span slot="nombre-atacante">Atacante</span>
         <span slot="valor-atacante"></span>
@@ -146,7 +148,6 @@
       <div class="info">
         <h1></h1>
       </div>
-      
     </div>
     <div id="finDeJuego">
       <div class="victoria">
@@ -157,9 +158,11 @@
         <h1>Derrota</h1>
         <p></p>
       </div>
-      <button id="btnVolverInicio" class="btnVolverInicio">Volver a la pantalla inicial</button>
+      <button id="btnVolverInicio" class="btnVolverInicio">
+        Volver a la pantalla inicial
+      </button>
     </div>
-    
-    <script type="module" src="../src/script.js"></script>
+
+    <script type="module" src="../src/index.js"></script>
   </body>
 </html>

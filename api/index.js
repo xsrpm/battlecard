@@ -1,4 +1,5 @@
 const express = require('express')
+const cors = require('cors')
 const WebSocket = require('ws')
 const { Pantalla } = require('./clases/juego.js')
 const Juego = require('./clases/juego.js')
@@ -8,6 +9,8 @@ const Juego = require('./clases/juego.js')
 const juego = new Juego()
 
 const app = express()
+app.use(cors())
+app.use(express.static('../app/build'))
 const wss = new WebSocket.Server({ noServer: true })
 
 /**

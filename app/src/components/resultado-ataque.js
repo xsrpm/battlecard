@@ -1,21 +1,25 @@
 class ResultadoAtaque extends HTMLElement {
-  constructor () {
+  constructor() {
     super()
     this.attachShadow({ mode: 'open' })
     this.render()
   }
 
-  static get observedAttributes () {
+  static get observedAttributes() {
     return ['mostrar']
   }
 
-  attributeChangedCallback (attr, oldVal, newVal) {
+  attributeChangedCallback(attr, oldVal, newVal) {
     if (attr === 'mostrar') {
-      if (newVal === 'true') { this.shadowRoot.children[0].classList.add('mostrar') } else { this.shadowRoot.children[0].classList.remove('mostrar') }
+      if (newVal === 'true') {
+        this.shadowRoot.children[0].classList.add('mostrar')
+      } else {
+        this.shadowRoot.children[0].classList.remove('mostrar')
+      }
     }
   }
 
-  getTemplate () {
+  getTemplate() {
     const template = document.createElement('template')
     template.innerHTML = `
             <div class="resultadoAtaque">
@@ -52,7 +56,7 @@ class ResultadoAtaque extends HTMLElement {
     return template
   }
 
-  getStyles () {
+  getStyles() {
     return `
         <style>
             :host{
@@ -128,7 +132,7 @@ class ResultadoAtaque extends HTMLElement {
     `
   }
 
-  render () {
+  render() {
     this.shadowRoot.appendChild(this.getTemplate().content.cloneNode(true))
   }
 }
