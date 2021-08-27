@@ -1,0 +1,9 @@
+version: '3.1'
+
+services:
+  front:
+    image: cemp2703/battlecard-front:1.0.0
+    ports:
+    - 8081:80
+    environment:
+    - WEBSOCKET_URL

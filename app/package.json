@@ -1,0 +1,24 @@
+{
+  "name": "battlecard-front",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "dev": "rm -rf ./development && rm -rf ./.cache && parcel public/index.html --out-dir development -p 3000",
+    "build": "parcel build public/index.html --out-dir dist --public-url ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xsrpm/battlecard-front.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xsrpm/battlecard-front/issues"
+  },
+  "homepage": "https://github.com/xsrpm/battlecard-front#readme",
+  "devDependencies": {
+    "parcel-bundler": "1.12.3"
+  }
+}
