@@ -1,0 +1,1949 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for jugador.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="prettify.css" />
+    <link rel="stylesheet" href="base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="index.html">All files</a> jugador.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">66.55% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>187/281</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">57.26% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>71/124</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">94.44% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>34/36</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">66.05% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>179/271</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576
+577
+578
+579
+580
+581
+582
+583
+584
+585
+586
+587
+588
+589
+590
+591
+592
+593
+594
+595
+596
+597
+598
+599
+600
+601
+602
+603
+604
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624
+625
+626
+627
+628
+629</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">539x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">781x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">709x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3394x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-yes">375x</span>
+<span class="cline-any cline-yes">375x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-yes">125x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">38x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-yes">780x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">3378x</span>
+<span class="cline-any cline-yes">3378x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3378x</span>
+<span class="cline-any cline-yes">780x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">780x</span>
+<span class="cline-any cline-yes">780x</span>
+<span class="cline-any cline-yes">780x</span>
+<span class="cline-any cline-yes">75x</span>
+<span class="cline-any cline-yes">705x</span>
+<span class="cline-any cline-yes">75x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">630x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/* eslint-disable no-undef */
+const Carta = require("./carta.js");
+const CeldaBatalla = require("./celdabatalla.js");
+&nbsp;
+const ResultadoCojerUnaCarta = {
+  MANO_LLENA: "MANO LLENA",
+  DECK_VACIO: "DECK VACIO",
+  EXITO: "EXITO",
+};
+Object.freeze(ResultadoCojerUnaCarta);
+const VeredictoAtaque = {
+  EMPATE: "EMPATE",
+  GANA_ATACANTE: "GANA ATACANTE", //Gana Atacante contra carta en Zona de Batalla
+  PIERDE_ATACANTE: "PIERDE ATACANTE", //Pierde Atacante
+};
+Object.freeze(VeredictoAtaque);
+const EstadoCarta = {
+  ACTIVA: "ACTIVA", // Carta activa
+  DESTRUIDA: "DESTRUIDA", // Carta destruida
+};
+Object.freeze(EstadoCarta);
+class Jugador {
+  static get MAX_ZONA_BATALLA_CARDS() {
+    return 3;
+  }
+  static get MAX_BARRERA_CARDS() {
+    return 5;
+  }
+  static get MAX_MANO_CARDS() {
+    return 5;
+  }
+  static get MAX_DECK() {
+    return Carta.MAX_VALOR_CARTA * Carta.NUMERO_ELEMENTOS_CARTAS;
+  }
+  static get ResultadoCojerUnaCarta() {
+    return ResultadoCojerUnaCarta;
+  }
+  static get VeredictoAtaque() {
+    return VeredictoAtaque;
+  }
+  static get EstadoCarta() {
+    return EstadoCarta;
+  }
+  /**
+   *
+   * @param {string} nombre
+   */
+  constructor(nombre) {
+    this.cartaColocada = false;
+    this.nAtaquesDisponibles = 0;
+    this.nCambiosPosicionesDisponibles = 0;
+    /**
+     * @type {Array&lt;CeldaBatalla&gt;}
+     */
+    this.zonaBatalla = [];
+    for (let i = 0; i &lt; Jugador.MAX_ZONA_BATALLA_CARDS; i++) {
+      this.zonaBatalla[i] = new CeldaBatalla();
+      this.zonaBatalla[i].carta = null;
+    }
+    /**
+     * @type {Array&lt;Carta&gt;}
+     */
+    this.barrera = [];
+    /**
+     * @type {Array&lt;Carta&gt;}
+     */
+    this.mano = [];
+    /**
+     * @type {Array&lt;Carta&gt;}
+     */
+    this.deck = [];
+    this.nTurnos = 0;
+    this.nombre = nombre;
+    this.puedeColocarCartaEnZB = true;
+    this.nCartasEnZB = 0; // revisa codigo por esto
+    this.enTurno = false;
+  }
+  //region Operaciones (Reglas)
+&nbsp;
+<span class="fstat-no" title="function not covered" >  es</span>tadoActual() {
+<span class="cstat-no" title="statement not covered" >    return {</span>
+      zonaBatalla: this.zonaBatalla,
+      deck: this.deck,
+      mano: this.mano,
+      barrera: this.barrera,
+      nTurnos: this.nTurnos,
+      enTurno: this.enTurno,
+      nombre: this.nombre,
+    };
+  }
+&nbsp;
+  sinBarreras() {
+    return this.barrera.length === 0;
+  }
+&nbsp;
+  sinCartasEnDeck() {
+    return this.deck.length === 0;
+  }
+&nbsp;
+  ataquesPermitidosXNumTurnos() {
+    return this.nTurnos &gt; 1;
+  }
+&nbsp;
+  setEnTurno(enTurno) {
+    this.enTurno = enTurno;
+  }
+&nbsp;
+  iniciarTurno() {
+    this.nTurnos++;
+    this.nAtaquesDisponibles = 0;
+    this.nCambiosPosicionesDisponibles = 0;
+    this.cartaColocada = false;
+    this.puedeColocarCartaEnZB = true;
+    for (let celdaBatalla of this.zonaBatalla) {
+      if (celdaBatalla.carta != null) {
+        if (
+          celdaBatalla.posBatalla === CeldaBatalla.Estado.POS_BATALLA_ATAQUE
+        ) {
+          celdaBatalla.dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE;
+          this.nAtaquesDisponibles++;
+        } else{
+          celdaBatalla.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE;
+        }
+        celdaBatalla.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_DISPONIBLE;
+        this.nCambiosPosicionesDisponibles++;
+      }
+    }
+  }
+&nbsp;
+  /**
+   *  @returns {string}
+   */
+  cogerUnaCartaDelDeck() {
+    if (this.mano.length === Jugador.MAX_MANO_CARDS)
+      return { resultado: ResultadoCojerUnaCarta.MANO_LLENA };
+    const carta = this.deck.pop();
+    if (carta === undefined) {
+      return { resultado: ResultadoCojerUnaCarta.DECK_VACIO };
+    } else {
+      this.mano.push(carta);
+      return { resultado: ResultadoCojerUnaCarta.EXITO, carta: carta };
+    }
+  }
+&nbsp;
+  puedeColocarCartas(){
+    if (!this.puedeColocarCartaEnZB)
+      return "Ya colocó cartas en este turno";
+    <span class="missing-if-branch" title="if path not taken" >I</span>if(this.nCartasEnZB === Jugador.MAX_ZONA_BATALLA_CARDS)
+<span class="cstat-no" title="statement not covered" >      return "La zona de batalla está llena"</span>
+    return "Posible"
+  }
+&nbsp;
+  puedeColocarCartaDesdeId(idCartaMano) {
+    let resp = this.puedeColocarCartas()
+    if (resp !== "Posible") return resp;
+    if (!this.tieneCartaEnMano(idCartaMano))
+      return "No hay carta en la mano para esa posicion";
+    return "Posible";
+  }
+&nbsp;
+  /**
+   * @param {number} idPosZB
+   * @param {number} idCartaMano
+   * @returns {string}
+   */
+  posibilidadColocarCartaEnPosicion(idPosZB, idCartaMano) {
+    let resp = this.puedeColocarCartaDesdeId(idCartaMano);
+    if (resp !== "Posible") return resp;
+    if (
+      this.tieneCartaColocada(idPosZB)
+    )
+      return "Posición en zona de batalla está ocupada";
+    return "Posible";
+  }
+&nbsp;
+  /**
+   * @param {number} idPosZB
+   * @param {number} idCartaMano
+   * @param {string} posBatalla
+   * @returns {string}
+   */
+  accionColocarCarta(idPosZB, idCartaMano, posBatalla) {
+    let rpta = {}
+    rpta.resultado = this.posibilidadColocarCartaEnPosicion(
+      idPosZB,
+      idCartaMano
+    );
+    if (rpta.resultado === "Posible") {
+      rpta.carta = this.mano[idCartaMano];
+      this.mano.splice(idCartaMano, 1);
+      this.puedeColocarCartaEnZB = false;
+      if (posBatalla === CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
+        this.nAtaquesDisponibles++;
+      this.zonaBatalla[idPosZB].agregarCarta(rpta.carta, posBatalla);
+      this.nCartasEnZB++;
+      rpta.resultado = "Carta colocada";
+    }
+    return rpta;
+  }
+&nbsp;
+  /**
+   * @param {Jugador} jugadorAtacado
+   * @returns {string}
+   */
+  puedeAtacarBarreras(jugadorAtacado) {
+    if (this.nCartasEnZB === 0) return "Sin cartas en zona de batalla";
+    if (jugadorAtacado.nCartasEnZB &gt; 0)
+      return "Hay cartas en zona de batalla enemiga";
+    if (this.nAtaquesDisponibles === 0)
+      return "No le quedan ataques disponibles";
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (this.nTurnos &lt; 2)
+      return "Atacantes solo se pueden realizar desde el segundo turno";
+<span class="cstat-no" title="statement not covered" >    return "Posible";</span>
+  }
+&nbsp;
+  /**
+   * @param {Jugador} jugadorAtacado
+   * @param {number} idCartaAtacante
+   * @returns {string}
+   */
+  posibilidadAtacarBarrera(jugadorAtacado, idCartaAtacante) {
+    let resp = this.puedeAtacarBarreras(jugadorAtacado);
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (resp !== "Posible") return resp;
+<span class="cstat-no" title="statement not covered" >    resp = this.existeCartaEnCeldaBatalla(idCartaAtacante);</span>
+<span class="cstat-no" title="statement not covered" >    if (resp === "No hay carta en tu ubicación de zona de batalla") <span class="cstat-no" title="statement not covered" >return resp;</span></span>
+<span class="cstat-no" title="statement not covered" >    if (</span>
+      this.zonaBatalla[idCartaAtacante].posBatalla !==
+      CeldaBatalla.Estado.POS_BATALLA_ATAQUE
+    )
+<span class="cstat-no" title="statement not covered" >      return "Carta atacante no está en posición de ataque";</span>
+<span class="cstat-no" title="statement not covered" >    if (</span>
+      this.zonaBatalla[idCartaAtacante].dispAtaque ===
+      CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE
+    )
+<span class="cstat-no" title="statement not covered" >      return "Carta atacante no tiene ataque disponible";</span>
+<span class="cstat-no" title="statement not covered" >    return "Posible";</span>
+  }
+&nbsp;
+  /**
+   *
+   * @param {number} idCartaAtacante
+   */
+  ataqueRealizado(idCartaAtacante) {
+    this.nAtaquesDisponibles--;
+    this.zonaBatalla[idCartaAtacante].ataqueRealizado();
+  }
+&nbsp;
+  /**
+   * @param {Jugador} jugadorAtacado
+   * @param {number} idCartaAtacante
+   */
+  accionAtacarBarrera(jugadorAtacado, idCartaAtacante) {
+    let respuesta = {};
+    respuesta.resultado = this.posibilidadAtacarBarrera(
+      jugadorAtacado,
+      idCartaAtacante
+    );
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (respuesta.resultado === "Posible") {
+<span class="cstat-no" title="statement not covered" >      respuesta.idBarreraEliminada = jugadorAtacado.barrera.length - 1;</span>
+<span class="cstat-no" title="statement not covered" >      jugadorAtacado.barrera.pop();</span>
+<span class="cstat-no" title="statement not covered" >      this.ataqueRealizado(idCartaAtacante);</span>
+<span class="cstat-no" title="statement not covered" >      if (jugadorAtacado.sinBarreras()) {</span>
+<span class="cstat-no" title="statement not covered" >        respuesta.sinBarreras = true;</span>
+<span class="cstat-no" title="statement not covered" >        respuesta.nombreJugadorDerrotado = jugadorAtacado.nombre;</span>
+<span class="cstat-no" title="statement not covered" >        respuesta.nombreJugadorVictorioso = this.nombre;</span>
+      }
+<span class="cstat-no" title="statement not covered" >      respuesta.resultado = "Barrera destruida";</span>
+    }
+    return respuesta;
+  }
+  /**
+   * @param {Jugador} jugadorAtacado
+   * @returns {string}
+   */
+  puedeAtacarCartas(jugadorAtacado) {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (this.nTurnos &lt; 2)
+      return "Atacantes solo se pueden realizar desde el segundo turno";
+<span class="cstat-no" title="statement not covered" >    if (this.nCartasEnZB === 0) <span class="cstat-no" title="statement not covered" >return "Sin cartas en zona de batalla";</span></span>
+<span class="cstat-no" title="statement not covered" >    if (jugadorAtacado.nCartasEnZB === 0)</span>
+<span class="cstat-no" title="statement not covered" >      return "No hay cartas en zona de batalla enemiga";</span>
+<span class="cstat-no" title="statement not covered" >    if (this.nAtaquesDisponibles === 0)</span>
+<span class="cstat-no" title="statement not covered" >      return "No le quedan ataques disponibles";</span>
+<span class="cstat-no" title="statement not covered" >    if (jugadorAtacado.barrera.length === 0)</span>
+<span class="cstat-no" title="statement not covered" >      return "Jugador enemigo debe tener barreras";</span>
+<span class="cstat-no" title="statement not covered" >    return "Posible";</span>
+  }
+&nbsp;
+  /**
+   *
+   * @param {number} idZonaBatalla
+   * @returns
+   */
+&nbsp;
+<span class="fstat-no" title="function not covered" >  ex</span>isteCartaEnCeldaBatalla(idZonaBatalla) {
+<span class="cstat-no" title="statement not covered" >    return (</span>
+      this.zonaBatalla[idZonaBatalla].carta != null &amp;&amp;
+      this.zonaBatalla[idZonaBatalla] !== undefined
+    );
+  }
+&nbsp;
+  /**
+   *
+   * @param {number} idPosicionMano
+   * @returns
+   */
+  tieneCartaEnMano(idPosicionMano) {
+    return this.mano[idPosicionMano] !== null &amp;&amp; this.mano[idPosicionMano] !== undefined;
+  }
+&nbsp;
+  tieneCartaColocada(idPosicionManoZB){
+      return this.zonaBatalla[idPosicionManoZB].carta !== null 
+  }
+&nbsp;
+  /**
+   *
+   * @param {Jugador} jugadorAtacado
+   * @param {number} idZonaBatalla
+   * @returns
+   */
+  puedeAtacarCartaDesdeId(jugadorAtacado, idZonaBatalla) {
+    let resp = this.puedeAtacarCartas(jugadorAtacado);
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (resp !== "Posible") return resp;
+<span class="cstat-no" title="statement not covered" >    if (this.existeCartaEnCeldaBatalla(idZonaBatalla) !== true)</span>
+<span class="cstat-no" title="statement not covered" >      return "No hay carta en tu ubicación de zona de batalla";</span>
+<span class="cstat-no" title="statement not covered" >    if (</span>
+      this.zonaBatalla[idZonaBatalla].dispAtaque ===
+      CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE
+    )
+<span class="cstat-no" title="statement not covered" >      return "Carta atacante no tiene ataque disponible";</span>
+<span class="cstat-no" title="statement not covered" >    if (</span>
+      this.zonaBatalla[idZonaBatalla].posBatalla !==
+      CeldaBatalla.Estado.POS_BATALLA_ATAQUE
+    )
+<span class="cstat-no" title="statement not covered" >      return "Carta atacante no está en posición de ataque";</span>
+<span class="cstat-no" title="statement not covered" >    return "Posible";</span>
+  }
+&nbsp;
+  /**
+   * @param {Jugador} jugadorAtacado
+   * @param {number} idCartaAtacada
+   * @param {number} idCartaAtacante
+   * @returns {string}
+   */
+  posibilidadAtacarCarta(jugadorAtacado, idCartaAtacada, idCartaAtacante) {
+    let resp = this.puedeAtacarCartaDesdeId(jugadorAtacado, idCartaAtacante);
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (resp !== "Posible") return resp;
+<span class="cstat-no" title="statement not covered" >    if (jugadorAtacado.zonaBatalla[idCartaAtacada].carta === null)</span>
+<span class="cstat-no" title="statement not covered" >      return "No hay carta en ubicación de zona de batalla enemiga";</span>
+<span class="cstat-no" title="statement not covered" >    return "Posible";</span>
+  }
+&nbsp;
+  /**
+   *
+   * @param {Carta} cartaAtacante
+   * @param {Carta} cartaAtacada
+   * @returns {{number,number}}
+   */
+  calculoValorAtaque(cartaAtacante, cartaAtacada) {
+    let calculoVAtacante = cartaAtacante.valor,
+      calculoVAtacada = cartaAtacada.valor,
+      bonifCartaAtacante = 0,
+      bonifCartaAtacada = 0;
+&nbsp;
+    switch (cartaAtacante.elemento + " " + cartaAtacada.elemento) {
+      case Carta.Elemento.ESPADA + " " + Carta.Elemento.TREBOL:
+        bonifCartaAtacada = 6;
+        calculoVAtacada += bonifCartaAtacada;
+        break;
+      case Carta.Elemento.TREBOL + " " + Carta.Elemento.ESPADA:
+        bonifCartaAtacante = 6;
+        calculoVAtacante += bonifCartaAtacante;
+        break;
+      case Carta.Elemento.ESPADA + " " + Carta.Elemento.CORAZON:
+      case Carta.Elemento.CORAZON + " " + Carta.Elemento.TREBOL:
+        bonifCartaAtacante = 2;
+        calculoVAtacante += bonifCartaAtacante;
+        break;
+      case Carta.Elemento.CORAZON + " " + Carta.Elemento.ESPADA:
+        bonifCartaAtacante = 2;
+        calculoVAtacada += bonifCartaAtacante;
+        break;
+      case Carta.Elemento.COCO + " " + Carta.Elemento.TREBOL:
+      case Carta.Elemento.ESPADA + " " + Carta.Elemento.COCO:
+        bonifCartaAtacante = 4;
+        calculoVAtacante += bonifCartaAtacante;
+        break;
+      case Carta.Elemento.TREBOL + " " + Carta.Elemento.COCO:
+      case Carta.Elemento.COCO + " " + Carta.Elemento.ESPADA:
+        bonifCartaAtacada = 4;
+        calculoVAtacada += bonifCartaAtacada;
+        break;
+      case Carta.Elemento.TREBOL + " " + Carta.Elemento.CORAZON:
+        bonifCartaAtacada = 2;
+        calculoVAtacada += bonifCartaAtacada;
+        break;
+    }
+    return {
+      calculoVAtacante,
+      calculoVAtacada,
+      bonifCartaAtacante,
+      bonifCartaAtacada,
+    };
+  }
+&nbsp;
+  /**
+   *
+   * @param {Carta} cartaAtacante
+   * @param {Carta} cartaAtacada
+   */
+  obtenerVeredictoAtaque(calculoVAtacante, calculoVAtacada) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (calculoVAtacante &gt; calculoVAtacada) {
+<span class="cstat-no" title="statement not covered" >      return VeredictoAtaque.GANA_ATACANTE; </span>//gana
+    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (calculoVAtacante &lt; calculoVAtacada) {
+<span class="cstat-no" title="statement not covered" >      return VeredictoAtaque.PIERDE_ATACANTE; </span>//pierde
+    } else {
+      return VeredictoAtaque.EMPATE; //empata
+    }
+  }
+&nbsp;
+  /**
+   * @param {Jugador} jugadorAtacado
+   * @param {number} idCartaAtacada
+   * @param {number} idCartaAtacante
+   */
+  accionAtacarCarta(jugadorAtacado, idCartaAtacante, idCartaAtacada) {
+    //Sistema de produccion
+    let rsAtaque = {};
+    rsAtaque.estadoAtaque = this.posibilidadAtacarCarta(
+      jugadorAtacado,
+      idCartaAtacada,
+      idCartaAtacante
+    );
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (rsAtaque.estadoAtaque === "Posible") {
+      let posicionCartaAtacada;
+<span class="cstat-no" title="statement not covered" >      rsAtaque.cartaAtacante = this.zonaBatalla[idCartaAtacante].carta;</span>
+<span class="cstat-no" title="statement not covered" >      rsAtaque.cartaAtacada = jugadorAtacado.zonaBatalla[idCartaAtacada].carta;</span>
+&nbsp;
+      let {
+        calculoVAtacante,
+        calculoVAtacada,
+        bonifCartaAtacante,
+        bonifCartaAtacada,
+      } = <span class="cstat-no" title="statement not covered" >this.calculoValorAtaque(</span>
+        rsAtaque.cartaAtacante,
+        rsAtaque.cartaAtacada
+      );
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      rsAtaque.bonifCartaAtacada = bonifCartaAtacada;</span>
+<span class="cstat-no" title="statement not covered" >      rsAtaque.bonifCartaAtacante = bonifCartaAtacante;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      rsAtaque.veredicto = this.obtenerVeredictoAtaque(</span>
+        calculoVAtacante,
+        calculoVAtacada
+      );
+&nbsp;
+      //Setear resultados
+&nbsp;
+      //Jugador Atacado en defensa cara abajo, se coloca cara arriba.
+<span class="cstat-no" title="statement not covered" >      if (</span>
+        jugadorAtacado.zonaBatalla[idCartaAtacada].posBatalla ===
+        CeldaBatalla.Estado.POS_BATALLA_DEF_ABAJO
+      ) {
+<span class="cstat-no" title="statement not covered" >        jugadorAtacado.zonaBatalla[idCartaAtacada].posBatalla =</span>
+          CeldaBatalla.Estado.POS_BATALLA_DEF_ARRIBA;
+      }
+<span class="cstat-no" title="statement not covered" >      posicionCartaAtacada =</span>
+        jugadorAtacado.zonaBatalla[idCartaAtacada].posBatalla;
+      //Jugador Atacado al Ataque
+<span class="cstat-no" title="statement not covered" >      if (posicionCartaAtacada === CeldaBatalla.Estado.POS_BATALLA_ATAQUE) {</span>
+<span class="cstat-no" title="statement not covered" >        if (rsAtaque.veredicto === VeredictoAtaque.GANA_ATACANTE) {</span>
+          //gana atacante
+<span class="cstat-no" title="statement not covered" >          jugadorAtacado.zonaBatalla[idCartaAtacada].quitarCarta();</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.idBarreraEliminada = jugadorAtacado.barrera.length - 1;</span>
+<span class="cstat-no" title="statement not covered" >          jugadorAtacado.barrera.pop();</span>
+<span class="cstat-no" title="statement not covered" >          jugadorAtacado.nCartasEnZB--;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoCartaAtacante = EstadoCarta.ACTIVA;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoCartaAtacada = EstadoCarta.DESTRUIDA;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoBarrera = EstadoCarta.DESTRUIDA;</span>
+<span class="cstat-no" title="statement not covered" >          if (jugadorAtacado.sinBarreras()) {</span>
+<span class="cstat-no" title="statement not covered" >            rsAtaque.sinBarreras = true;</span>
+<span class="cstat-no" title="statement not covered" >            rsAtaque.nombreJugadorDerrotado = jugadorAtacado.nombre;</span>
+<span class="cstat-no" title="statement not covered" >            rsAtaque.nombreJugadorVictorioso = this.nombre;</span>
+          }
+        } else <span class="cstat-no" title="statement not covered" >if (rsAtaque.veredicto === VeredictoAtaque.PIERDE_ATACANTE) {</span>
+          //pierde atacante
+<span class="cstat-no" title="statement not covered" >          this.zonaBatalla[idCartaAtacante].quitarCarta();</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoCartaAtacante = EstadoCarta.DESTRUIDA;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoCartaAtacada = EstadoCarta.ACTIVA;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoBarrera = EstadoCarta.ACTIVA;</span>
+<span class="cstat-no" title="statement not covered" >          this.nCartasEnZB--;</span>
+        } else {
+          //Empate
+<span class="cstat-no" title="statement not covered" >          jugadorAtacado.zonaBatalla[idCartaAtacada].quitarCarta();</span>
+<span class="cstat-no" title="statement not covered" >          this.zonaBatalla[idCartaAtacante].quitarCarta();</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoCartaAtacante = EstadoCarta.DESTRUIDA;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoCartaAtacada = EstadoCarta.DESTRUIDA;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoBarrera = EstadoCarta.ACTIVA;</span>
+<span class="cstat-no" title="statement not covered" >          jugadorAtacado.nCartasEnZB--;</span>
+<span class="cstat-no" title="statement not covered" >          this.nCartasEnZB--;</span>
+        }
+      } else <span class="cstat-no" title="statement not covered" >if (</span>
+        posicionCartaAtacada === CeldaBatalla.Estado.POS_BATALLA_DEF_ARRIBA
+      ) {
+        //Jugador Atacado a la Defensa
+<span class="cstat-no" title="statement not covered" >        if (rsAtaque.veredicto === VeredictoAtaque.GANA_ATACANTE) {</span>
+          //gana atacante
+<span class="cstat-no" title="statement not covered" >          jugadorAtacado.zonaBatalla[idCartaAtacada].quitarCarta();</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoCartaAtacante = EstadoCarta.ACTIVA;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoCartaAtacada = EstadoCarta.DESTRUIDA;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoBarrera = EstadoCarta.ACTIVA;</span>
+<span class="cstat-no" title="statement not covered" >          jugadorAtacado.nCartasEnZB--;</span>
+        } else <span class="cstat-no" title="statement not covered" >if (rsAtaque.veredicto === VeredictoAtaque.PIERDE_ATACANTE) {</span>
+          //pierde atacante
+<span class="cstat-no" title="statement not covered" >          this.zonaBatalla[idCartaAtacante].quitarCarta();</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoCartaAtacante = EstadoCarta.DESTRUIDA;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoCartaAtacada = EstadoCarta.ACTIVA;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoBarrera = EstadoCarta.ACTIVA;</span>
+<span class="cstat-no" title="statement not covered" >          this.nCartasEnZB--;</span>
+        } else {
+          //Empate
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoCartaAtacante = EstadoCarta.ACTIVA;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoCartaAtacada = EstadoCarta.ACTIVA;</span>
+<span class="cstat-no" title="statement not covered" >          rsAtaque.estadoBarrera = EstadoCarta.ACTIVA;</span>
+        }
+      }
+<span class="cstat-no" title="statement not covered" >      rsAtaque.estadoAtaque = "Ataque realizado";</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      this.ataqueRealizado(idCartaAtacante);</span>
+    }
+    return rsAtaque;
+  }
+  /**
+   * @returns {string}
+   */
+  puedeCambiarPosicion() {
+    if (this.nCartasEnZB === 0) return "Sin cartas en zona de batalla";
+    if (this.nCambiosPosicionesDisponibles === 0)
+      return "Sin cambios de posición disponibles";
+    return "Posible";
+  }
+  /**
+   * @param {number} idZonaBatalla
+   * @returns {string}
+   */
+  posibilidadCambiarPosicionBatallaEnCarta(idZonaBatalla) {
+    let resp = this.puedeCambiarPosicion();
+    if (resp !== "Posible") return resp;
+    if (this.zonaBatalla[idZonaBatalla].carta === null)
+      return "No hay carta en posición de batalla indicada";
+    if (
+      this.zonaBatalla[idZonaBatalla].dispCambio ===
+      CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
+    )
+      return "Carta indicada no tiene disponible el cambio de posición";
+    return "Posible";
+  }
+&nbsp;
+  /**
+   * @param {number} idCarta
+   */
+  cambiarPosicionBatalla(idCarta) {
+    let respuesta = this.posibilidadCambiarPosicionBatallaEnCarta(idCarta);
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (respuesta === "Posible") {
+      if (
+        this.zonaBatalla[idCarta].posBatalla ===
+          CeldaBatalla.Estado.POS_BATALLA_DEF_ARRIBA ||
+        this.zonaBatalla[idCarta].posBatalla ==
+          CeldaBatalla.Estado.POS_BATALLA_DEF_ABAJO
+      ) {
+        this.zonaBatalla[idCarta].posBatalla =
+          CeldaBatalla.Estado.POS_BATALLA_ATAQUE;
+        this.zonaBatalla[idCarta].dispAtaque =
+          CeldaBatalla.Estado.ATAQUE_DISPONIBLE;
+        this.nAtaquesDisponibles++
+      } else {
+        this.zonaBatalla[idCarta].posBatalla =
+          CeldaBatalla.Estado.POS_BATALLA_DEF_ARRIBA;
+        this.zonaBatalla[idCarta].dispAtaque =
+          CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE;
+      }
+      this.zonaBatalla[idCarta].dispCambio =
+        CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE;
+      this.nCambiosPosicionesDisponibles--;
+      respuesta = "Posicion cambiada";
+    }
+    return {
+      respuesta: respuesta,
+      posBatalla: this.zonaBatalla[idCarta].posBatalla,
+      carta: this.zonaBatalla[idCarta].carta,
+    };
+  }
+&nbsp;
+  repartirCartas() {
+    let cartasElegidas = [];
+    let n, m, cartasRepartidas;
+&nbsp;
+    for (let i = 0; i &lt; Carta.NUMERO_ELEMENTOS_CARTAS; i++) {
+      cartasElegidas.push([]);
+      for (let j = 0; j &lt; Carta.MAX_VALOR_CARTA; j++) {
+        cartasElegidas[i][j] = false;
+      }
+    }
+&nbsp;
+    cartasRepartidas = 0;
+&nbsp;
+    while (cartasRepartidas &lt; Jugador.MAX_DECK) {
+      n = Math.floor(Math.random() * Carta.NUMERO_ELEMENTOS_CARTAS);
+      m = Math.floor(Math.random() * Carta.MAX_VALOR_CARTA);
+&nbsp;
+      if (!cartasElegidas[n][m]) {
+        cartasElegidas[n][m] = true;
+&nbsp;
+        cartasRepartidas++;
+        let c = new Carta(m + 1, Object.values(Carta.Elemento)[n]);
+        if (this.barrera.length &lt; Jugador.MAX_BARRERA_CARDS) {
+          this.barrera.push(c);
+        } else if (this.mano.length &lt; Jugador.MAX_MANO_CARDS) {
+          this.mano.push(c);
+        } else {
+          this.deck.push(c);
+        }
+      }
+    }
+  }
+&nbsp;
+}
+&nbsp;
+module.exports = { Jugador };
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed May 05 2021 15:21:55 GMT-0500 (GMT-05:00)
+</div>
+</div>
+<script src="prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="sorter.js"></script>
+</body>
+</html>
