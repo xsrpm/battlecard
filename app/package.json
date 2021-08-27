@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "rm -rf ./development && rm -rf ./.cache && parcel public/index.html --out-dir development -p 3000",
     "build": "parcel build public/index.html --out-dir build --public-url ./",
-    "start": "react-scripts start"
+    "dev:react": "react-scripts start"
   },
   "repository": {
     "type": "git",
