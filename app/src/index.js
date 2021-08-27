@@ -45,9 +45,11 @@ const Estado = {
   CAMBIO_POS_DISPONIBLE: 'Cambio de posición disponible'
 }
 
-console.log(window.location.host)
-console.log(`${process.env.NODE_ENV}`)
-const url = `${process.env.WEBSOCKET_URL}/ws`
+console.log(location.origin)
+const url =
+  process.env.WEBSOCKET_URL ||
+  `ws://${location.host}/ws` ||
+  `wss://${location.host}/ws`
 
 let socket
 let idCartaManoSeleccionada

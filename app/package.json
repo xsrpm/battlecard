@@ -2,10 +2,9 @@
   "name": "battlecard-front",
   "version": "1.0.0",
   "description": "",
-  "main": "",
   "scripts": {
     "dev": "rm -rf ./development && rm -rf ./.cache && parcel public/index.html --out-dir development -p 3000",
-    "build": "parcel build public/index.html --out-dir build --public-url ./",
+    "build": "parcel build public/index.html --dist-dir build --public-url ./ ",
     "dev:react": "react-scripts start"
   },
   "repository": {
@@ -16,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "parcel-bundler": "1.12.3"
+    "parcel": "2.0.0-rc.0"
   },
   "devDependencies": {
     "react-scripts": "4.0.3"
