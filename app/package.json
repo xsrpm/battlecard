@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "rm -rf ./development && rm -rf ./.cache && parcel serve public/index.html --dist-dir development --cache-dir parcel-cache -p 3000",
+    "dev": "rm -rf ./development && rm -rf ./.cache && parcel serve public/index1.html --dist-dir development --cache-dir parcel-cache -p 3000",
     "build": "parcel build public/index.html --dist-dir build --public-url ./ --cache-dir parcel-cache",
     "dev:react": "react-scripts start"
   },
@@ -15,7 +15,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "parcel": "2.0.0-rc.0"
+    "parcel": "2.0.0-rc.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
   },
   "devDependencies": {
     "react-scripts": "4.0.3"
