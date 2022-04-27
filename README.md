@@ -1,5 +1,5 @@
 # BattleCard
-Juego de cartas usando cartas inglesas.
+Juego de cartas usando barajas inglesas. Para 2 jugadores en tiempo real. 
 ![Juego](https://raw.githubusercontent.com/xsrpm/battlecard/master/app/images/pant5.png)
 
 ## Table of Contents
