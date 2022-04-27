@@ -1,5 +1,5 @@
 # BattleCard
-Juego de cartas basado en Yu-Gi-Oh! Trading Card Game usando cartas inglesas.
+Juego de cartas usando cartas inglesas.
 ![Juego](https://raw.githubusercontent.com/xsrpm/battlecard/master/app/images/pant5.png)
 
 ## Table of Contents
