@@ -1,13 +1,16 @@
 import './components/jugador-panel'
 import './components/resultado-ataque'
 
-const pantallas = document.querySelectorAll('body > div')
-const bienvenida = document.getElementById('bienvenida')
+import { cambiarPantalla } from './modules/utils'
+import { btnFinDeJuego } from './modules/botonera'
+import { nombreJugadorDerrotado, setNombreJugadorVictorioso, setNombreJugadorDerrotado } from './modules/estadoGlobal'
+import './modules/pantallaFinDeJuego'
+
 const recepcion = document.getElementById('recepcion')
 const sala = document.getElementById('sala')
 
 const juego = document.getElementById('juego')
-const finDeJuego = document.getElementById('finDeJuego')
+
 const h2 = sala.getElementsByTagName('h2')
 const inNombreJugador = document.getElementById('inNombreJugador')
 const btnUnirASala = document.getElementById('btnUnirASala')
@@ -20,8 +23,7 @@ const btnAtacarCarta = document.getElementById('btnAtacarCarta')
 const btnAtacarBarrera = document.getElementById('btnAtacarBarrera')
 const btnCambiarPosicion = document.getElementById('btnCambiarPosicion')
 const btnTerminarTurno = document.getElementById('btnTerminarTurno')
-const btnFinDeJuego = document.getElementById('btnFinDeJuego')
-const btnVolverInicio = document.getElementById('btnVolverInicio')
+
 const resultadoAtaque = document.querySelector('resultado-ataque')
 const info = document.querySelector('.info')
 const manoEnemigo = document.getElementById('manoEnemigo')
@@ -68,22 +70,12 @@ let cartaZBSeleccionada
 let stepAccion = 'STAND BY'
 let posicionBatalla
 let message
-let nombreJugadorDerrotado
-let nombreJugadorVictorioso
+// let nombreJugadorDerrotado
+// let nombreJugadorVictorioso
 let sinBarrerasFlag
 let juegoFinalizado
 
 // Visual Life Cicle (App)
-/**
- *
- * @param {HTMLElement} pantalla
- */
-function cambiarPantalla(pantalla) {
-  Array.from(pantallas).forEach((p) => {
-    p.classList.remove('mostrarPantalla')
-  })
-  pantalla.classList.add('mostrarPantalla')
-}
 
 // Visual Juego
 
@@ -101,8 +93,8 @@ function mostrarCartaCogida() {
       manoEnemigo.children[4].classList.add('oculto')
     }
   } else if (resultado === 'DECK VACIO') {
-    nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
-    nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
+    setNombreJugadorDerrotado(message.payload.nombreJugadorDerrotado)
+    setNombreJugadorVictorioso(message.payload.nombreJugadorVictorioso)
     info.children[0].innerText = `${nombreJugadorDerrotado} se ha quedado sin cartas para tomar del deck`
     btnFinDeJuego.classList.remove('ocultar')
     btnTerminarTurno.classList.add('ocultar')
@@ -307,8 +299,8 @@ function atacarCarta() {
       barreraEnemiga.children[idBarreraEliminada].classList.remove('barrera')
       sinBarrerasFlag = message.payload.sinBarreras
       if (sinBarrerasFlag) {
-        nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
-        nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
+        setNombreJugadorDerrotado(message.payload.nombreJugadorDerrotado)
+        setNombreJugadorVictorioso(message.payload.nombreJugadorVictorioso)
         info.children[0].innerText = `${nombreJugadorDerrotado} se ha queda sin barreras`
         btnFinDeJuego.classList.remove('ocultar')
         btnTerminarTurno.classList.add('ocultar')
@@ -400,8 +392,8 @@ function atacanTuCarta() {
       barreraYo.children[idBarreraEliminada].classList.remove('barrera')
       sinBarrerasFlag = message.payload.sinBarreras
       if (sinBarrerasFlag) {
-        nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
-        nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
+        setNombreJugadorDerrotado(message.payload.nombreJugadorDerrotado)
+        setNombreJugadorVictorioso(message.payload.nombreJugadorVictorioso)
         info.children[0].innerText = `${nombreJugadorDerrotado} se ha queda sin barreras`
         btnFinDeJuego.classList.remove('ocultar')
         btnTerminarTurno.classList.add('ocultar')
@@ -438,8 +430,8 @@ function atacarBarrera() {
     sinBarrerasFlag = message.payload.sinBarreras
     habilitacionBotonera()
     if (sinBarrerasFlag) {
-      nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
-      nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
+      setNombreJugadorDerrotado(message.payload.nombreJugadorDerrotado)
+      setNombreJugadorVictorioso(message.payload.nombreJugadorVictorioso)
       info.children[0].innerText = `${nombreJugadorDerrotado} se ha queda sin barreras`
       btnFinDeJuego.classList.remove('ocultar')
       btnTerminarTurno.classList.add('ocultar')
@@ -461,8 +453,8 @@ function atacanTuBarrera() {
     barreraYo.children[idBarreraEliminada].classList.remove('barrera')
     sinBarrerasFlag = message.payload.sinBarreras
     if (sinBarrerasFlag) {
-      nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
-      nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
+      setNombreJugadorDerrotado(message.payload.nombreJugadorDerrotado)
+      setNombreJugadorVictorioso(message.payload.nombreJugadorVictorioso)
       info.children[0].innerText = `${nombreJugadorDerrotado} se ha queda sin barreras`
       btnFinDeJuego.classList.remove('ocultar')
       btnTerminarTurno.classList.add('ocultar')
@@ -507,8 +499,8 @@ function cambiaPosicionEnemigo() {
 
 function enemigoDesconectado() {
   if (encuentraError()) return
-  nombreJugadorVictorioso = message.payload.nombreJugadorVictorioso
-  nombreJugadorDerrotado = message.payload.nombreJugadorDerrotado
+  setNombreJugadorVictorioso(message.payload.nombreJugadorVictorioso)
+  setNombreJugadorDerrotado(message.payload.nombreJugadorDerrotado)
   info.children[0].innerText = message.payload.resultado
   btnFinDeJuego.classList.remove('ocultar')
   btnTerminarTurno.classList.add('ocultar')
@@ -836,13 +828,4 @@ zonaBatallaEnemiga.addEventListener('click', function (e) {
 
 info.addEventListener('click', function (e) {
   info.classList.remove('mostrarResultado')
-})
-btnFinDeJuego.addEventListener('click', function () {
-  finDeJuego.children[0].children[1].innerText = nombreJugadorVictorioso
-  finDeJuego.children[1].children[1].innerText = nombreJugadorDerrotado
-  cambiarPantalla(finDeJuego)
-})
-
-btnVolverInicio.addEventListener('click', function () {
-  cambiarPantalla(bienvenida)
 })
