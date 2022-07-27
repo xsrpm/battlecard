@@ -57,7 +57,7 @@ btnAtacarCarta.addEventListener('click', () => {
 
 btnColocarEnDefensa.addEventListener('click', () => {
   if (stepAccion === 'SELECCIONAR MANO') {
-    stepAccion('COLOCAR CARTA')
+    setStepAccion('COLOCAR CARTA')
     console.log('stepAccion: ' + stepAccion)
     setPosicionBatalla(Estado.POS_BATALLA_DEF_ABAJO)
     console.log('posicionBatalla: ' + posicionBatalla)
