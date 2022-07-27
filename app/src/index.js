@@ -2,10 +2,11 @@ import './components/jugador-panel'
 import './components/resultado-ataque'
 
 import { cambiarPantalla } from './modules/utils'
-import { btnFinDeJuego, btnTerminarTurno } from './modules/botonera'
-import { nombreJugadorDerrotado, setNombreJugadorVictorioso, setNombreJugadorDerrotado } from './modules/estadoGlobal'
+import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './modules/botonera'
+import { nombreJugadorDerrotado, setNombreJugadorVictorioso, setNombreJugadorDerrotado, setStepAccion, stepAccion, setIdCartaZBSeleccionada, idCartaZBSeleccionada, posicionBatalla } from './modules/estadoGlobal'
 import './modules/pantallaFinDeJuego'
 import { initSocket, sendMessage } from './modules/socket'
+import { Estado } from './modules/tablero'
 
 const recepcion = document.getElementById('recepcion')
 const sala = document.getElementById('sala')
@@ -17,35 +18,17 @@ const inNombreJugador = document.getElementById('inNombreJugador')
 const btnUnirASala = document.getElementById('btnUnirASala')
 const btnJugar = document.getElementById('btnJugar')
 const btnIniciarJuego = document.getElementById('btnIniciarJuego')
-const mensajeBotones = document.getElementById('mensajeBotones')
-const btnColocarEnAtaque = document.getElementById('btnColocarEnAtaque')
-const btnColocarEnDefensa = document.getElementById('btnColocarEnDefensa')
-const btnAtacarCarta = document.getElementById('btnAtacarCarta')
-const btnAtacarBarrera = document.getElementById('btnAtacarBarrera')
-const btnCambiarPosicion = document.getElementById('btnCambiarPosicion')
 
 const resultadoAtaque = document.querySelector('resultado-ataque')
 const info = document.querySelector('.info')
 const manoEnemigo = document.getElementById('manoEnemigo')
 const manoYo = document.getElementById('manoYo')
-const zonaBatallaYo = document.getElementById('zonaBatallaYo')
+export const zonaBatallaYo = document.getElementById('zonaBatallaYo')
 const zonaBatallaEnemiga = document.getElementById('zonaBatallaEnemiga')
 const barreraYo = document.getElementById('barreraYo')
 const barreraEnemiga = document.getElementById('barreraEnemiga')
-const jugYo = document.getElementById('jugYo')
-const jugEnemigo = document.getElementById('jugEnemigo')
-
-const Estado = {
-  NO_HAY_CARTA: 'No hay carta',
-  POS_BATALLA_ATAQUE: 'Posición de batalla: Ataque',
-  POS_BATALLA_DEF_ARRIBA: 'Posición de batalla: Defensa cara arriba',
-  POS_BATALLA_DEF_ABAJO: 'Posición de batalla: Defensa cara abajo',
-  YA_ESTA_EN_POSICION_SOLICITADA: 'Ya se está en la posición solicitada',
-  ATAQUE_NO_DISPONIBLE: 'Atacar carta no disponible',
-  ATAQUE_DISPONIBLE: 'Atacar carta disponible',
-  CAMBIO_POS_NO_DISPONIBLE: 'Cambio de posición no disponible',
-  CAMBIO_POS_DISPONIBLE: 'Cambio de posición disponible'
-}
+export const jugDown = document.getElementById('jugDown')
+const jugUp = document.getElementById('jugUp')
 
 console.log({ location })
 console.log(process.env.NODE_ENV)
@@ -62,12 +45,10 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 let idCartaManoSeleccionada
-let idCartaZBSeleccionada
 let idCartaZBEnemigaSeleccionada
 let cartaManoSeleccionada
 let cartaZBSeleccionada
-let stepAccion = 'STAND BY'
-let posicionBatalla
+
 let message
 // let nombreJugadorDerrotado
 // let nombreJugadorVictorioso
@@ -106,15 +87,15 @@ function mostrarCartaCogida() {
 function mostrarJugadorEnTurno() {
   if (encuentraError()) return
   if (message.payload.jugador.enTurno) {
-    jugYo.setAttribute('en-turno', 'true')
-    jugEnemigo.setAttribute('en-turno', 'false')
+    jugDown.setAttribute('en-turno', 'true')
+    jugUp.setAttribute('en-turno', 'false')
   } else {
-    jugEnemigo.setAttribute('en-turno', 'true')
-    jugYo.setAttribute('en-turno', 'false')
+    jugUp.setAttribute('en-turno', 'true')
+    jugDown.setAttribute('en-turno', 'false')
   }
-  jugYo.querySelector("span[slot='nCartas']").textContent =
+  jugDown.querySelector("span[slot='nCartas']").textContent =
     message.payload.jugador.nDeck
-  jugEnemigo.querySelector("span[slot='nCartas']").textContent =
+  jugUp.querySelector("span[slot='nCartas']").textContent =
     message.payload.jugadorEnemigo.nDeck
 }
 
@@ -123,9 +104,9 @@ function inicializarJuego() {
   for (let i = 0; i < message.payload.jugador.nBarrera; i++) {
     barreraYo.children[i].classList.add('barrera')
   }
-  jugYo.querySelector("span[slot='jugadorNombre']").textContent =
+  jugDown.querySelector("span[slot='jugadorNombre']").textContent =
     message.payload.jugador.nombre
-  jugYo.querySelector("span[slot='nCartas']").textContent =
+  jugDown.querySelector("span[slot='nCartas']").textContent =
     message.payload.jugador.nDeck
   message.payload.jugador.mano.forEach((c, i) => {
     manoYo.children[i].classList.add('mano')
@@ -149,9 +130,9 @@ function inicializarJuego() {
   for (let i = 0; i < message.payload.jugadorEnemigo.nMano; i++) {
     manoEnemigo.children[i].classList.add('oculto')
   }
-  jugEnemigo.querySelector("span[slot='jugadorNombre']").textContent =
+  jugUp.querySelector("span[slot='jugadorNombre']").textContent =
     message.payload.jugadorEnemigo.nombre
-  jugEnemigo.querySelector("span[slot='nCartas']").textContent =
+  jugUp.querySelector("span[slot='nCartas']").textContent =
     message.payload.jugadorEnemigo.nDeck
   btnTerminarTurno.classList.remove('ocultar')
   btnFinDeJuego.classList.add('ocultar')
@@ -188,39 +169,6 @@ function iniciarJuego() {
   mostrarJugadorEnTurno()
   habilitacionBotonera()
   cambiarPantalla(juego)
-}
-
-function habilitacionBotonera() {
-  if (jugYo.getAttribute('en-turno') === 'true') {
-    btnColocarEnAtaque.classList.add('ocultar')
-    btnColocarEnDefensa.classList.add('ocultar')
-    btnAtacarCarta.classList.add('ocultar')
-    btnAtacarBarrera.classList.add('ocultar')
-    btnCambiarPosicion.classList.add('ocultar')
-    btnTerminarTurno.classList.remove('ocultar')
-  } else {
-    btnColocarEnAtaque.classList.add('ocultar')
-    btnColocarEnDefensa.classList.add('ocultar')
-    btnAtacarCarta.classList.add('ocultar')
-    btnAtacarBarrera.classList.add('ocultar')
-    btnCambiarPosicion.classList.add('ocultar')
-    btnTerminarTurno.classList.add('ocultar')
-  }
-  mensajeBotones.textContent = ''
-}
-
-function colocarCarta() {
-  habilitacionBotonera()
-  mensajeBotones.innerText = 'Seleccione ubicación en zona de batalla...'
-  for (const celda of zonaBatallaYo.children) {
-    if (
-      !celda.classList.contains('ataque') &&
-      !celda.classList.contains('defensa')
-    ) {
-      celda.classList.add('seleccionado')
-    }
-  }
-  stepAccion = 'COLOCAR SELECCIONAR ZONA BATALLA'
 }
 
 function quitarSeleccionEnCartas() {
@@ -588,57 +536,9 @@ resultadoAtaque.addEventListener('click', () => {
   }
 })
 
-btnColocarEnAtaque.addEventListener('click', () => {
-  if (stepAccion === 'SELECCIONAR MANO') {
-    stepAccion = 'COLOCAR CARTA'
-    console.log('stepAccion: ' + stepAccion)
-    posicionBatalla = Estado.POS_BATALLA_ATAQUE
-    console.log('posicionBatalla: ' + posicionBatalla)
-    colocarCarta()
-  }
-})
-btnColocarEnDefensa.addEventListener('click', () => {
-  if (stepAccion === 'SELECCIONAR MANO') {
-    stepAccion = 'COLOCAR CARTA'
-    console.log('stepAccion: ' + stepAccion)
-    posicionBatalla = Estado.POS_BATALLA_DEF_ABAJO
-    console.log('posicionBatalla: ' + posicionBatalla)
-    colocarCarta()
-  }
-})
-btnAtacarCarta.addEventListener('click', () => {
-  if (stepAccion === 'SELECCIONAR ZONA BATALLA') {
-    console.log('ATACAR CARTA')
-    stepAccion = 'ATACAR CARTA SELECCIONAR ZB ENEMIGA'
-    habilitacionBotonera()
-    mensajeBotones.innerText = 'Seleccione objetivo...'
-  }
-})
-btnAtacarBarrera.addEventListener('click', () => {
-  sendMessage({
-    event: 'Atacar Barrera',
-    payload: {
-      idZonaBatalla: idCartaZBSeleccionada
-    }
-  })
-})
-btnCambiarPosicion.addEventListener('click', () => {
-  if (stepAccion === 'SELECCIONAR ZONA BATALLA') {
-    console.log('CAMBIAR POSICION')
-    stepAccion = 'CAMBIAR POSICION'
-    habilitacionBotonera()
-    sendMessage({
-      event: 'Cambiar Posicion',
-      payload: {
-        idZonaBatalla: idCartaZBSeleccionada
-      }
-    })
-  }
-})
-
 manoYo.addEventListener('click', function (e) {
   if (juegoFinalizado) return
-  if (jugYo.getAttribute('en-turno') === 'false') return
+  if (jugDown.getAttribute('en-turno') === 'false') return
   /**
    * @type {HTMLElement}
    */
@@ -647,7 +547,7 @@ manoYo.addEventListener('click', function (e) {
   idCartaManoSeleccionada = target.dataset.id
   cartaManoSeleccionada = target
   if (target.classList.contains('mano')) {
-    stepAccion = 'SELECCIONAR MANO'
+    setStepAccion('SELECCIONAR MANO')
     console.log('stepAccion: ' + stepAccion)
     console.log(target)
     sendMessage({
@@ -685,7 +585,7 @@ function colocarSeleccionarZonaBatalla() {
     } else {
       zonaBatallaYo.children[idCartaZBSeleccionada].classList.add('defensa')
     }
-    stepAccion = 'STAND BY'
+    setStepAccion('STAND BY')
     console.log('CARTA COLOCADA')
   }
 }
@@ -707,7 +607,7 @@ function colocaCartaOtroJugador() {
     } else {
       zonaBatallaEnemiga.children[idZonaBatalla].classList.add('oculto')
     }
-    stepAccion = 'STAND BY'
+    setStepAccion('STAND BY')
     console.log('CARTA COLOCADA POR ENEMIGO')
   }
 }
@@ -745,10 +645,10 @@ function standBySeleccionarZonaBatalla() {
 
 zonaBatallaYo.addEventListener('click', function (e) {
   if (juegoFinalizado) return
-  if (jugYo.getAttribute('en-turno') === 'false') return
+  if (jugDown.getAttribute('en-turno') === 'false') return
   let target = e.target
   while (!target.classList.contains('slot')) target = target.parentElement
-  idCartaZBSeleccionada = target.dataset.id
+  setIdCartaZBSeleccionada(target.dataset.id)
   cartaZBSeleccionada = target
   if (stepAccion === 'COLOCAR SELECCIONAR ZONA BATALLA') {
     if (
@@ -775,7 +675,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
       target.classList.contains('defensa') ||
       target.classList.contains('oculto')
     ) {
-      stepAccion = 'SELECCIONAR ZONA BATALLA'
+      setStepAccion('SELECCIONAR ZONA BATALLA')
       console.log('stepAccion: ' + stepAccion)
       console.log(target)
 
