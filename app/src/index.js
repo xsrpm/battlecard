@@ -2,9 +2,10 @@ import './components/jugador-panel'
 import './components/resultado-ataque'
 
 import { cambiarPantalla } from './modules/utils'
-import { btnFinDeJuego } from './modules/botonera'
+import { btnFinDeJuego, btnTerminarTurno } from './modules/botonera'
 import { nombreJugadorDerrotado, setNombreJugadorVictorioso, setNombreJugadorDerrotado } from './modules/estadoGlobal'
 import './modules/pantallaFinDeJuego'
+import { initSocket, sendMessage } from './modules/socket'
 
 const recepcion = document.getElementById('recepcion')
 const sala = document.getElementById('sala')
@@ -22,7 +23,6 @@ const btnColocarEnDefensa = document.getElementById('btnColocarEnDefensa')
 const btnAtacarCarta = document.getElementById('btnAtacarCarta')
 const btnAtacarBarrera = document.getElementById('btnAtacarBarrera')
 const btnCambiarPosicion = document.getElementById('btnCambiarPosicion')
-const btnTerminarTurno = document.getElementById('btnTerminarTurno')
 
 const resultadoAtaque = document.querySelector('resultado-ataque')
 const info = document.querySelector('.info')
@@ -61,7 +61,6 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-let socket
 let idCartaManoSeleccionada
 let idCartaZBSeleccionada
 let idCartaZBEnemigaSeleccionada
@@ -208,12 +207,6 @@ function habilitacionBotonera() {
     btnTerminarTurno.classList.add('ocultar')
   }
   mensajeBotones.textContent = ''
-}
-
-function sendMessage() {
-  socket.send(JSON.stringify(message))
-  console.log('sended:')
-  console.log(message)
 }
 
 function colocarCarta() {
@@ -511,79 +504,82 @@ function enemigoDesconectado() {
 btnJugar.addEventListener('click', () => {
   cambiarPantalla(recepcion)
 })
+
+const handleOpenSocket = (e) => {
+  sendMessage({
+    event: 'Unir a sala',
+    payload: { nombreJugador: inNombreJugador.value }
+  })
+}
+
+const handleMessageSocket = (e) => {
+  console.log('received:')
+  message = JSON.parse(e.data)
+  console.log(message)
+  switch (message.event) {
+    case 'Unir a sala':
+      unirASala()
+      break
+    case 'Iniciar juego':
+      iniciarJuego()
+      break
+    case 'Colocar Carta':
+      colocarSeleccionarZonaBatalla()
+      break
+    case 'Coloca Carta Otro Jugador':
+      colocaCartaOtroJugador()
+      break
+    case 'Seleccionar Zona Batalla':
+      standBySeleccionarZonaBatalla()
+      break
+    case 'Seleccionar Mano':
+      seleccionarMano()
+      break
+    case 'Atacar Carta':
+      atacarCarta()
+      break
+    case 'Atacar Barrera':
+      atacarBarrera()
+      break
+    case 'Atacan Tu Carta':
+      atacanTuCarta()
+      break
+    case 'Atacan Tu Barrera':
+      atacanTuBarrera()
+      break
+    case 'Cambiar Posicion':
+      cambiarPosicion()
+      break
+    case 'Cambia Posicion Enemigo':
+      cambiaPosicionEnemigo()
+      break
+    case 'Terminar Turno':
+      terminarTurno()
+      break
+    case 'Enemigo Desconectado':
+      enemigoDesconectado()
+      break
+  }
+}
+
+const handleErrorSocket = (e) => {
+  if (recepcion.classList.contains('mostrarPantalla')) {
+    btnUnirASala.innerText = 'Unirse a la Sala'
+    btnUnirASala.setAttribute('disabled', 'false')
+  }
+  console.log('Error: ' + e)
+}
+
+const handleCloseSocket = (e) => {
+  console.log('close ws' + e)
+}
+
 btnUnirASala.addEventListener('click', () => {
   if (inNombreJugador.value === '') return
-  socket = new WebSocket(url)
-  socket.onopen = (e) => {
-    message = {
-      event: 'Unir a sala',
-      payload: { nombreJugador: inNombreJugador.value }
-    }
-    sendMessage()
-  }
-  socket.onmessage = (e) => {
-    console.log('received:')
-    message = JSON.parse(e.data)
-    console.log(message)
-    switch (message.event) {
-      case 'Unir a sala':
-        unirASala()
-        break
-      case 'Iniciar juego':
-        iniciarJuego()
-        break
-      case 'Colocar Carta':
-        colocarSeleccionarZonaBatalla()
-        break
-      case 'Coloca Carta Otro Jugador':
-        colocaCartaOtroJugador()
-        break
-      case 'Seleccionar Zona Batalla':
-        standBySeleccionarZonaBatalla()
-        break
-      case 'Seleccionar Mano':
-        seleccionarMano()
-        break
-      case 'Atacar Carta':
-        atacarCarta()
-        break
-      case 'Atacar Barrera':
-        atacarBarrera()
-        break
-      case 'Atacan Tu Carta':
-        atacanTuCarta()
-        break
-      case 'Atacan Tu Barrera':
-        atacanTuBarrera()
-        break
-      case 'Cambiar Posicion':
-        cambiarPosicion()
-        break
-      case 'Cambia Posicion Enemigo':
-        cambiaPosicionEnemigo()
-        break
-      case 'Terminar Turno':
-        terminarTurno()
-        break
-      case 'Enemigo Desconectado':
-        enemigoDesconectado()
-        break
-    }
-  }
-  socket.onerror = (e) => {
-    if (recepcion.classList.contains('mostrarPantalla')) {
-      btnUnirASala.innerText = 'Unirse a la Sala'
-      btnUnirASala.setAttribute('disabled', 'false')
-    }
-    console.log('Error: ' + e)
-  }
-  socket.onclose = (e) => {
-    console.log('close ws' + e)
-  }
+  initSocket(url, handleOpenSocket, handleMessageSocket, handleCloseSocket, handleErrorSocket)
 })
 btnIniciarJuego.addEventListener('click', () => {
-  message = { event: 'Iniciar juego' }
-  sendMessage()
+  sendMessage({ event: 'Iniciar juego' })
 })
 resultadoAtaque.addEventListener('click', () => {
   resultadoAtaque.setAttribute('mostrar', 'false')
@@ -619,31 +615,25 @@ btnAtacarCarta.addEventListener('click', () => {
   }
 })
 btnAtacarBarrera.addEventListener('click', () => {
-  message = {
+  sendMessage({
     event: 'Atacar Barrera',
     payload: {
       idZonaBatalla: idCartaZBSeleccionada
     }
-  }
-  sendMessage()
+  })
 })
 btnCambiarPosicion.addEventListener('click', () => {
   if (stepAccion === 'SELECCIONAR ZONA BATALLA') {
     console.log('CAMBIAR POSICION')
     stepAccion = 'CAMBIAR POSICION'
     habilitacionBotonera()
-    message = {
+    sendMessage({
       event: 'Cambiar Posicion',
       payload: {
         idZonaBatalla: idCartaZBSeleccionada
       }
-    }
-    sendMessage()
+    })
   }
-})
-btnTerminarTurno.addEventListener('click', () => {
-  message = { event: 'Terminar Turno' }
-  sendMessage()
 })
 
 manoYo.addEventListener('click', function (e) {
@@ -660,13 +650,12 @@ manoYo.addEventListener('click', function (e) {
     stepAccion = 'SELECCIONAR MANO'
     console.log('stepAccion: ' + stepAccion)
     console.log(target)
-    message = {
+    sendMessage({
       event: 'Seleccionar Mano',
       payload: {
         idMano: idCartaManoSeleccionada
       }
-    }
-    sendMessage()
+    })
   }
 })
 
@@ -771,15 +760,14 @@ zonaBatallaYo.addEventListener('click', function (e) {
     ) {
       console.log('stepAccion: ' + stepAccion)
       console.log(target)
-      message = {
+      sendMessage({
         event: 'Colocar Carta',
         payload: {
           posicion: posicionBatalla,
           idZonaBatalla: idCartaZBSeleccionada,
           idMano: idCartaManoSeleccionada
         }
-      }
-      sendMessage()
+      })
     }
   } else {
     if (
@@ -791,13 +779,12 @@ zonaBatallaYo.addEventListener('click', function (e) {
       console.log('stepAccion: ' + stepAccion)
       console.log(target)
 
-      message = {
+      sendMessage({
         event: 'Seleccionar Zona Batalla',
         payload: {
           idZonaBatalla: idCartaZBSeleccionada
         }
-      }
-      sendMessage()
+      })
     }
   }
 })
@@ -814,14 +801,13 @@ zonaBatallaEnemiga.addEventListener('click', function (e) {
       console.log('stepAccion: ' + stepAccion)
       console.log('target: ' + target)
       idCartaZBEnemigaSeleccionada = target.dataset.id
-      message = {
+      sendMessage({
         event: 'Atacar Carta',
         payload: {
           idZonaBatalla: idCartaZBSeleccionada,
           idZonaBatallaEnemiga: idCartaZBEnemigaSeleccionada
         }
-      }
-      sendMessage()
+      })
     }
   }
 })
