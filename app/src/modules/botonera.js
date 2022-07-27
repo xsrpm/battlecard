@@ -1,8 +1,7 @@
 import { cambiarPantalla } from './utils'
 import { nombreJugadorVictorioso, nombreJugadorDerrotado, idCartaZBSeleccionada, stepAccion, setStepAccion, posicionBatalla, setPosicionBatalla } from './estadoGlobal'
 import { sendMessage } from './socket'
-import { colocarCarta, Estado } from './tablero'
-import { jugDown } from '..'
+import { colocarCarta, Estado, jugDown } from './tablero'
 
 export const btnFinDeJuego = document.getElementById('btnFinDeJuego')
 export const finDeJuego = document.getElementById('finDeJuego')

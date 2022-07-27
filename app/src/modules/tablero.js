@@ -1,6 +1,7 @@
 import { zonaBatallaYo } from '..'
 import { habilitacionBotonera, mensajeBotones } from './botonera'
-import { setStepAccion } from './estadoGlobal'
+import { message, setStepAccion } from './estadoGlobal'
+import { encuentraError } from './socket'
 
 export const Estado = {
   NO_HAY_CARTA: 'No hay carta',
@@ -14,6 +15,9 @@ export const Estado = {
   CAMBIO_POS_DISPONIBLE: 'Cambio de posición disponible'
 }
 
+export const jugDown = document.getElementById('jugDown')
+export const jugUp = document.getElementById('jugUp')
+
 export function colocarCarta() {
   habilitacionBotonera()
   mensajeBotones.innerText = 'Seleccione ubicación en zona de batalla...'
@@ -26,4 +30,19 @@ export function colocarCarta() {
     }
   }
   setStepAccion('COLOCAR SELECCIONAR ZONA BATALLA')
+}
+
+export function mostrarJugadorEnTurno() {
+  if (encuentraError()) return
+  if (message.payload.jugador.enTurno) {
+    jugDown.setAttribute('en-turno', 'true')
+    jugUp.setAttribute('en-turno', 'false')
+  } else {
+    jugUp.setAttribute('en-turno', 'true')
+    jugDown.setAttribute('en-turno', 'false')
+  }
+  jugDown.querySelector("span[slot='nCartas']").textContent =
+        message.payload.jugador.nDeck
+  jugUp.querySelector("span[slot='nCartas']").textContent =
+        message.payload.jugadorEnemigo.nDeck
 }

@@ -4,6 +4,11 @@ export let nombreJugadorDerrotado = ''
 export let idCartaZBSeleccionada
 export let stepAccion = 'STAND BY'
 export let posicionBatalla
+export let message
+
+export const setMessage = (msg) => {
+  message = msg
+}
 
 export const setPosicionBatalla = (posicion) => {
   posicionBatalla = posicion

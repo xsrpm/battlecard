@@ -1,3 +1,5 @@
+import { message } from './estadoGlobal'
+
 let socket
 
 export function sendMessage(message) {
@@ -12,4 +14,12 @@ export function initSocket(url, onopen, onmessage, onclose, onerror) {
   socket.onmessage = onmessage
   socket.onerror = onerror
   socket.onclose = onclose
+}
+
+export function encuentraError() {
+  if (typeof message.error !== 'undefined') {
+    console.log(message.error)
+    window.alert(message.error)
+    return true
+  }
 }

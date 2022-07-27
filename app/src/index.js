@@ -3,10 +3,10 @@ import './components/resultado-ataque'
 
 import { cambiarPantalla } from './modules/utils'
 import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './modules/botonera'
-import { nombreJugadorDerrotado, setNombreJugadorVictorioso, setNombreJugadorDerrotado, setStepAccion, stepAccion, setIdCartaZBSeleccionada, idCartaZBSeleccionada, posicionBatalla } from './modules/estadoGlobal'
+import { nombreJugadorDerrotado, setNombreJugadorVictorioso, setNombreJugadorDerrotado, setStepAccion, stepAccion, setIdCartaZBSeleccionada, idCartaZBSeleccionada, posicionBatalla, message, setMessage } from './modules/estadoGlobal'
 import './modules/pantallaFinDeJuego'
-import { initSocket, sendMessage } from './modules/socket'
-import { Estado } from './modules/tablero'
+import { encuentraError, initSocket, sendMessage } from './modules/socket'
+import { Estado, jugDown, jugUp, mostrarJugadorEnTurno } from './modules/tablero'
 
 const recepcion = document.getElementById('recepcion')
 const sala = document.getElementById('sala')
@@ -27,8 +27,6 @@ export const zonaBatallaYo = document.getElementById('zonaBatallaYo')
 const zonaBatallaEnemiga = document.getElementById('zonaBatallaEnemiga')
 const barreraYo = document.getElementById('barreraYo')
 const barreraEnemiga = document.getElementById('barreraEnemiga')
-export const jugDown = document.getElementById('jugDown')
-const jugUp = document.getElementById('jugUp')
 
 console.log({ location })
 console.log(process.env.NODE_ENV)
@@ -49,7 +47,6 @@ let idCartaZBEnemigaSeleccionada
 let cartaManoSeleccionada
 let cartaZBSeleccionada
 
-let message
 // let nombreJugadorDerrotado
 // let nombreJugadorVictorioso
 let sinBarrerasFlag
@@ -82,21 +79,6 @@ function mostrarCartaCogida() {
   } else {
     console.log('MANO LLENA')
   }
-}
-
-function mostrarJugadorEnTurno() {
-  if (encuentraError()) return
-  if (message.payload.jugador.enTurno) {
-    jugDown.setAttribute('en-turno', 'true')
-    jugUp.setAttribute('en-turno', 'false')
-  } else {
-    jugUp.setAttribute('en-turno', 'true')
-    jugDown.setAttribute('en-turno', 'false')
-  }
-  jugDown.querySelector("span[slot='nCartas']").textContent =
-    message.payload.jugador.nDeck
-  jugUp.querySelector("span[slot='nCartas']").textContent =
-    message.payload.jugadorEnemigo.nDeck
 }
 
 function inicializarJuego() {
@@ -140,14 +122,6 @@ function inicializarJuego() {
   resultadoAtaque.setAttribute('mostrar', 'false')
   sinBarrerasFlag = false
   juegoFinalizado = false
-}
-
-function encuentraError() {
-  if (typeof message.error !== 'undefined') {
-    console.log(message.error)
-    window.alert(message.error)
-    return true
-  }
 }
 
 function unirASala() {
@@ -462,7 +436,7 @@ const handleOpenSocket = (e) => {
 
 const handleMessageSocket = (e) => {
   console.log('received:')
-  message = JSON.parse(e.data)
+  setMessage(JSON.parse(e.data))
   console.log(message)
   switch (message.event) {
     case 'Unir a sala':
