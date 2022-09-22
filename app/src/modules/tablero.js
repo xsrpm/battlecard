@@ -65,7 +65,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
   if (juegoFinalizado) return
   if (jugDown.getAttribute('en-turno') === 'false') return
   let target = e.target
-  while (!target.classList.contains('slot')) target = target.parentElement
+  while (!target.classList.contains('slot') && target.id !== zonaBatallaYo.getAttribute('id')) target = target.parentElement
   setIdCartaZBSeleccionada(target.dataset.id)
   cartaZBSeleccionada = target
   if (stepAccion === 'COLOCAR SELECCIONAR ZONA BATALLA') {
@@ -471,7 +471,7 @@ export function atacanTuBarrera() {
 zonaBatallaEnemiga.addEventListener('click', function (e) {
   if (juegoFinalizado) return
   let target = e.target
-  while (!target.classList.contains('slot')) target = target.parentElement
+  while (!target.classList.contains('slot') && target.id !== zonaBatallaEnemiga.getAttribute('id')) target = target.parentElement
   if (stepAccion === 'ATACAR CARTA SELECCIONAR ZB ENEMIGA') {
     if (
       target.classList.contains('ataque') ||
