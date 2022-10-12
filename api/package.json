@@ -2,25 +2,43 @@
   "name": "battlecard-api",
   "version": "0.1.0",
   "dependencies": {
-    "uuid": "^8.3.1",
-    "ws": "^7.3.1",
+    "uuid": "8.3.1",
+    "ws": "7.3.1",
     "express": "4.17.1",
     "cors": "2.8.5",
-    "dotenv": "^10.0.0"
+    "dotenv": "10.0.0"
   },
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/index.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "dev": "nodemon --exec"
   },
   "devDependencies": {
-    "nodemon": "^2.0.6"
+    "nodemon": "2.0.6"
   },
   "jest": {
     "verbose": true,
     "testURL": "http://localhost/"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/standard/eslintrc.json",
+    "env": {
+      "jest": true,
+      "browser": true,
+      "node": true
+    },
+    "rules": {
+      "space-before-function-paren": [
+        "error",
+        {
+          "anonymous": "always",
+          "named": "never",
+          "asyncArrow": "always"
+        }
+      ]
+    }
   }
 }
