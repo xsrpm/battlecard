@@ -12,6 +12,7 @@
     "christian-kohler.npm-intellisense",
     "esbenp.prettier-vscode",
     "streetsidesoftware.code-spell-checker-spanish",
-    "ChakrounAnas.turbo-console-log"
+    "chakrounanas.turbo-console-log",
+    "naumovs.color-highlight"
   ]
 }
