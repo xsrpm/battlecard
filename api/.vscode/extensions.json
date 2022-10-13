@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "orta.vscode-jest",
+    "steoates.autoimport",
+    "formulahendry.auto-rename-tag",
+    "streetsidesoftware.code-spell-checker",
+    "usernamehw.errorlens",
+    "dbaeumer.vscode-eslint",
+    "wix.vscode-import-cost",
+    "xabikos.javascriptsnippets",
+    "pkief.material-icon-theme",
+    "christian-kohler.npm-intellisense",
+    "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker-spanish",
+    "ChakrounAnas.turbo-console-log"
+  ]
+}

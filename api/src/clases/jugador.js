@@ -119,7 +119,7 @@ class Jugador {
     this.cartaColocada = false
     this.puedeColocarCartaEnZB = true
     for (const celdaBatalla of this.zonaBatalla) {
-      if (celdaBatalla.carta != null) {
+      if (celdaBatalla.carta !== null) {
         if (
           celdaBatalla.posBatalla === CeldaBatalla.Estado.POS_BATALLA_ATAQUE
         ) {
@@ -144,7 +144,7 @@ class Jugador {
       return { resultado: ResultadoCojerUnaCarta.DECK_VACIO }
     } else {
       this.mano.push(carta)
-      return { resultado: ResultadoCojerUnaCarta.EXITO, carta: carta }
+      return { resultado: ResultadoCojerUnaCarta.EXITO, carta }
     }
   }
 
@@ -207,7 +207,7 @@ class Jugador {
     if (this.nCartasEnZB === 0) return 'Sin cartas en zona de batalla'
     if (jugadorAtacado.nCartasEnZB > 0) { return 'Hay cartas en zona de batalla enemiga' }
     if (this.nAtaquesDisponibles === 0) { return 'No le quedan ataques disponibles' }
-    if (this.nTurnos < 2) { return 'Atacantes solo se pueden realizar desde el segundo turno' }
+    if (this.nTurnos < 2) { return 'Ataques solo se pueden realizar desde el segundo turno' }
     return 'Posible'
   }
 
@@ -217,10 +217,9 @@ class Jugador {
    * @returns {string}
    */
   posibilidadAtacarBarrera (jugadorAtacado, idCartaAtacante) {
-    let resp = this.puedeAtacarBarreras(jugadorAtacado)
+    const resp = this.puedeAtacarBarreras(jugadorAtacado)
     if (resp !== 'Posible') return resp
-    resp = this.existeCartaEnCeldaBatalla(idCartaAtacante)
-    if (resp === 'No hay carta en tu ubicación de zona de batalla') return resp
+    if (!this.existeCartaEnCeldaBatalla(idCartaAtacante)) return 'No hay carta en tu ubicación de zona de batalla'
     if (
       this.zonaBatalla[idCartaAtacante].posBatalla !==
       CeldaBatalla.Estado.POS_BATALLA_ATAQUE
@@ -285,10 +284,7 @@ class Jugador {
    */
 
   existeCartaEnCeldaBatalla (idZonaBatalla) {
-    return (
-      this.zonaBatalla[idZonaBatalla].carta != null &&
-      this.zonaBatalla[idZonaBatalla] !== undefined
-    )
+    return (this.zonaBatalla[idZonaBatalla] && this.zonaBatalla[idZonaBatalla].carta !== null)
   }
 
   /**
@@ -572,7 +568,7 @@ class Jugador {
       respuesta = 'Posicion cambiada'
     }
     return {
-      respuesta: respuesta,
+      respuesta,
       posBatalla: this.zonaBatalla[idCarta].posBatalla,
       carta: this.zonaBatalla[idCarta].carta
     }
@@ -612,4 +608,4 @@ class Jugador {
   }
 }
 
-module.exports = { Jugador }
+module.exports = { Jugador, ResultadoCojerUnaCarta }

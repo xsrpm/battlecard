@@ -8,11 +8,11 @@ const Pantalla = {
 Object.freeze(Pantalla)
 
 class Juego {
-  static get Pantalla() {
+  static get Pantalla () {
     return Pantalla
   }
 
-  constructor() {
+  constructor () {
     /**
      * @type {Array<Jugador>}
      */
@@ -37,7 +37,7 @@ class Juego {
    *
    * @param {string} nombreJugador
    */
-  unirASala(nombreJugador) {
+  unirASala (nombreJugador) {
     const rpta = {}
     if (this.estadoSala !== 'SALA ABIERTA') rpta.resultado = 'Sala llena, no pueden entrar jugadores'
     else if (nombreJugador === '') return 'No indicó nombre de jugador'
@@ -55,7 +55,7 @@ class Juego {
     return rpta
   }
 
-  obtenerNombreJugadores() {
+  obtenerNombreJugadores () {
     const jugNames = []
     for (const j of this.jugador) {
       jugNames.push(j.nombre)
@@ -63,7 +63,7 @@ class Juego {
     return jugNames
   }
 
-  iniciarJuego() {
+  iniciarJuego () {
     if (this.estadoSala === 'SALA ABIERTA' &&
     this.pantalla === Pantalla.EN_SALA_DE_ESPERA) {
       return 'No se tienen 2 jugadores para empezar'
@@ -85,7 +85,7 @@ class Juego {
     }
   }
 
-  finalizarJuego() {
+  finalizarJuego () {
     this.pantalla = Pantalla.FIN_DE_JUEGO
     this.jugador = []
     this.jugadorActual = null
@@ -98,7 +98,7 @@ class Juego {
     this.estadoSala = 'SALA ABIERTA'
   }
 
-  cambioDeJugadorActual() {
+  cambioDeJugadorActual () {
     const jugadorTmp = this.jugadorActual
     this.jugadorActual = this.jugadorAnterior
     this.jugadorAnterior = jugadorTmp
@@ -107,7 +107,7 @@ class Juego {
     this.jugadorAnterior.setEnTurno(false)
   }
 
-  terminarTurno() {
+  terminarTurno () {
     this.cambioDeJugadorActual()
     let res = this.cogerUnaCartaDelDeck()
     res = {
@@ -127,7 +127,7 @@ class Juego {
     return res
   }
 
-  cogerUnaCartaDelDeck() {
+  cogerUnaCartaDelDeck () {
     const res = this.jugadorActual.cogerUnaCartaDelDeck()
     if (res.resultado === 'DECK VACIO') {
       res.nombreJugadorDerrotado = this.jugadorActual.nombre
@@ -142,7 +142,7 @@ class Juego {
  * @param {number} idCartaMano
  * @returns String
  */
-  colocarCarta(idPosZB, idCartaMano, posCarta) {
+  colocarCarta (idPosZB, idCartaMano, posCarta) {
     return this.jugadorActual.accionColocarCarta(
       idPosZB,
       idCartaMano,
@@ -150,7 +150,7 @@ class Juego {
     )
   }
 
-  opcionesSeleccionarZonaBatalla(idZonaBatalla) {
+  opcionesSeleccionarZonaBatalla (idZonaBatalla) {
     return {
       existeCarta: this.jugadorActual.existeCartaEnCeldaBatalla(idZonaBatalla),
       puedeAtacarCarta: this.jugadorActual.puedeAtacarCartaDesdeId(this.jugadorAnterior, idZonaBatalla),
@@ -159,7 +159,7 @@ class Juego {
     }
   }
 
-  opcionesSeleccionarMano(idMano) {
+  opcionesSeleccionarMano (idMano) {
     return {
       existeCarta: this.jugadorActual.tieneCartaEnMano(idMano),
       puedeColocarCarta: this.jugadorActual.puedeColocarCartaDesdeId(idMano)
@@ -170,7 +170,7 @@ class Juego {
    *
    * @param {number} idCartaAtacante
    */
-  atacarBarrera(idCartaAtacante) {
+  atacarBarrera (idCartaAtacante) {
     const res = this.jugadorActual.accionAtacarBarrera(this.jugadorAnterior, idCartaAtacante)
     if (typeof res.sinBarreras !== 'undefined') {
       if (res.sinBarreras) {
@@ -185,7 +185,7 @@ class Juego {
  * @param {number} idCartaAtacante
  * @param {number} idCartaAtacada
  */
-  atacarCarta(idCartaAtacante, idCartaAtacada) {
+  atacarCarta (idCartaAtacante, idCartaAtacada) {
     const res = this.jugadorActual.accionAtacarCarta(this.jugadorAnterior, idCartaAtacante, idCartaAtacada)
     if (typeof res.sinBarreras !== 'undefined') {
       if (res.sinBarreras) {
@@ -195,11 +195,11 @@ class Juego {
     return res
   }
 
-  cambiarPosicionBatalla(idCarta) {
+  cambiarPosicionBatalla (idCarta) {
     return this.jugadorActual.cambiarPosicionBatalla(idCarta)
   }
 
-  jugadorEnemigo(jugador) {
+  jugadorEnemigo (jugador) {
     return this.jugador.filter(j => j.nombre !== jugador.nombre)[0]
   }
 }

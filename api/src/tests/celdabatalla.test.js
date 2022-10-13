@@ -3,7 +3,7 @@ const Carta = require('../clases/carta.js')
 const CeldaBatalla = require('../clases/celdabatalla.js')
 
 describe('CeldaBatalla clase', () => {
-  test('tiene propiedades estaticas válidas', () => {
+  test('tiene propiedades estáticas válidas', () => {
     expect(CeldaBatalla.Estado.NO_HAY_CARTA).toBe('No hay carta')
     expect(CeldaBatalla.Estado.POS_BATALLA_ATAQUE).toBe(
       'Posición de batalla: Ataque'

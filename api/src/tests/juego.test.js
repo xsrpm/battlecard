@@ -1,6 +1,6 @@
-/* eslint-disable no-undef */
+
+const CeldaBatalla = require('../clases/celdabatalla')
 const Juego = require('../clases/juego')
-const { Jugador } = require('../clases/jugador')
 
 describe('Juego objeto', () => {
   /**
@@ -45,16 +45,15 @@ describe('Juego objeto', () => {
 
   describe('unir a sala', () => {
     test('sala sin llenar', () => {
-      const jug = new Jugador('Cesar')
-      const ret = juego.unirASala('Cesar')
-      expect(ret).toEqual(jug)
-      expect(juego.pantalla).toBe(Juego.Pantalla.EN_SALA_DE_ESPERA)
+      juego.unirASala('Cesar')
+      expect(juego.estadoSala).toBe('SALA ABIERTA')
     })
     test('sala llena', () => {
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
-      const ret = juego.unirASala('Krister')
-      expect(ret).toBe('Sala llena, no pueden entrar jugadores')
+      const resp = juego.unirASala('Krister')
+      expect(resp.resultado).toBe('Sala llena, no pueden entrar jugadores')
+      expect(juego.estadoSala).toBe('SALA CERRADA')
     })
   })
 
@@ -85,12 +84,12 @@ describe('Juego objeto', () => {
 
   describe('cambiar de jugador actual', () => {
     test('cambio realizado', () => {
-      const jug0 = juego.unirASala('Cesar')
-      const jug1 = juego.unirASala('Marco')
+      const resp0 = juego.unirASala('Cesar')
+      const resp1 = juego.unirASala('Marco')
       juego.iniciarJuego()
       juego.cambioDeJugadorActual()
-      expect(juego.jugadorActual).toEqual(jug1)
-      expect(juego.jugadorAnterior).toEqual(jug0)
+      expect(juego.jugadorActual).toEqual(resp1.jugador)
+      expect(juego.jugadorAnterior).toEqual(resp0.jugador)
     })
   })
 
@@ -99,7 +98,7 @@ describe('Juego objeto', () => {
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
       juego.iniciarJuego()
-      expect(juego.colocarCartaEnAtaque(0, 0)).toBe('Carta colocada')
+      expect(juego.colocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE).resultado).toBe('Carta colocada')
     })
   })
 
@@ -108,7 +107,7 @@ describe('Juego objeto', () => {
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
       juego.iniciarJuego()
-      expect(juego.colocarCartaEnDefensa(0, 0)).toBe('Carta colocada')
+      expect(juego.colocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_DEF_ABAJO).resultado).toBe('Carta colocada')
     })
   })
 
@@ -117,12 +116,14 @@ describe('Juego objeto', () => {
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
       juego.iniciarJuego()
-      juego.colocarCartaEnAtaque(0, 0)
+      juego.colocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
+      console.log('🚀 ~ file: juego.test.js ~ line 121 ~ test ~ juego', juego)
       juego.cambioDeJugadorActual()
+      console.log('🚀 ~ file: juego.test.js ~ line 122 ~ test ~ juego', juego)
       juego.cambioDeJugadorActual()
-      expect(juego.atacarBarrera(0)).toBe(
-        'Barrera destruida'
-      )
+      console.log('🚀 ~ file: juego.test.js ~ line 123 ~ test ~ juego', juego)
+      expect(juego.atacarBarrera(0).resultado).toBe('Barrera destruida')
+      console.log('🚀 ~ file: juego.test.js ~ line 124 ~ test ~ juego', juego)
     })
   })
 
@@ -131,13 +132,11 @@ describe('Juego objeto', () => {
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
       juego.iniciarJuego()
-      juego.colocarCartaEnAtaque(0, 0)
+      juego.colocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
       juego.cambioDeJugadorActual()
-      juego.colocarCartaEnAtaque(0, 0)
+      juego.colocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
       juego.cambioDeJugadorActual()
-      expect(juego.atacarCarta(0, 0).estadoAtaque).toBe(
-        'Ataque realizado'
-      )
+      expect(juego.atacarCarta(0, 0).estadoAtaque).toBe('Ataque realizado')
     })
   })
 
@@ -146,10 +145,10 @@ describe('Juego objeto', () => {
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
       juego.iniciarJuego()
-      juego.colocarCartaEnAtaque(0, 0)
+      juego.colocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
       juego.cambioDeJugadorActual()
       juego.cambioDeJugadorActual()
-      expect(juego.cambiarPosicionBatalla(0)).toBe('Posicion cambiada')
+      expect(juego.cambiarPosicionBatalla(0).respuesta).toBe('Posicion cambiada')
     })
   })
 })

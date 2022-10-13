@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 
 const Carta = require('../clases/carta.js')
 
