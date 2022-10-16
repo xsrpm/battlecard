@@ -346,7 +346,7 @@ export class Jugador {
    */
   puedeAtacarCartas(jugadorAtacado: Jugador) {
     if (this.nTurnos < 2) {
-      return "Atacantes solo se pueden realizar desde el segundo turno";
+      return "Ataques solo se pueden realizar desde el segundo turno";
     }
     if (this.nCartasEnZB === 0) return "Sin cartas en zona de batalla";
     if (jugadorAtacado.nCartasEnZB === 0) {

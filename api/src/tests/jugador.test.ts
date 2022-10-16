@@ -1,10 +1,11 @@
 
-const { Jugador, ResultadoCojerUnaCarta } = require('../clases/jugador')
-const Carta = require('../clases/carta')
-const CeldaBatalla = require('../clases/celdabatalla')
+import {expect, describe, test, beforeEach} from '@jest/globals';
+import { Jugador, ResultadoCojerUnaCarta } from '../clases/jugador'
+import {Carta} from '../clases/carta'
+import {CeldaBatalla} from '../clases/celdabatalla'
 
 describe('Jugador clase', () => {
-  test('tiene propiedades estaticas válidas', () => {
+  test('tiene propiedades estáticas válidas', () => {
     expect(Jugador.MAX_BARRERA_CARDS).toBe(5)
     expect(Jugador.MAX_MANO_CARDS).toBe(5)
     expect(Jugador.MAX_ZONA_BATALLA_CARDS).toBe(3)
@@ -25,7 +26,7 @@ describe('Jugador objeto', () => {
   /**
    * @type {Jugador}
    */
-  let jugador
+  let jugador: Jugador
   const nombreJugador = 'César'
 
   const carta = new Carta(7, Carta.Elemento.CORAZON)
@@ -201,7 +202,7 @@ describe('Jugador objeto', () => {
   })
 
   describe('puede Atacar Barreras', () => {
-    let jugadorEnemigo
+    let jugadorEnemigo: Jugador
     beforeEach(() => {
       jugadorEnemigo = new Jugador('Enemigo')
     })
@@ -233,7 +234,7 @@ describe('Jugador objeto', () => {
   })
 
   describe('posibilidad de Atacar Barrera carta en posicion', () => {
-    let jugadorEnemigo
+    let jugadorEnemigo: Jugador
     beforeEach(() => {
       jugadorEnemigo = new Jugador('Enemigo')
     })
@@ -247,7 +248,6 @@ describe('Jugador objeto', () => {
       jugador.accionColocarCarta(1, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
       jugador.nAtaquesDisponibles = 1
       jugador.nTurnos = 3
-      console.log(jugador)
       expect(jugador.posibilidadAtacarBarrera(jugadorEnemigo, 0)).toBe(
         'No hay carta en tu ubicación de zona de batalla'
       )
@@ -296,13 +296,13 @@ describe('Jugador objeto', () => {
   })
 
   describe('accion atacar barrera', () => {
-    let jugadorEnemigo
+    let jugadorEnemigo: Jugador
     beforeEach(() => {
       jugadorEnemigo = new Jugador('Enemigo')
     })
 
     test('No Posible', () => {
-      expect(jugador.accionAtacarBarrera(jugadorEnemigo)).not.toBe('Posible')
+      expect(jugador.accionAtacarBarrera(jugadorEnemigo, 0)).not.toBe('Posible')
     })
 
     test('barrera destruida', () => {
@@ -320,7 +320,7 @@ describe('Jugador objeto', () => {
   })
 
   describe('puede atacar cartas', () => {
-    let jugadorEnemigo
+    let jugadorEnemigo:Jugador
     beforeEach(() => {
       jugadorEnemigo = new Jugador('Enemigo')
     })
@@ -367,7 +367,7 @@ describe('Jugador objeto', () => {
   })
 
   describe('posibilidad atacar carta', () => {
-    let jugadorEnemigo
+    let jugadorEnemigo:Jugador
     beforeEach(() => {
       jugadorEnemigo = new Jugador('Enemigo')
     })
@@ -632,7 +632,7 @@ describe('Jugador objeto', () => {
   })
 
   describe('accion atacar carta', () => {
-    let jugadorEnemigo
+    let jugadorEnemigo:Jugador
     let cartaAtacante, cartaAtacada
     beforeEach(() => {
       jugadorEnemigo = new Jugador('Enemigo')

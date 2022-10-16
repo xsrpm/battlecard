@@ -1,12 +1,12 @@
-
-const CeldaBatalla = require('../clases/celdabatalla')
-const Juego = require('../clases/juego')
+import {expect, describe, test, beforeEach} from '@jest/globals';
+import {CeldaBatalla} from '../clases/celdabatalla'
+import {Juego} from '../clases/juego'
 
 describe('Juego objeto', () => {
   /**
    * @type {Juego}
    */
-  let juego
+  let juego: Juego
   beforeEach(() => {
     juego = new Juego()
   })
@@ -117,13 +117,9 @@ describe('Juego objeto', () => {
       juego.unirASala('Marco')
       juego.iniciarJuego()
       juego.colocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
-      console.log('🚀 ~ file: juego.test.js ~ line 121 ~ test ~ juego', juego)
       juego.cambioDeJugadorActual()
-      console.log('🚀 ~ file: juego.test.js ~ line 122 ~ test ~ juego', juego)
       juego.cambioDeJugadorActual()
-      console.log('🚀 ~ file: juego.test.js ~ line 123 ~ test ~ juego', juego)
       expect(juego.atacarBarrera(0).resultado).toBe('Barrera destruida')
-      console.log('🚀 ~ file: juego.test.js ~ line 124 ~ test ~ juego', juego)
     })
   })
 

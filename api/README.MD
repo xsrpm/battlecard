@@ -12,6 +12,11 @@ para test especifico de clase
 
     npm run test tests/carta.test.js   
 
+https://jestjs.io/docs/getting-started#using-typescript
+https://jestjs.io/docs/getting-started#via-ts-jest
+https://github.com/kulshekhar/ts-jest
+https://jestjs.io/docs/api
+
 ## Nodemon
 
 Inicia y autodespliega servidor luego de cambios en el codigo fuente.

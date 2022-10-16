@@ -1,8 +1,8 @@
-
-const Carta = require('../clases/carta.js')
+import {expect, describe, test} from '@jest/globals';
+import { Carta } from '../clases/carta'
 
 describe('Carta', () => {
-  test('tiene propiedades estaticas', () => {
+  test('tiene propiedades estáticas', () => {
     expect(Carta.MAX_VALOR_CARTA).toBe(13)
     expect(Carta.MIN_VALOR_CARTA).toBe(1)
     expect(Carta.Elemento.COCO).toBe('0x2666')

@@ -1,9 +1,7 @@
-const express = require("express");
-const cors = require("cors");
-const { Server } = require("ws");
-const { Pantalla } = require("./clases/juego.js");
-const Juego = require("./clases/juego.js");
-const { Jugador } = require("./clases/jugador.js");
+import express from "express"
+import cors from "cors"
+import WebSocket, { Server  } from "ws"
+import {Juego, Pantalla} from "./clases/juego"
 /**
  * @type {Juego}
  */
@@ -11,27 +9,18 @@ const juego = new Juego();
 
 const app = express();
 app.use(cors());
-app.use(express.static("../../app/build"));
+app.use(express.static("../app/build"));
 const wss = new Server({ noServer: true });
 
-/**
- *
- * @param {WebSocket} ws
- * @param {*} message
- */
-function sendMessage(ws: WebSocket, message: any) {
+
+function sendMessage(ws:WebSocket, message: any) {
   ws.send(JSON.stringify(message));
   console.log("sended:");
   console.log(message);
 }
 
-/**
- *
- * @param {WebSocket} wsorigen
- * @param {*} message
- */
-function sendMessageToOthers(wsorigen: WebSocket, message: any) {
-  wss.clients.forEach((ws: WebSocket) => {
+function sendMessageToOthers(wsorigen:WebSocket, message: any) {
+  wss.clients.forEach((ws) => {
     if (ws.readyState === WebSocket.OPEN) {
       if (ws !== wsorigen) {
         sendMessage(ws, message);
@@ -41,17 +30,13 @@ function sendMessageToOthers(wsorigen: WebSocket, message: any) {
 }
 
 function cerrarSala() {
-  wss.clients.forEach((ws: WebSocket) => {
+  wss.clients.forEach((ws) => {
     if (ws.readyState === WebSocket.OPEN) {
       ws.close();
     }
   });
 }
-/**
- *
- * @param {WebSocket} ws
- * @param {*} message
- */
+
 function unirASala(ws: any, message: any) {
   const nombreJugador = message.payload.nombreJugador;
   const resp = juego.unirASala(nombreJugador);
@@ -86,70 +71,70 @@ function iniciarJuego(ws: any, message: any) {
   if (ws.jugador === juego.jugadorActual) {
     message.payload = {
       jugador: {
-        nombre: juego.jugadorActual.nombre,
-        nBarrera: juego.jugadorActual.barrera.length,
-        nDeck: juego.jugadorActual.deck.length,
-        mano: juego.jugadorActual.mano,
-        enTurno: juego.jugadorActual.enTurno,
+        nombre: juego.jugadorActual?.nombre,
+        nBarrera: juego.jugadorActual?.barrera.length,
+        nDeck: juego.jugadorActual?.deck.length,
+        mano: juego.jugadorActual?.mano,
+        enTurno: juego.jugadorActual?.enTurno,
       },
       jugadorEnemigo: {
-        nombre: juego.jugadorAnterior.nombre,
-        nBarrera: juego.jugadorAnterior.barrera.length,
-        nDeck: juego.jugadorAnterior.deck.length,
-        nMano: juego.jugadorActual.mano.length,
-        enTurno: juego.jugadorAnterior.enTurno,
+        nombre: juego.jugadorAnterior?.nombre,
+        nBarrera: juego.jugadorAnterior?.barrera.length,
+        nDeck: juego.jugadorAnterior?.deck.length,
+        nMano: juego.jugadorActual?.mano.length,
+        enTurno: juego.jugadorAnterior?.enTurno,
       },
     };
     sendMessage(ws, message);
     message.payload = {
       jugador: {
-        nombre: juego.jugadorAnterior.nombre,
-        nBarrera: juego.jugadorAnterior.barrera.length,
-        nDeck: juego.jugadorAnterior.deck.length,
-        mano: juego.jugadorAnterior.mano,
-        enTurno: juego.jugadorAnterior.enTurno,
+        nombre: juego.jugadorAnterior?.nombre,
+        nBarrera: juego.jugadorAnterior?.barrera.length,
+        nDeck: juego.jugadorAnterior?.deck.length,
+        mano: juego.jugadorAnterior?.mano,
+        enTurno: juego.jugadorAnterior?.enTurno,
       },
       jugadorEnemigo: {
-        nombre: juego.jugadorActual.nombre,
-        nBarrera: juego.jugadorActual.barrera.length,
-        nDeck: juego.jugadorActual.deck.length,
-        nMano: juego.jugadorActual.mano.length,
-        enTurno: juego.jugadorActual.enTurno,
+        nombre: juego.jugadorActual?.nombre,
+        nBarrera: juego.jugadorActual?.barrera.length,
+        nDeck: juego.jugadorActual?.deck.length,
+        nMano: juego.jugadorActual?.mano.length,
+        enTurno: juego.jugadorActual?.enTurno,
       },
     };
     sendMessageToOthers(ws, message);
   } else {
     message.payload = {
       jugador: {
-        nombre: juego.jugadorAnterior.nombre,
-        nBarrera: juego.jugadorAnterior.barrera.length,
-        nDeck: juego.jugadorAnterior.deck.length,
-        mano: juego.jugadorAnterior.mano,
-        enTurno: juego.jugadorAnterior.enTurno,
+        nombre: juego.jugadorAnterior?.nombre,
+        nBarrera: juego.jugadorAnterior?.barrera.length,
+        nDeck: juego.jugadorAnterior?.deck.length,
+        mano: juego.jugadorAnterior?.mano,
+        enTurno: juego.jugadorAnterior?.enTurno,
       },
       jugadorEnemigo: {
-        nombre: juego.jugadorActual.nombre,
-        nBarrera: juego.jugadorActual.barrera.length,
-        nDeck: juego.jugadorActual.deck.length,
-        nMano: juego.jugadorActual.mano.length,
-        enTurno: juego.jugadorActual.enTurno,
+        nombre: juego.jugadorActual?.nombre,
+        nBarrera: juego.jugadorActual?.barrera.length,
+        nDeck: juego.jugadorActual?.deck.length,
+        nMano: juego.jugadorActual?.mano.length,
+        enTurno: juego.jugadorActual?.enTurno,
       },
     };
     sendMessage(ws, message);
     message.payload = {
       jugador: {
-        nombre: juego.jugadorActual.nombre,
-        nBarrera: juego.jugadorActual.barrera.length,
-        nDeck: juego.jugadorActual.deck.length,
-        mano: juego.jugadorActual.mano,
-        enTurno: juego.jugadorActual.enTurno,
+        nombre: juego.jugadorActual?.nombre,
+        nBarrera: juego.jugadorActual?.barrera.length,
+        nDeck: juego.jugadorActual?.deck.length,
+        mano: juego.jugadorActual?.mano,
+        enTurno: juego.jugadorActual?.enTurno,
       },
       jugadorEnemigo: {
-        nombre: juego.jugadorAnterior.nombre,
-        nBarrera: juego.jugadorAnterior.barrera.length,
-        nDeck: juego.jugadorAnterior.deck.length,
-        nMano: juego.jugadorAnterior.mano.length,
-        enTurno: juego.jugadorAnterior.enTurno,
+        nombre: juego.jugadorAnterior?.nombre,
+        nBarrera: juego.jugadorAnterior?.barrera.length,
+        nDeck: juego.jugadorAnterior?.deck.length,
+        nMano: juego.jugadorAnterior?.mano.length,
+        enTurno: juego.jugadorAnterior?.enTurno,
       },
     };
     sendMessageToOthers(ws, message);
@@ -166,7 +151,7 @@ function colocarCarta(ws: WebSocket, message: any) {
   if (accionAutorizada(ws, message) === false) return;
   const { posicion, idZonaBatalla, idMano } = message.payload;
   message.payload = juego.colocarCarta(idZonaBatalla, idMano, posicion);
-  message.payload.mano = juego.jugadorActual.mano;
+  message.payload.mano = juego.jugadorActual?.mano;
   sendMessage(ws, message);
   delete message.payload.mano;
   message.event = "Coloca Carta Otro Jugador";

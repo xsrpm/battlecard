@@ -1,6 +1,6 @@
-/* eslint-disable no-undef */
-const Carta = require('../clases/carta.js')
-const CeldaBatalla = require('../clases/celdabatalla.js')
+import {expect, describe, test, beforeEach} from '@jest/globals';
+import {Carta} from '../clases/carta'
+import {CeldaBatalla} from '../clases/celdabatalla'
 
 describe('CeldaBatalla clase', () => {
   test('tiene propiedades estáticas válidas', () => {
@@ -37,8 +37,7 @@ describe('CeldaBatalla objeto', () => {
   /**
    * @type {CeldaBatalla}
    */
-  let celda
-
+  let celda: CeldaBatalla
   beforeEach(() => {
     celda = new CeldaBatalla()
   })

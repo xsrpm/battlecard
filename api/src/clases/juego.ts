@@ -1,6 +1,6 @@
 import { Jugador, RptaCogerUnaCartaDelDeck } from './jugador'
 
-const Pantalla = {
+export const Pantalla = {
   EN_SALA_DE_ESPERA: 'EN SALA DE ESPERA',
   EN_JUEGO: 'EN JUEGO',
   FIN_DE_JUEGO: 'FIN DE JUEGO'
@@ -12,7 +12,7 @@ type RptaUnirASala = {
   jugador?:Jugador,
   jugadores?: Array<string>,
   iniciar?:boolean
-} | string
+} 
 
 interface RptaCogerUnaCartaDelDeckJuego extends RptaCogerUnaCartaDelDeck {
   nombreJugadorDerrotado?: string
@@ -30,7 +30,7 @@ interface RptaTerminarJuego extends RptaCogerUnaCartaDelDeckJuego {
   }
 }
 
-class Juego {
+export class Juego {
   jugador: Array<Jugador>
   jugadorActual:Jugador | null
   jugadorAnterior: Jugador | null
@@ -72,7 +72,7 @@ class Juego {
    */
   unirASala (nombreJugador: string) : RptaUnirASala{
     if (this.estadoSala !== 'SALA ABIERTA') return { resultado : 'Sala llena, no pueden entrar jugadores'}
-    else if (nombreJugador === '') return 'No indicó nombre de jugador'
+    else if (nombreJugador === '') return {resultado:'No indicó nombre de jugador'}
     else if (this.jugador.filter((j) => j.nombre === nombreJugador).length >= 1) return { resultado : 'Nombre de Usuario/Nick en uso'}
     else {
       const jug = new Jugador(nombreJugador)
@@ -238,5 +238,3 @@ class Juego {
     return this.jugador.filter(j => j.nombre !== jugador.nombre)[0]
   }
 }
-
-module.exports = Juego
