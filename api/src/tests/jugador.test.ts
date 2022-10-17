@@ -1,8 +1,8 @@
 
-import {expect, describe, test, beforeEach} from '@jest/globals';
+import { expect, describe, test, beforeEach } from '@jest/globals'
 import { Jugador, ResultadoCojerUnaCarta } from '../clases/jugador'
-import {Carta} from '../clases/carta'
-import {CeldaBatalla} from '../clases/celdabatalla'
+import { Carta } from '../clases/carta'
+import { CeldaBatalla } from '../clases/celdabatalla'
 
 describe('Jugador clase', () => {
   test('tiene propiedades estáticas válidas', () => {
@@ -320,7 +320,7 @@ describe('Jugador objeto', () => {
   })
 
   describe('puede atacar cartas', () => {
-    let jugadorEnemigo:Jugador
+    let jugadorEnemigo: Jugador
     beforeEach(() => {
       jugadorEnemigo = new Jugador('Enemigo')
     })
@@ -367,7 +367,7 @@ describe('Jugador objeto', () => {
   })
 
   describe('posibilidad atacar carta', () => {
-    let jugadorEnemigo:Jugador
+    let jugadorEnemigo: Jugador
     beforeEach(() => {
       jugadorEnemigo = new Jugador('Enemigo')
     })
@@ -632,7 +632,7 @@ describe('Jugador objeto', () => {
   })
 
   describe('accion atacar carta', () => {
-    let jugadorEnemigo:Jugador
+    let jugadorEnemigo: Jugador
     let cartaAtacante, cartaAtacada
     beforeEach(() => {
       jugadorEnemigo = new Jugador('Enemigo')

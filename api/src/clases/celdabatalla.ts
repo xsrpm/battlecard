@@ -1,32 +1,32 @@
-import { Carta } from "./carta";
+import { Carta } from './carta'
 
 const Estado = {
-  NO_HAY_CARTA: "No hay carta",
-  POS_BATALLA_ATAQUE: "Posición de batalla: Ataque",
-  POS_BATALLA_DEF_ARRIBA: "Posición de batalla: Defensa cara arriba",
-  POS_BATALLA_DEF_ABAJO: "Posición de batalla: Defensa cara abajo",
-  YA_ESTA_EN_POSICION_SOLICITADA: "Ya se está en la posición solicitada",
-  ATAQUE_NO_DISPONIBLE: "Atacar carta no disponible",
-  ATAQUE_DISPONIBLE: "Atacar carta disponible",
-  CAMBIO_POS_NO_DISPONIBLE: "Cambio de posición no disponible",
-  CAMBIO_POS_DISPONIBLE: "Cambio de posición disponible",
-};
-Object.freeze(Estado);
+  NO_HAY_CARTA: 'No hay carta',
+  POS_BATALLA_ATAQUE: 'Posición de batalla: Ataque',
+  POS_BATALLA_DEF_ARRIBA: 'Posición de batalla: Defensa cara arriba',
+  POS_BATALLA_DEF_ABAJO: 'Posición de batalla: Defensa cara abajo',
+  YA_ESTA_EN_POSICION_SOLICITADA: 'Ya se está en la posición solicitada',
+  ATAQUE_NO_DISPONIBLE: 'Atacar carta no disponible',
+  ATAQUE_DISPONIBLE: 'Atacar carta disponible',
+  CAMBIO_POS_NO_DISPONIBLE: 'Cambio de posición no disponible',
+  CAMBIO_POS_DISPONIBLE: 'Cambio de posición disponible'
+}
+Object.freeze(Estado)
 
 export class CeldaBatalla {
-  posBatalla;
-  dispAtaque;
-  dispCambio;
-  carta: Carta | null;
-  static get Estado() {
-    return Estado;
+  posBatalla
+  dispAtaque
+  dispCambio
+  carta: Carta | null
+  static get Estado () {
+    return Estado
   }
 
-  constructor() {
-    this.posBatalla = CeldaBatalla.Estado.NO_HAY_CARTA;
-    this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE;
-    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE;
-    this.carta = null;
+  constructor () {
+    this.posBatalla = CeldaBatalla.Estado.NO_HAY_CARTA
+    this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE
+    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
+    this.carta = null
   }
 
   /**
@@ -34,60 +34,60 @@ export class CeldaBatalla {
    * @param {Carta} carta
    * @param {string} posBatalla
    */
-  agregarCarta(carta: Carta, posBatalla: string) {
-    this.posBatalla = posBatalla;
-    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE;
+  agregarCarta (carta: Carta, posBatalla: string) {
+    this.posBatalla = posBatalla
+    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
     if (posBatalla === CeldaBatalla.Estado.POS_BATALLA_ATAQUE) {
-      this.dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE;
-    } else this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE;
-    this.carta = carta;
+      this.dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE
+    } else this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE
+    this.carta = carta
   }
 
   /**
    *
    * @param {string} posBatalla
    */
-  cambioPosicionBatalla(posBatalla: any) {
+  cambioPosicionBatalla (posBatalla: any) {
     if (this.dispCambio === CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE) {
-      return CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE;
+      return CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
     }
     if (this.posBatalla === posBatalla) {
-      return CeldaBatalla.Estado.YA_ESTA_EN_POSICION_SOLICITADA;
+      return CeldaBatalla.Estado.YA_ESTA_EN_POSICION_SOLICITADA
     }
-    this.posBatalla = posBatalla;
-    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE;
-    return posBatalla;
+    this.posBatalla = posBatalla
+    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
+    return posBatalla
   }
 
-  cambioPosicionBatallaAtaque() {
+  cambioPosicionBatallaAtaque () {
     const res = this.cambioPosicionBatalla(
       CeldaBatalla.Estado.POS_BATALLA_ATAQUE
-    );
+    )
     if (res === CeldaBatalla.Estado.POS_BATALLA_ATAQUE) {
-      this.dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE;
+      this.dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE
     }
-    return res;
+    return res
   }
 
-  cambioPosicionBatallaDefensa() {
+  cambioPosicionBatallaDefensa () {
     const res = this.cambioPosicionBatalla(
       CeldaBatalla.Estado.POS_BATALLA_DEF_ARRIBA
-    );
+    )
     if (res === CeldaBatalla.Estado.POS_BATALLA_DEF_ARRIBA) {
-      this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE;
+      this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE
     }
-    return res;
+    return res
   }
 
-  ataqueRealizado() {
-    this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE;
-    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE;
+  ataqueRealizado () {
+    this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE
+    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
   }
 
-  quitarCarta() {
-    this.carta = null;
-    this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE;
-    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE;
-    this.posBatalla = CeldaBatalla.Estado.NO_HAY_CARTA;
+  quitarCarta () {
+    this.carta = null
+    this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE
+    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
+    this.posBatalla = CeldaBatalla.Estado.NO_HAY_CARTA
   }
 }

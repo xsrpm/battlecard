@@ -1,6 +1,6 @@
-import {expect, describe, test, beforeEach} from '@jest/globals';
-import {CeldaBatalla} from '../clases/celdabatalla'
-import {Juego} from '../clases/juego'
+import { expect, describe, test, beforeEach } from '@jest/globals'
+import { CeldaBatalla } from '../clases/celdabatalla'
+import { Juego } from '../clases/juego'
 
 describe('Juego objeto', () => {
   /**

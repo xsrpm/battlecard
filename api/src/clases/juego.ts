@@ -7,12 +7,12 @@ export const Pantalla = {
 }
 Object.freeze(Pantalla)
 
-type RptaUnirASala = {
-  resultado:string,
-  jugador?:Jugador,
-  jugadores?: Array<string>,
-  iniciar?:boolean
-} 
+interface RptaUnirASala {
+  resultado: string
+  jugador?: Jugador
+  jugadores?: string[]
+  iniciar?: boolean
+}
 
 interface RptaCogerUnaCartaDelDeckJuego extends RptaCogerUnaCartaDelDeck {
   nombreJugadorDerrotado?: string
@@ -20,19 +20,19 @@ interface RptaCogerUnaCartaDelDeckJuego extends RptaCogerUnaCartaDelDeck {
 }
 
 interface RptaTerminarJuego extends RptaCogerUnaCartaDelDeckJuego {
-  jugador : {
-    enTurno: boolean,
-    nDeck:number
-  },
+  jugador: {
+    enTurno: boolean
+    nDeck: number
+  }
   jugadorEnemigo: {
-    enTurno: boolean,
+    enTurno: boolean
     nDeck: number
   }
 }
 
 export class Juego {
-  jugador: Array<Jugador>
-  jugadorActual:Jugador | null
+  jugador: Jugador[]
+  jugadorActual: Jugador | null
   jugadorAnterior: Jugador | null
   idCartaZonaBSel
   idCartaZonaBSelEnemigo
@@ -40,7 +40,7 @@ export class Juego {
   estadoSala
   pantalla: string | null
   momento: any
-  
+
   static get Pantalla () {
     return Pantalla
   }
@@ -70,10 +70,10 @@ export class Juego {
    *
    * @param {string} nombreJugador
    */
-  unirASala (nombreJugador: string) : RptaUnirASala{
-    if (this.estadoSala !== 'SALA ABIERTA') return { resultado : 'Sala llena, no pueden entrar jugadores'}
-    else if (nombreJugador === '') return {resultado:'No indicó nombre de jugador'}
-    else if (this.jugador.filter((j) => j.nombre === nombreJugador).length >= 1) return { resultado : 'Nombre de Usuario/Nick en uso'}
+  unirASala (nombreJugador: string): RptaUnirASala {
+    if (this.estadoSala !== 'SALA ABIERTA') return { resultado: 'Sala llena, no pueden entrar jugadores' }
+    else if (nombreJugador === '') return { resultado: 'No indicó nombre de jugador' }
+    else if (this.jugador.filter((j) => j.nombre === nombreJugador).length >= 1) return { resultado: 'Nombre de Usuario/Nick en uso' }
     else {
       const jug = new Jugador(nombreJugador)
       this.jugador.push(jug)
@@ -83,7 +83,7 @@ export class Juego {
         resultado: 'Exito',
         jugador: jug,
         jugadores: this.obtenerNombreJugadores(),
-        iniciar: this.estadoSala === 'SALA CERRADA' ? true : false
+        iniciar: this.estadoSala === 'SALA CERRADA'
       }
     }
   }
@@ -140,21 +140,20 @@ export class Juego {
     this.jugadorAnterior?.setEnTurno(false)
   }
 
-  cogerUnaCartaDelDeck () : RptaCogerUnaCartaDelDeckJuego{
+  cogerUnaCartaDelDeck (): RptaCogerUnaCartaDelDeckJuego {
     const res = (this.jugadorActual as Jugador).cogerUnaCartaDelDeck()
     if (res?.resultado === 'DECK VACIO') {
-      return{
+      return {
         ...res,
         nombreJugadorDerrotado: this.jugadorActual?.nombre,
-        nombreJugadorVictorioso:this.jugadorAnterior?.nombre
+        nombreJugadorVictorioso: this.jugadorAnterior?.nombre
       }
     } else return res
   }
 
-
   terminarTurno (): RptaTerminarJuego {
     this.cambioDeJugadorActual()
-    let res = this.cogerUnaCartaDelDeck()
+    const res = this.cogerUnaCartaDelDeck()
     if (res.resultado === 'DECK VACIO') {
       this.finalizarJuego()
     }
@@ -177,7 +176,7 @@ export class Juego {
  * @param {number} idCartaMano
  * @returns String
  */
-  colocarCarta (idPosZB: number, idCartaMano:number, posCarta: string) {
+  colocarCarta (idPosZB: number, idCartaMano: number, posCarta: string) {
     return (this.jugadorActual as Jugador).accionColocarCarta(
       idPosZB,
       idCartaMano,

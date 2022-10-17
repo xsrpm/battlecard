@@ -1,6 +1,6 @@
-import {expect, describe, test, beforeEach} from '@jest/globals';
-import {Carta} from '../clases/carta'
-import {CeldaBatalla} from '../clases/celdabatalla'
+import { expect, describe, test, beforeEach } from '@jest/globals'
+import { Carta } from '../clases/carta'
+import { CeldaBatalla } from '../clases/celdabatalla'
 
 describe('CeldaBatalla clase', () => {
   test('tiene propiedades estáticas válidas', () => {
