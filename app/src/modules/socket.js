@@ -1,5 +1,3 @@
-import { message } from './estadoGlobal'
-
 let socket
 let url
 

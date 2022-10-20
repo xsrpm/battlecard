@@ -2,33 +2,20 @@
   "name": "battlecard-front",
   "version": "1.0.0",
   "description": "",
-  "scripts": {
-    "dev": "rm -rf ./development && rm -rf ./.cache && parcel serve public/index.html --dist-dir development --cache-dir parcel-cache -p 3000",
-    "build": "parcel build public/index.html --dist-dir build --public-url ./ --cache-dir parcel-cache"
+  "engines": {
+    "node": ">=16.13.1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/xsrpm/battlecard-front.git"
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "parcel": "2.0.0-rc.0"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "dependencies": {},
   "devDependencies": {
-    "typescript": "4.8.4"
+    "vite": "3.1.0",
+    "typescript": "4.6.4"
   }
 }
