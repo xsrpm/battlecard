@@ -28,3 +28,5 @@ para instalaciones globales:
 
     nodemon --exec "npm start"
  
+ Validating & Structuring JSON over WebSockets - JavaScript Tutorial
+ https://www.youtube.com/watch?v=mmZmtOUIBsg

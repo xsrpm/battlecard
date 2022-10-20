@@ -24,7 +24,7 @@ interface RptaAccionColocarCarta {
   carta?: Carta
 }
 
-interface RptaAccionAtacarBarrera {
+export interface RptaAccionAtacarBarrera {
   resultado: string
   idBarreraEliminada?: number
   sinBarreras?: boolean
@@ -58,6 +58,12 @@ interface RptaAccionAtacarCarta {
 export interface RptaCogerUnaCartaDelDeck {
   resultado: string
   carta?: Carta
+}
+
+export interface RptaCambiarPosicion {
+  respuesta: string
+  posBatalla: string
+  carta: Carta | null
 }
 
 export class Jugador {
@@ -365,7 +371,7 @@ export class Jugador {
 
   existeCartaEnCeldaBatalla (idZonaBatalla: number) {
     return (
-      this.zonaBatalla[idZonaBatalla] && this.zonaBatalla[idZonaBatalla].carta !== null
+      this.zonaBatalla[idZonaBatalla]?.carta !== null
     )
   }
 
@@ -509,7 +515,6 @@ export class Jugador {
     )
 
     if (estadoAtaque === 'Posible') {
-      let veredicto: string
       let idBarreraEliminada = 0
       let estadoCartaAtacante = EstadoCarta.ACTIVA
       let estadoCartaAtacada = EstadoCarta.ACTIVA
@@ -526,7 +531,7 @@ export class Jugador {
         bonifCartaAtacada
       } = this.calculoValorAtaque(cartaAtacante, cartaAtacada)
 
-      veredicto = this.obtenerVeredictoAtaque(
+      const veredicto = this.obtenerVeredictoAtaque(
         calculoVAtacante,
         calculoVAtacada
       )
