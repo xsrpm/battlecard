@@ -6,12 +6,12 @@
     "node": ">=16.13.1"
   },
   "scripts": {
-    "start": "tsc && node build/index.js",
+    "start": "node build/index.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "dev": "ts-node-dev src/index.ts",
-    "tsc": "tsc"
+    "build": "tsc"
   },
   "dependencies": {
     "cors": "2.8.5",

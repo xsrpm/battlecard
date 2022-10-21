@@ -13,9 +13,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
-  "devDependencies": {
-    "vite": "3.1.0",
+  "dependencies": {
     "typescript": "4.6.4"
+  },
+  "devDependencies": {
+    "vite": "3.1.0"
   }
 }
