@@ -8,24 +8,21 @@
     "app"
   ],
   "engines": {
-    "npm": "7.20.3"
+    "node": ">=16.13.1"
   },
   "main": "index.js",
   "scripts": {
     "build": "npm run build --workspace=app",
     "start": "npm run build && npm start --workspace=api",
     "dev:api": "npm run dev --workspace=api",
-    "dev:app": "npm run dev --workspace=app"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/xsrpm/battlecard-back.git"
+    "dev:app": "npm run dev --workspace=app",
+    "dev": "npm run dev:api && npm run dev:app"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/xsrpm/battlecard-back/issues"
+    "url": "https://github.com/xsrpm/battlecard/issues"
   },
-  "homepage": "https://github.com/xsrpm/battlecard-back#readme"
+  "homepage": "https://github.com/xsrpm/battlecard#readme"
 }

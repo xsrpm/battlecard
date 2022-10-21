@@ -134,3 +134,4 @@ El juego termina bajo cualquiera de las siguientes condiciones:
 - https://create-react-app.dev/docs/proxying-api-requests-in-development/
 - https://masteringjs.io/tutorials/express/websockets
 - https://en.wikipedia.org/wiki/Yu-Gi-Oh!_Trading_Card_Game
+- https://developers.refinitiv.com/en/article-catalog/article/how-to-implement-elektron-websocket-api-javascript-application-typescript
