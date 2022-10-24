@@ -3,6 +3,7 @@ import { expect, describe, test, beforeEach } from '@jest/globals'
 import { Jugador, ResultadoCojerUnaCarta } from '../clases/jugador'
 import { Carta } from '../clases/carta'
 import { CeldaBatalla } from '../clases/celdabatalla'
+import { Elemento, MAX_VALOR_CARTA, NUMERO_ELEMENTOS_CARTAS } from '../constants/carta'
 
 describe('Jugador clase', () => {
   test('tiene propiedades estáticas válidas', () => {
@@ -10,7 +11,7 @@ describe('Jugador clase', () => {
     expect(Jugador.MAX_MANO_CARDS).toBe(5)
     expect(Jugador.MAX_ZONA_BATALLA_CARDS).toBe(3)
     expect(Jugador.MAX_DECK).toBe(
-      Carta.MAX_VALOR_CARTA * Carta.NUMERO_ELEMENTOS_CARTAS
+      MAX_VALOR_CARTA * NUMERO_ELEMENTOS_CARTAS
     )
     expect(Jugador.ResultadoCojerUnaCarta.DECK_VACIO).toBe('DECK VACIO')
     expect(Jugador.ResultadoCojerUnaCarta.EXITO).toBe('EXITO')
@@ -29,7 +30,7 @@ describe('Jugador objeto', () => {
   let jugador: Jugador
   const nombreJugador = 'César'
 
-  const carta = new Carta(7, Carta.Elemento.CORAZON)
+  const carta = new Carta(7, Elemento.CORAZON)
   beforeEach(() => {
     jugador = new Jugador(nombreJugador)
   })
@@ -472,8 +473,8 @@ describe('Jugador objeto', () => {
     let cartaAtacante
     let cartaAtacada
     test('atacante:ESPADA atacado:TREBOL', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.ESPADA)
-      cartaAtacada = new Carta(8, Carta.Elemento.TREBOL)
+      cartaAtacante = new Carta(8, Elemento.ESPADA)
+      cartaAtacada = new Carta(8, Elemento.TREBOL)
       const { calculoVAtacante, calculoVAtacada } = jugador.calculoValorAtaque(
         cartaAtacante,
         cartaAtacada
@@ -482,8 +483,8 @@ describe('Jugador objeto', () => {
       expect(calculoVAtacada).toBe(14)
     })
     test('atacante:TREBOL atacado:ESPADA', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.TREBOL)
-      cartaAtacada = new Carta(8, Carta.Elemento.ESPADA)
+      cartaAtacante = new Carta(8, Elemento.TREBOL)
+      cartaAtacada = new Carta(8, Elemento.ESPADA)
       const { calculoVAtacante, calculoVAtacada } = jugador.calculoValorAtaque(
         cartaAtacante,
         cartaAtacada
@@ -492,8 +493,8 @@ describe('Jugador objeto', () => {
       expect(calculoVAtacada).toBe(8)
     })
     test('atacante:ESPADA atacado:CORAZON', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.ESPADA)
-      cartaAtacada = new Carta(8, Carta.Elemento.CORAZON)
+      cartaAtacante = new Carta(8, Elemento.ESPADA)
+      cartaAtacada = new Carta(8, Elemento.CORAZON)
       const { calculoVAtacante, calculoVAtacada } = jugador.calculoValorAtaque(
         cartaAtacante,
         cartaAtacada
@@ -502,8 +503,8 @@ describe('Jugador objeto', () => {
       expect(calculoVAtacada).toBe(8)
     })
     test('atacante:CORAZON atacado:ESPADA', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.CORAZON)
-      cartaAtacada = new Carta(8, Carta.Elemento.ESPADA)
+      cartaAtacante = new Carta(8, Elemento.CORAZON)
+      cartaAtacada = new Carta(8, Elemento.ESPADA)
       const { calculoVAtacante, calculoVAtacada } = jugador.calculoValorAtaque(
         cartaAtacante,
         cartaAtacada
@@ -512,8 +513,8 @@ describe('Jugador objeto', () => {
       expect(calculoVAtacada).toBe(10)
     })
     test('atacante:COCO atacado:TREBOL', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.COCO)
-      cartaAtacada = new Carta(8, Carta.Elemento.TREBOL)
+      cartaAtacante = new Carta(8, Elemento.COCO)
+      cartaAtacada = new Carta(8, Elemento.TREBOL)
       const { calculoVAtacante, calculoVAtacada } = jugador.calculoValorAtaque(
         cartaAtacante,
         cartaAtacada
@@ -522,8 +523,8 @@ describe('Jugador objeto', () => {
       expect(calculoVAtacada).toBe(8)
     })
     test('atacante:TREBOL atacado:COCO', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.TREBOL)
-      cartaAtacada = new Carta(8, Carta.Elemento.COCO)
+      cartaAtacante = new Carta(8, Elemento.TREBOL)
+      cartaAtacada = new Carta(8, Elemento.COCO)
       const { calculoVAtacante, calculoVAtacada } = jugador.calculoValorAtaque(
         cartaAtacante,
         cartaAtacada
@@ -532,8 +533,8 @@ describe('Jugador objeto', () => {
       expect(calculoVAtacada).toBe(12)
     })
     test('atacante:ESPADA atacado:COCO', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.ESPADA)
-      cartaAtacada = new Carta(8, Carta.Elemento.COCO)
+      cartaAtacante = new Carta(8, Elemento.ESPADA)
+      cartaAtacada = new Carta(8, Elemento.COCO)
       const { calculoVAtacante, calculoVAtacada } = jugador.calculoValorAtaque(
         cartaAtacante,
         cartaAtacada
@@ -542,8 +543,8 @@ describe('Jugador objeto', () => {
       expect(calculoVAtacada).toBe(8)
     })
     test('atacante:COCO atacado:ESPADA', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.COCO)
-      cartaAtacada = new Carta(8, Carta.Elemento.ESPADA)
+      cartaAtacante = new Carta(8, Elemento.COCO)
+      cartaAtacada = new Carta(8, Elemento.ESPADA)
       const { calculoVAtacante, calculoVAtacada } = jugador.calculoValorAtaque(
         cartaAtacante,
         cartaAtacada
@@ -552,8 +553,8 @@ describe('Jugador objeto', () => {
       expect(calculoVAtacada).toBe(12)
     })
     test('atacante:CORAZON atacado:TREBOL', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.CORAZON)
-      cartaAtacada = new Carta(8, Carta.Elemento.TREBOL)
+      cartaAtacante = new Carta(8, Elemento.CORAZON)
+      cartaAtacada = new Carta(8, Elemento.TREBOL)
       const { calculoVAtacante, calculoVAtacada } = jugador.calculoValorAtaque(
         cartaAtacante,
         cartaAtacada
@@ -562,8 +563,8 @@ describe('Jugador objeto', () => {
       expect(calculoVAtacada).toBe(8)
     })
     test('atacante:TREBOL atacado:CORAZON', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.TREBOL)
-      cartaAtacada = new Carta(8, Carta.Elemento.CORAZON)
+      cartaAtacante = new Carta(8, Elemento.TREBOL)
+      cartaAtacada = new Carta(8, Elemento.CORAZON)
       const { calculoVAtacante, calculoVAtacada } = jugador.calculoValorAtaque(
         cartaAtacante,
         cartaAtacada
@@ -572,8 +573,8 @@ describe('Jugador objeto', () => {
       expect(calculoVAtacada).toBe(10)
     })
     test('atacante:CORAZON atacado:COCO', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.CORAZON)
-      cartaAtacada = new Carta(8, Carta.Elemento.COCO)
+      cartaAtacante = new Carta(8, Elemento.CORAZON)
+      cartaAtacada = new Carta(8, Elemento.COCO)
       const { calculoVAtacante, calculoVAtacada } = jugador.calculoValorAtaque(
         cartaAtacante,
         cartaAtacada
@@ -582,8 +583,8 @@ describe('Jugador objeto', () => {
       expect(calculoVAtacada).toBe(8)
     })
     test('atacante:COCO atacado:CORAZON', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.COCO)
-      cartaAtacada = new Carta(8, Carta.Elemento.CORAZON)
+      cartaAtacante = new Carta(8, Elemento.COCO)
+      cartaAtacada = new Carta(8, Elemento.CORAZON)
       const { calculoVAtacante, calculoVAtacada } = jugador.calculoValorAtaque(
         cartaAtacante,
         cartaAtacada
@@ -597,8 +598,8 @@ describe('Jugador objeto', () => {
     let cartaAtacante
     let cartaAtacada
     test('gana atacante ', () => {
-      cartaAtacante = new Carta(12, Carta.Elemento.COCO)
-      cartaAtacada = new Carta(10, Carta.Elemento.CORAZON)
+      cartaAtacante = new Carta(12, Elemento.COCO)
+      cartaAtacada = new Carta(10, Elemento.CORAZON)
       const {
         calculoVAtacante,
         calculoVAtacada
@@ -608,8 +609,8 @@ describe('Jugador objeto', () => {
       )
     })
     test('pierde atacante', () => {
-      cartaAtacante = new Carta(9, Carta.Elemento.CORAZON)
-      cartaAtacada = new Carta(8, Carta.Elemento.ESPADA)
+      cartaAtacante = new Carta(9, Elemento.CORAZON)
+      cartaAtacada = new Carta(8, Elemento.ESPADA)
       const {
         calculoVAtacante,
         calculoVAtacada
@@ -619,8 +620,8 @@ describe('Jugador objeto', () => {
       )
     })
     test('empate', () => {
-      cartaAtacante = new Carta(8, Carta.Elemento.TREBOL)
-      cartaAtacada = new Carta(4, Carta.Elemento.COCO)
+      cartaAtacante = new Carta(8, Elemento.TREBOL)
+      cartaAtacada = new Carta(4, Elemento.COCO)
       const {
         calculoVAtacante,
         calculoVAtacada
@@ -642,11 +643,11 @@ describe('Jugador objeto', () => {
       expect(resultadoAtaque.veredicto).not.toBe('Ataque realizado')
     })
     test('posible, jugador atacado en posición de ataque - gana atacante', () => {
-      cartaAtacante = new Carta(13, Carta.Elemento.COCO)
+      cartaAtacante = new Carta(13, Elemento.COCO)
       jugador.mano.push(cartaAtacante)
       jugador.accionColocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
       jugador.zonaBatalla[0].dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE
-      cartaAtacada = new Carta(1, Carta.Elemento.CORAZON)
+      cartaAtacada = new Carta(1, Elemento.CORAZON)
       jugadorEnemigo.barrera.push(carta)
       jugadorEnemigo.mano.push(cartaAtacada)
       jugadorEnemigo.accionColocarCarta(
@@ -674,11 +675,11 @@ describe('Jugador objeto', () => {
       expect(resultadoAtaque.cartaAtacada).toEqual(cartaAtacada)
     })
     test('posible, jugador atacado en posición de ataque - pierde atacante', () => {
-      cartaAtacante = new Carta(1, Carta.Elemento.COCO)
+      cartaAtacante = new Carta(1, Elemento.COCO)
       jugador.mano.push(cartaAtacante)
       jugador.accionColocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
       jugador.zonaBatalla[0].dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE
-      cartaAtacada = new Carta(13, Carta.Elemento.CORAZON)
+      cartaAtacada = new Carta(13, Elemento.CORAZON)
       jugadorEnemigo.barrera.push(carta)
       jugadorEnemigo.mano.push(cartaAtacada)
       jugadorEnemigo.accionColocarCarta(
@@ -706,11 +707,11 @@ describe('Jugador objeto', () => {
       expect(resultadoAtaque.cartaAtacada).toEqual(cartaAtacada)
     })
     test('posible, jugador atacado en posición de ataque - empate', () => {
-      cartaAtacante = new Carta(1, Carta.Elemento.COCO)
+      cartaAtacante = new Carta(1, Elemento.COCO)
       jugador.mano.push(cartaAtacante)
       jugador.accionColocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
       jugador.zonaBatalla[0].dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE
-      cartaAtacada = new Carta(1, Carta.Elemento.CORAZON)
+      cartaAtacada = new Carta(1, Elemento.CORAZON)
       jugadorEnemigo.barrera.push(carta)
       jugadorEnemigo.mano.push(cartaAtacada)
       jugadorEnemigo.accionColocarCarta(
@@ -736,11 +737,11 @@ describe('Jugador objeto', () => {
       expect(resultadoAtaque.cartaAtacada).toEqual(cartaAtacada)
     })
     test('posible, jugador atacado en posición de defensa - gana atacante', () => {
-      cartaAtacante = new Carta(13, Carta.Elemento.COCO)
+      cartaAtacante = new Carta(13, Elemento.COCO)
       jugador.mano.push(cartaAtacante)
       jugador.accionColocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
       jugador.zonaBatalla[0].dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE
-      cartaAtacada = new Carta(1, Carta.Elemento.CORAZON)
+      cartaAtacada = new Carta(1, Elemento.CORAZON)
       jugadorEnemigo.barrera.push(carta)
       jugadorEnemigo.mano.push(cartaAtacada)
       jugadorEnemigo.accionColocarCarta(
@@ -768,11 +769,11 @@ describe('Jugador objeto', () => {
       expect(resultadoAtaque.cartaAtacada).toEqual(cartaAtacada)
     })
     test('posible, jugador atacado en posición de defensa - pierde atacante', () => {
-      cartaAtacante = new Carta(1, Carta.Elemento.COCO)
+      cartaAtacante = new Carta(1, Elemento.COCO)
       jugador.mano.push(cartaAtacante)
       jugador.accionColocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
       jugador.zonaBatalla[0].dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE
-      cartaAtacada = new Carta(13, Carta.Elemento.CORAZON)
+      cartaAtacada = new Carta(13, Elemento.CORAZON)
       jugadorEnemigo.barrera.push(carta)
       jugadorEnemigo.mano.push(cartaAtacada)
       jugadorEnemigo.accionColocarCarta(
@@ -800,11 +801,11 @@ describe('Jugador objeto', () => {
       expect(resultadoAtaque.cartaAtacada).toEqual(cartaAtacada)
     })
     test('posible, jugador atacado en posición de defensa - empate', () => {
-      cartaAtacante = new Carta(1, Carta.Elemento.COCO)
+      cartaAtacante = new Carta(1, Elemento.COCO)
       jugador.mano.push(cartaAtacante)
       jugador.accionColocarCarta(0, 0, CeldaBatalla.Estado.POS_BATALLA_ATAQUE)
       jugador.zonaBatalla[0].dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE
-      cartaAtacada = new Carta(1, Carta.Elemento.CORAZON)
+      cartaAtacada = new Carta(1, Elemento.CORAZON)
       jugadorEnemigo.barrera.push(carta)
       jugadorEnemigo.mano.push(cartaAtacada)
       jugadorEnemigo.accionColocarCarta(

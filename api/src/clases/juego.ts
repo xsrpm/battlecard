@@ -1,4 +1,5 @@
 import { Jugador, RptaCogerUnaCartaDelDeck } from './jugador'
+import {Juego as IJuego } from '../../../shared/types/juego'
 
 export const Pantalla = {
   EN_SALA_DE_ESPERA: 'EN SALA DE ESPERA',
@@ -30,7 +31,7 @@ interface RptaTerminarJuego extends RptaCogerUnaCartaDelDeckJuego {
   }
 }
 
-export class Juego {
+export class Juego implements IJuego{
   jugador: Jugador[]
   jugadorActual: Jugador | null
   jugadorAnterior: Jugador | null

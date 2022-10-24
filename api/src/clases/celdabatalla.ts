@@ -1,3 +1,4 @@
+import { CeldaBatalla as ICeldaBatalla } from '../../../shared/types/celdabatalla';
 import { Carta } from './carta'
 
 const Estado = {
@@ -13,7 +14,7 @@ const Estado = {
 }
 Object.freeze(Estado)
 
-export class CeldaBatalla {
+export class CeldaBatalla implements ICeldaBatalla{
   posBatalla
   dispAtaque
   dispCambio

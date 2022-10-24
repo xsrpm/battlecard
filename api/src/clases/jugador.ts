@@ -1,5 +1,7 @@
 import { Carta } from './carta'
 import { CeldaBatalla } from './celdabatalla'
+import { Jugador as IJugador} from '../../../shared/types/jugador'
+import { Elemento, MAX_VALOR_CARTA, NUMERO_ELEMENTOS_CARTAS } from '../constants/carta'
 
 export const ResultadoCojerUnaCarta = {
   MANO_LLENA: 'MANO LLENA',
@@ -66,7 +68,7 @@ export interface RptaCambiarPosicion {
   carta: Carta | null
 }
 
-export class Jugador {
+export class Jugador implements IJugador{
   cartaColocada
   nAtaquesDisponibles
   nCambiosPosicionesDisponibles
@@ -92,7 +94,7 @@ export class Jugador {
   }
 
   static get MAX_DECK () {
-    return Carta.MAX_VALOR_CARTA * Carta.NUMERO_ELEMENTOS_CARTAS
+    return MAX_VALOR_CARTA * NUMERO_ELEMENTOS_CARTAS
   }
 
   static get ResultadoCojerUnaCarta () {
@@ -446,34 +448,34 @@ export class Jugador {
     let bonifCartaAtacada = 0
 
     switch (cartaAtacante.elemento + ' ' + cartaAtacada.elemento) {
-      case Carta.Elemento.ESPADA + ' ' + Carta.Elemento.TREBOL:
+      case Elemento.ESPADA + ' ' + Elemento.TREBOL:
         bonifCartaAtacada = 6
         calculoVAtacada += bonifCartaAtacada
         break
-      case Carta.Elemento.TREBOL + ' ' + Carta.Elemento.ESPADA:
+      case Elemento.TREBOL + ' ' + Elemento.ESPADA:
         bonifCartaAtacante = 6
         calculoVAtacante += bonifCartaAtacante
         break
-      case Carta.Elemento.ESPADA + ' ' + Carta.Elemento.CORAZON:
-      case Carta.Elemento.CORAZON + ' ' + Carta.Elemento.TREBOL:
+      case Elemento.ESPADA + ' ' + Elemento.CORAZON:
+      case Elemento.CORAZON + ' ' + Elemento.TREBOL:
         bonifCartaAtacante = 2
         calculoVAtacante += bonifCartaAtacante
         break
-      case Carta.Elemento.CORAZON + ' ' + Carta.Elemento.ESPADA:
+      case Elemento.CORAZON + ' ' + Elemento.ESPADA:
         bonifCartaAtacante = 2
         calculoVAtacada += bonifCartaAtacante
         break
-      case Carta.Elemento.COCO + ' ' + Carta.Elemento.TREBOL:
-      case Carta.Elemento.ESPADA + ' ' + Carta.Elemento.COCO:
+      case Elemento.COCO + ' ' + Elemento.TREBOL:
+      case Elemento.ESPADA + ' ' + Elemento.COCO:
         bonifCartaAtacante = 4
         calculoVAtacante += bonifCartaAtacante
         break
-      case Carta.Elemento.TREBOL + ' ' + Carta.Elemento.COCO:
-      case Carta.Elemento.COCO + ' ' + Carta.Elemento.ESPADA:
+      case Elemento.TREBOL + ' ' + Elemento.COCO:
+      case Elemento.COCO + ' ' + Elemento.ESPADA:
         bonifCartaAtacada = 4
         calculoVAtacada += bonifCartaAtacada
         break
-      case Carta.Elemento.TREBOL + ' ' + Carta.Elemento.CORAZON:
+      case Elemento.TREBOL + ' ' + Elemento.CORAZON:
         bonifCartaAtacada = 2
         calculoVAtacada += bonifCartaAtacada
         break
@@ -522,8 +524,8 @@ export class Jugador {
       let sinBarreras = false
       let nombreJugadorDerrotado = ''
       let nombreJugadorVictorioso = ''
-      const cartaAtacante = this.zonaBatalla[idCartaAtacante].carta ?? new Carta(0, Carta.Elemento.COCO)
-      const cartaAtacada = jugadorAtacado.zonaBatalla[idCartaAtacada].carta ?? new Carta(0, Carta.Elemento.COCO)
+      const cartaAtacante = this.zonaBatalla[idCartaAtacante].carta ?? new Carta(0, Elemento.COCO)
+      const cartaAtacada = jugadorAtacado.zonaBatalla[idCartaAtacada].carta ?? new Carta(0, Elemento.COCO)
       const {
         calculoVAtacante,
         calculoVAtacada,
@@ -701,9 +703,9 @@ export class Jugador {
     const cartasElegidas: boolean[][] = []
     let n, m, cartasRepartidas
 
-    for (let i = 0; i < Carta.NUMERO_ELEMENTOS_CARTAS; i++) {
+    for (let i = 0; i < NUMERO_ELEMENTOS_CARTAS; i++) {
       cartasElegidas.push([])
-      for (let j = 0; j < Carta.MAX_VALOR_CARTA; j++) {
+      for (let j = 0; j < MAX_VALOR_CARTA; j++) {
         cartasElegidas[i][j] = false
       }
     }
@@ -711,14 +713,14 @@ export class Jugador {
     cartasRepartidas = 0
 
     while (cartasRepartidas < Jugador.MAX_DECK) {
-      n = Math.floor(Math.random() * Carta.NUMERO_ELEMENTOS_CARTAS)
-      m = Math.floor(Math.random() * Carta.MAX_VALOR_CARTA)
+      n = Math.floor(Math.random() * NUMERO_ELEMENTOS_CARTAS)
+      m = Math.floor(Math.random() * MAX_VALOR_CARTA)
 
       if (!cartasElegidas[n][m]) {
         cartasElegidas[n][m] = true
 
         cartasRepartidas++
-        const c = new Carta(m + 1, Object.values(Carta.Elemento)[n])
+        const c = new Carta(m + 1, Object.values(Elemento)[n])
         if (this.barrera.length < Jugador.MAX_BARRERA_CARDS) {
           this.barrera.push(c)
         } else if (this.mano.length < Jugador.MAX_MANO_CARDS) {

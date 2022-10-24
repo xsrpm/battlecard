@@ -1,6 +1,7 @@
 import { expect, describe, test, beforeEach } from '@jest/globals'
 import { Carta } from '../clases/carta'
 import { CeldaBatalla } from '../clases/celdabatalla'
+import { Elemento } from '../constants/carta'
 
 describe('CeldaBatalla clase', () => {
   test('tiene propiedades estáticas válidas', () => {
@@ -33,7 +34,7 @@ describe('CeldaBatalla clase', () => {
 })
 
 describe('CeldaBatalla objeto', () => {
-  const carta = new Carta(12, Carta.Elemento.COCO)
+  const carta = new Carta(12, Elemento.COCO)
   /**
    * @type {CeldaBatalla}
    */
