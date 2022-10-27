@@ -1,32 +1,17 @@
+import { DispAtaque, PosBatalla, DispCambio } from './../constants/celdabatalla';
 import { CeldaBatalla as ICeldaBatalla } from '../../../shared/types/celdabatalla';
 import { Carta } from './carta'
 
-const Estado = {
-  NO_HAY_CARTA: 'No hay carta',
-  POS_BATALLA_ATAQUE: 'Posición de batalla: Ataque',
-  POS_BATALLA_DEF_ARRIBA: 'Posición de batalla: Defensa cara arriba',
-  POS_BATALLA_DEF_ABAJO: 'Posición de batalla: Defensa cara abajo',
-  YA_ESTA_EN_POSICION_SOLICITADA: 'Ya se está en la posición solicitada',
-  ATAQUE_NO_DISPONIBLE: 'Atacar carta no disponible',
-  ATAQUE_DISPONIBLE: 'Atacar carta disponible',
-  CAMBIO_POS_NO_DISPONIBLE: 'Cambio de posición no disponible',
-  CAMBIO_POS_DISPONIBLE: 'Cambio de posición disponible'
-}
-Object.freeze(Estado)
-
 export class CeldaBatalla implements ICeldaBatalla{
-  posBatalla
-  dispAtaque
-  dispCambio
+  posBatalla: PosBatalla
+  dispAtaque: DispAtaque
+  dispCambio: DispCambio
   carta: Carta | null
-  static get Estado () {
-    return Estado
-  }
 
   constructor () {
-    this.posBatalla = CeldaBatalla.Estado.NO_HAY_CARTA
-    this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE
-    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
+    this.posBatalla = PosBatalla.NO_HAY_CARTA
+    this.dispAtaque = DispAtaque.NO_DISPONIBLE
+    this.dispCambio = DispCambio.NO_DISPONIBLE
     this.carta = null
   }
 
@@ -35,12 +20,12 @@ export class CeldaBatalla implements ICeldaBatalla{
    * @param {Carta} carta
    * @param {string} posBatalla
    */
-  agregarCarta (carta: Carta, posBatalla: string) {
+  agregarCarta (carta: Carta, posBatalla: PosBatalla) {
     this.posBatalla = posBatalla
-    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
-    if (posBatalla === CeldaBatalla.Estado.POS_BATALLA_ATAQUE) {
-      this.dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE
-    } else this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE
+    this.dispCambio = DispCambio.NO_DISPONIBLE
+    if (posBatalla === PosBatalla.ATAQUE) {
+      this.dispAtaque = DispAtaque.DISPONIBLE
+    } else this.dispAtaque = DispAtaque.NO_DISPONIBLE
     this.carta = carta
   }
 
@@ -49,46 +34,46 @@ export class CeldaBatalla implements ICeldaBatalla{
    * @param {string} posBatalla
    */
   cambioPosicionBatalla (posBatalla: any) {
-    if (this.dispCambio === CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE) {
-      return CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
+    if (this.dispCambio === DispCambio.NO_DISPONIBLE) {
+      return DispCambio.NO_DISPONIBLE
     }
     if (this.posBatalla === posBatalla) {
-      return CeldaBatalla.Estado.YA_ESTA_EN_POSICION_SOLICITADA
+      return PosBatalla.YA_ESTA_EN_POSICION_SOLICITADA
     }
     this.posBatalla = posBatalla
-    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
+    this.dispCambio = DispCambio.NO_DISPONIBLE
     return posBatalla
   }
 
   cambioPosicionBatallaAtaque () {
     const res = this.cambioPosicionBatalla(
-      CeldaBatalla.Estado.POS_BATALLA_ATAQUE
+      PosBatalla.ATAQUE
     )
-    if (res === CeldaBatalla.Estado.POS_BATALLA_ATAQUE) {
-      this.dispAtaque = CeldaBatalla.Estado.ATAQUE_DISPONIBLE
+    if (res === PosBatalla.ATAQUE) {
+      this.dispAtaque = DispAtaque.DISPONIBLE
     }
     return res
   }
 
   cambioPosicionBatallaDefensa () {
     const res = this.cambioPosicionBatalla(
-      CeldaBatalla.Estado.POS_BATALLA_DEF_ARRIBA
+      PosBatalla.DEF_ARRIBA
     )
-    if (res === CeldaBatalla.Estado.POS_BATALLA_DEF_ARRIBA) {
-      this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE
+    if (res === PosBatalla.DEF_ARRIBA) {
+      this.dispAtaque = DispAtaque.NO_DISPONIBLE
     }
     return res
   }
 
   ataqueRealizado () {
-    this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE
-    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
+    this.dispAtaque = DispAtaque.NO_DISPONIBLE
+    this.dispCambio = DispCambio.NO_DISPONIBLE
   }
 
   quitarCarta () {
     this.carta = null
-    this.dispAtaque = CeldaBatalla.Estado.ATAQUE_NO_DISPONIBLE
-    this.dispCambio = CeldaBatalla.Estado.CAMBIO_POS_NO_DISPONIBLE
-    this.posBatalla = CeldaBatalla.Estado.NO_HAY_CARTA
+    this.dispAtaque = DispAtaque.NO_DISPONIBLE
+    this.dispCambio = DispCambio.NO_DISPONIBLE
+    this.posBatalla = PosBatalla.NO_HAY_CARTA
   }
 }

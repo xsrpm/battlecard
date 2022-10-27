@@ -1,8 +1,10 @@
+import { ResultadoUnirASala, ResultadoIniciarJuego } from './../constants/juego';
+import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, UnirASalaResponse, WebsocketEvent } from './../../../shared/types/response.d';
 import { SeleccionarZonaBatallaRequest } from '../schemas/seleccionar-zona-batalla.schema'
-import { Jugador, RptaAccionAtacarBarrera, RptaCambiarPosicion } from './jugador'
+import { Jugador } from './jugador'
 import WebSocket from 'ws'
 import { cerrarSockets, sendMessage, sendMessageToOthers, wss } from './websocket-server'
-import { Juego, Pantalla } from './juego'
+import { Juego } from './juego'
 import { UnirASalaRequest } from '../schemas/unir-a-sala.schema'
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
 import { Carta } from './carta'
@@ -11,23 +13,12 @@ import { SeleccionarManoRequest } from '../schemas/seleccionar-mano.schema'
 import { AtacarCartaRequest } from '../schemas/atacar-carta.schema'
 import { AtacarBarreraRequest } from '../schemas/atacar-barrera.schema'
 import { CambiarPosicionRequest } from '../schemas/cambiar-posicion.schema'
+import { PosBatalla } from '../constants/celdabatalla'
+import { Pantalla } from '../constants/juego'
+import { ResultadoCogerCarta } from '../constants/jugador';
 const juego = new Juego()
 
 export const WebSocketServer = wss
-
-interface WebsocketEvent {
-  event: string
-  payload?: object
-  error?: string
-}
-
-interface UnirASalaResponse extends WebsocketEvent {
-  payload: {
-    resultado: string
-    jugadores: string[]
-    iniciar: boolean
-  }
-}
 
 interface WebSocketJugador extends WebSocket {
   jugador: Jugador
@@ -36,7 +27,7 @@ interface WebSocketJugador extends WebSocket {
 function unirASala (ws: WebSocketJugador, reqEvent: UnirASalaRequest) {
   const nombreJugador = reqEvent.payload.nombreJugador
   const respUnirASala = juego.unirASala(nombreJugador)
-  if (respUnirASala.resultado === 'Exito') {
+  if (respUnirASala.resultado === ResultadoUnirASala.EXITO) {
     ws.jugador = respUnirASala.jugador as Jugador
     const respEvent: UnirASalaResponse = {
       event: WebsocketEventTitle.UNIR_A_SALA,
@@ -58,29 +49,9 @@ function unirASala (ws: WebSocketJugador, reqEvent: UnirASalaRequest) {
   }
 }
 
-interface IniciarJuegoResponse extends WebsocketEvent {
-  payload: {
-    respuesta: string
-    jugador?: {
-      nombre?: string
-      nBarrera?: number
-      nDeck?: number
-      mano?: Carta[]
-      enTurno?: boolean
-    }
-    jugadorEnemigo?: {
-      nombre?: string
-      nBarrera?: number
-      nDeck?: number
-      nMano?: number
-      enTurno?: boolean
-    }
-  }
-}
-
 function iniciarJuego (ws: WebSocketJugador) {
   const respIniciarJuego = juego.iniciarJuego()
-  if (respIniciarJuego !== 'JUEGO INICIADO') {
+  if (respIniciarJuego !== ResultadoIniciarJuego.JUEGO_INICIADO) {
     const respEvent: IniciarJuegoResponse = {
       event: WebsocketEventTitle.INICIAR_JUEGO,
       payload: {
@@ -166,27 +137,10 @@ function iniciarJuego (ws: WebSocketJugador) {
   }
 }
 
-interface ColocarCartaResponse extends WebsocketEvent {
-  payload: {
-    mano: Carta[]
-    resultado: string
-  }
-}
-
-interface ColocarCartaOtroJugadorResponse extends WebsocketEvent {
-  payload: {
-    posicion: string
-    idZonaBatalla: number
-    idMano: number
-    resultado: string
-    carta: Carta
-  }
-}
-
 function colocarCarta (ws: WebSocket, reqEvent: ColocarCartaRequest) {
   if (!accionAutorizada(ws as WebSocketJugador, reqEvent)) return
   const { posicion, idZonaBatalla, idMano } = reqEvent.payload
-  const respColocarCarta = juego.colocarCarta(idZonaBatalla, idMano, posicion)
+  const respColocarCarta = juego.colocarCarta(idZonaBatalla, idMano, posicion as PosBatalla)
   const respEvent: ColocarCartaResponse = {
     event: WebsocketEventTitle.COLOCAR_CARTA,
     payload: {
@@ -209,15 +163,6 @@ function colocarCarta (ws: WebSocket, reqEvent: ColocarCartaRequest) {
   sendMessageToOthers(ws, respOtrosEvent)
 }
 
-interface SeleccionarZonaBatallaResponse extends WebsocketEvent {
-  payload: {
-    existeCarta: boolean
-    puedeAtacarCarta: string
-    puedeAtacarBarrera: string
-    puedeCambiarPosicion: string
-  }
-}
-
 function seleccionarZonaBatalla (ws: WebSocket, reqEvent: SeleccionarZonaBatallaRequest) {
   if (!accionAutorizada(ws as WebSocketJugador, reqEvent)) return
   const { idZonaBatalla } = reqEvent.payload
@@ -229,23 +174,6 @@ function seleccionarZonaBatalla (ws: WebSocket, reqEvent: SeleccionarZonaBatalla
     }
   }
   sendMessage(ws, respSeleccionarZB)
-}
-
-interface TerminarTurnoResponse extends WebsocketEvent {
-  payload: {
-    jugador: {
-      enTurno: boolean
-      nDeck: number
-    }
-    jugadorEnemigo: {
-      enTurno: boolean
-      nDeck: number
-    }
-    nombreJugadorDerrotado?: string
-    nombreJugadorVictorioso?: string
-    resultado?: string
-    carta?: Carta
-  }
 }
 
 function terminarTurno (ws: WebSocket, message: WebsocketEvent) {
@@ -277,7 +205,7 @@ function terminarTurno (ws: WebSocket, message: WebsocketEvent) {
     }
   }
   sendMessageToOthers(ws, respTerminarTurno)
-  if (res.resultado === 'DECK VACIO') {
+  if (res.resultado === ResultadoCogerCarta.DECK_VACIO) {
     cerrarSockets()
   }
 }
@@ -291,13 +219,6 @@ function accionAutorizada (ws: WebSocketJugador, message: WebsocketEvent) {
   return false
 }
 
-interface SeleccionarManoResponse extends WebsocketEvent {
-  payload: {
-    existeCarta: boolean
-    puedeColocarCarta: string
-  }
-}
-
 function seleccionarMano (ws: WebSocket, message: SeleccionarManoRequest) {
   if (!accionAutorizada(ws as WebSocketJugador, message)) return
   const { idMano } = message.payload
@@ -308,26 +229,6 @@ function seleccionarMano (ws: WebSocket, message: SeleccionarManoRequest) {
     }
   }
   sendMessage(ws, respSeleccionarMano)
-}
-
-interface AtacarCartaResponse extends WebsocketEvent {
-  payload: {
-    cartaAtacante?: Carta
-    cartaAtacada?: Carta
-    veredicto?: string
-    idBarreraEliminada?: number
-    estadoCartaAtacante?: string
-    estadoCartaAtacada?: string
-    estadoBarrera?: string
-    sinBarreras?: boolean
-    bonifCartaAtacante?: number
-    bonifCartaAtacada?: number
-    nombreJugadorDerrotado?: string
-    nombreJugadorVictorioso?: string
-    estadoAtaque: string
-    idCartaAtacante?: number
-    idCartaAtacada?: number
-  }
 }
 
 function atacarCarta (ws: WebSocket, message: AtacarCartaRequest) {
@@ -349,10 +250,6 @@ function atacarCarta (ws: WebSocket, message: AtacarCartaRequest) {
   }
 }
 
-interface AtacarBarreraResponse extends WebsocketEvent {
-  payload: RptaAccionAtacarBarrera
-}
-
 function atacarBarrera (ws: WebSocket, message: AtacarBarreraRequest) {
   if (!accionAutorizada(ws as WebSocketJugador, message)) return
   const { idZonaBatalla } = message.payload
@@ -366,14 +263,6 @@ function atacarBarrera (ws: WebSocket, message: AtacarBarreraRequest) {
   if (rptaAtacarBarrera.payload.sinBarreras as boolean) {
     cerrarSockets()
   }
-}
-
-interface RptaCambiarPosicionId extends RptaCambiarPosicion {
-  idZonaBatalla?: number
-}
-
-interface CambiarPosicionResponse extends WebsocketEvent {
-  payload: RptaCambiarPosicionId
 }
 
 function cambiarPosicion (ws: WebSocket, message: CambiarPosicionRequest) {
