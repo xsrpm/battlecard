@@ -1,4 +1,4 @@
-import { btnFinDeJuego, btnTerminarTurno, habilitacionBotonera } from './botonera'
+import { btnFinDeJuego, btnTerminarTurno, habilitacionBotonera } from './botonera.js'
 import { message, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag } from './estadoGlobal'
 import { info } from './info'
 import { resultadoAtaque } from './resultado-ataque'
@@ -7,7 +7,7 @@ import { cambiarPantalla } from './utils'
 
 const juego = document.getElementById('juego')
 
-function inicializarJuego() {
+function inicializarJuego () {
   if (encuentraError()) return
   for (let i = 0; i < message.payload.jugador.nBarrera; i++) {
     barreraYo.children[i].classList.add('barrera')
@@ -50,7 +50,7 @@ function inicializarJuego() {
   setJuegoFinalizado(false)
 }
 
-export function iniciarJuego() {
+export function iniciarJuego () {
   if (encuentraError()) return
   inicializarJuego()
   mostrarJugadorEnTurno()
@@ -58,7 +58,7 @@ export function iniciarJuego() {
   cambiarPantalla(juego)
 }
 
-export function terminarTurno() {
+export function terminarTurno () {
   if (encuentraError()) return
   mostrarJugadorEnTurno()
   habilitacionBotonera()
@@ -66,7 +66,7 @@ export function terminarTurno() {
   mostrarCartaCogida()
 }
 
-export function enemigoDesconectado() {
+export function enemigoDesconectado () {
   if (encuentraError()) return
   setNombreJugadorVictorioso(message.payload.nombreJugadorVictorioso)
   setNombreJugadorDerrotado(message.payload.nombreJugadorDerrotado)
@@ -77,7 +77,7 @@ export function enemigoDesconectado() {
   setJuegoFinalizado(true)
 }
 
-export function encuentraError() {
+export function encuentraError () {
   if (typeof message.error !== 'undefined') {
     console.log(message.error)
     window.alert(message.error)

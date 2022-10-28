@@ -11,13 +11,13 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-export function sendMessage(message) {
+export function sendMessage (message) {
   socket.send(JSON.stringify(message))
   console.log('sended:')
   console.log(message)
 }
 
-export function initSocket(onopen, onmessage, onclose, onerror) {
+export function initSocket (onopen, onmessage, onclose, onerror) {
   socket = new WebSocket(url)
   socket.onopen = onopen
   socket.onmessage = onmessage

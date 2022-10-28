@@ -10,7 +10,7 @@ const sala = document.getElementById('sala')
 const h2 = sala.getElementsByTagName('h2')
 const btnUnirASala = document.getElementById('btnUnirASala')
 
-function unirASala() {
+function unirASala () {
   h2[0].innerText = '(Sin Jugador)'
   h2[1].innerText = '(Sin Jugador)'
   if (encuentraError()) return

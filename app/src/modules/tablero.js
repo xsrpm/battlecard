@@ -1,5 +1,5 @@
 
-import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './botonera'
+import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './botonera.js'
 import { idCartaZBSeleccionada, juegoFinalizado, message, nombreJugadorDerrotado, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from './estadoGlobal'
 import { info } from './info'
 import { encuentraError } from './juego'
@@ -32,7 +32,7 @@ export const zonaBatallaYo = document.getElementById('zonaBatallaYo')
 export const manoYo = document.getElementById('manoYo')
 export const barreraYo = document.getElementById('barreraYo')
 
-export function colocarCarta() {
+export function colocarCarta () {
   habilitacionBotonera()
   mensajeBotones.innerText = 'Seleccione ubicación en zona de batalla...'
   for (const celda of zonaBatallaYo.children) {
@@ -46,7 +46,7 @@ export function colocarCarta() {
   setStepAccion('COLOCAR SELECCIONAR ZONA BATALLA')
 }
 
-export function mostrarJugadorEnTurno() {
+export function mostrarJugadorEnTurno () {
   if (encuentraError()) return
   if (message.payload.jugador.enTurno) {
     jugDown.setAttribute('en-turno', 'true')
@@ -107,7 +107,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
   }
 })
 
-export function standBySeleccionarZonaBatalla() {
+export function standBySeleccionarZonaBatalla () {
   if (encuentraError()) return
   const {
     existeCarta,
@@ -138,14 +138,14 @@ export function standBySeleccionarZonaBatalla() {
   }
 }
 
-export function quitarSeleccionEnCartas() {
+export function quitarSeleccionEnCartas () {
   Array.from(manoYo.children).forEach((e) => e.classList.remove('seleccionado'))
   Array.from(zonaBatallaYo.children).forEach((e) =>
     e.classList.remove('seleccionado')
   )
 }
 
-export function seleccionarMano() {
+export function seleccionarMano () {
   if (encuentraError()) return
   const { existeCarta, puedeColocarCarta } = message.payload
   if (existeCarta) {
@@ -162,7 +162,7 @@ export function seleccionarMano() {
   }
 }
 
-export function mostrarCartaCogida() {
+export function mostrarCartaCogida () {
   if (encuentraError()) return
   const { carta, resultado } = message.payload
   if (resultado === 'EXITO') {
@@ -187,7 +187,7 @@ export function mostrarCartaCogida() {
   }
 }
 
-export function atacarCarta() {
+export function atacarCarta () {
   if (encuentraError()) return
   const {
     estadoAtaque,
@@ -302,7 +302,7 @@ manoYo.addEventListener('click', function (e) {
   }
 })
 
-export function colocarSeleccionarZonaBatalla() {
+export function colocarSeleccionarZonaBatalla () {
   if (encuentraError()) return
   if (message.payload.resultado === 'Carta colocada') {
     habilitacionBotonera()
@@ -333,7 +333,7 @@ export function colocarSeleccionarZonaBatalla() {
   }
 }
 
-export function colocaCartaOtroJugador() {
+export function colocaCartaOtroJugador () {
   if (encuentraError()) return
   const { posicion, idZonaBatalla, idMano, resultado, carta } = message.payload
   if (resultado === 'Carta colocada') {
@@ -355,7 +355,7 @@ export function colocaCartaOtroJugador() {
   }
 }
 
-export function atacanTuCarta() {
+export function atacanTuCarta () {
   if (encuentraError()) return
   const {
     estadoAtaque,
@@ -424,7 +424,7 @@ export function atacanTuCarta() {
   }
 }
 
-export function atacarBarrera() {
+export function atacarBarrera () {
   if (encuentraError()) return
   const { resultado, idBarreraEliminada } = message.payload
   if (resultado === 'Barrera destruida') {
@@ -448,7 +448,7 @@ export function atacarBarrera() {
   }
 }
 
-export function atacanTuBarrera() {
+export function atacanTuBarrera () {
   if (encuentraError()) return
   const { resultado, idBarreraEliminada } = message.payload
   if (resultado === 'Barrera destruida') {
@@ -492,7 +492,7 @@ zonaBatallaEnemiga.addEventListener('click', function (e) {
   }
 })
 
-export function cambiarPosicion() {
+export function cambiarPosicion () {
   if (encuentraError()) return
   const { respuesta, posBatalla } = message.payload
   if (stepAccion !== 'CAMBIAR POSICION') {
@@ -507,7 +507,7 @@ export function cambiarPosicion() {
   }
 }
 
-export function cambiaPosicionEnemigo() {
+export function cambiaPosicionEnemigo () {
   if (encuentraError()) return
   const { respuesta, posBatalla, idZonaBatalla, carta } = message.payload
   if (respuesta === 'Posicion cambiada') {

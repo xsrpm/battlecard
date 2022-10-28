@@ -75,7 +75,7 @@ btnColocarEnAtaque.addEventListener('click', () => {
   }
 })
 
-export function habilitacionBotonera() {
+export function habilitacionBotonera () {
   if (jugDown.getAttribute('en-turno') === 'true') {
     btnColocarEnAtaque.classList.add('ocultar')
     btnColocarEnDefensa.classList.add('ocultar')

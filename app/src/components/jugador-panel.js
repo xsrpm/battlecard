@@ -1,15 +1,15 @@
 class JugadorPanel extends HTMLElement {
-  constructor() {
+  constructor () {
     super()
     this.attachShadow({ mode: 'open' })
     this.render()
   }
 
-  static get observedAttributes() {
+  static get observedAttributes () {
     return ['en-turno']
   }
 
-  attributeChangedCallback(attr, oldVal, newVal) {
+  attributeChangedCallback (attr, oldVal, newVal) {
     if (attr === 'en-turno') {
       if (newVal === 'true') {
         this.shadowRoot.children[0].classList.add('jugEnTurno')
@@ -19,7 +19,7 @@ class JugadorPanel extends HTMLElement {
     }
   }
 
-  getTemplate() {
+  getTemplate () {
     const template = document.createElement('template')
     template.innerHTML = `
             <div>
@@ -32,7 +32,7 @@ class JugadorPanel extends HTMLElement {
     return template
   }
 
-  getStyles() {
+  getStyles () {
     return `
           <style>
             :host{
@@ -64,7 +64,7 @@ class JugadorPanel extends HTMLElement {
         `
   }
 
-  render() {
+  render () {
     this.shadowRoot.appendChild(this.getTemplate().content.cloneNode(true))
   }
 }
