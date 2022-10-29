@@ -26,18 +26,11 @@ import {
   ResultadoCogerCarta,
   VeredictoAtaque,
 } from "../constants/jugador";
+import { RptaAtacarBarrera } from '../../../shared/types/response';
 
 interface RptaColocarCarta {
   resultado: string;
   carta?: Carta;
-}
-
-export interface RptaAtacarBarrera {
-  resultado: string;
-  idBarreraEliminada?: number;
-  sinBarreras?: boolean;
-  nombreJugadorDerrotado?: string;
-  nombreJugadorVictorioso?: string;
 }
 
 interface RptaCalculoValorAtaque {

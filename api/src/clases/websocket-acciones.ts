@@ -1,5 +1,5 @@
 import { ResultadoUnirASala, ResultadoIniciarJuego } from './../constants/juego';
-import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, UnirASalaResponse, WebsocketEvent } from './../../../shared/types/response.d';
+import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, UnirASalaResponse, WebsocketEvent } from './../../../shared/types/response.d';
 import { SeleccionarZonaBatallaRequest } from '../schemas/seleccionar-zona-batalla.schema'
 import { Jugador } from './jugador'
 import WebSocket from 'ws'
@@ -65,73 +65,73 @@ function iniciarJuego (ws: WebSocketJugador) {
   const respEvent: IniciarJuegoResponse = {
     event: WebsocketEventTitle.INICIAR_JUEGO,
     payload: {
-      respuesta: respIniciarJuego,
-      jugador: {},
-      jugadorEnemigo: {}
+      respuesta: respIniciarJuego
     }
   }
+  const jugadorActual = (juego.jugadorAnterior as Jugador)
+  const jugadorAnterior = (juego.jugadorActual as Jugador)
   if (ws.jugador === juego.jugadorActual) {
     respEvent.payload.jugador = {
-      nombre: juego.jugadorActual?.nombre,
-      nBarrera: juego.jugadorActual?.barrera.length,
-      nDeck: juego.jugadorActual?.deck.length,
-      mano: juego.jugadorActual?.mano,
-      enTurno: juego.jugadorActual?.enTurno
+      nombre: juego.jugadorActual.nombre,
+      nBarrera: juego.jugadorActual.barrera.length,
+      nDeck: juego.jugadorActual.deck.length,
+      mano: juego.jugadorActual.mano,
+      enTurno: juego.jugadorActual.enTurno
     }
     respEvent.payload.jugadorEnemigo = {
-      nombre: juego.jugadorAnterior?.nombre,
-      nBarrera: juego.jugadorAnterior?.barrera.length,
-      nDeck: juego.jugadorAnterior?.deck.length,
-      nMano: juego.jugadorActual?.mano.length,
-      enTurno: juego.jugadorAnterior?.enTurno
+      nombre: jugadorAnterior.nombre,
+      nBarrera: jugadorAnterior.barrera.length,
+      nDeck: jugadorAnterior.deck.length,
+      nMano: juego.jugadorActual.mano.length,
+      enTurno: jugadorAnterior.enTurno
     }
     sendMessage(ws, respEvent)
     respEvent.payload.jugador = {
-      nombre: juego.jugadorAnterior?.nombre,
-      nBarrera: juego.jugadorAnterior?.barrera.length,
-      nDeck: juego.jugadorAnterior?.deck.length,
-      mano: juego.jugadorAnterior?.mano,
-      enTurno: juego.jugadorAnterior?.enTurno
+      nombre: jugadorAnterior.nombre,
+      nBarrera: jugadorAnterior.barrera.length,
+      nDeck: jugadorAnterior.deck.length,
+      mano:jugadorAnterior.mano,
+      enTurno: jugadorAnterior.enTurno
     }
     respEvent.payload.jugadorEnemigo = {
-      nombre: juego.jugadorActual?.nombre,
-      nBarrera: juego.jugadorActual?.barrera.length,
-      nDeck: juego.jugadorActual?.deck.length,
-      nMano: juego.jugadorActual?.mano.length,
-      enTurno: juego.jugadorActual?.enTurno
+      nombre: juego.jugadorActual.nombre,
+      nBarrera: juego.jugadorActual.barrera.length,
+      nDeck: juego.jugadorActual.deck.length,
+      nMano: juego.jugadorActual.mano.length,
+      enTurno: juego.jugadorActual.enTurno
     }
 
     sendMessageToOthers(ws, respEvent)
   } else {
     respEvent.payload.jugador = {
-      nombre: juego.jugadorAnterior?.nombre,
-      nBarrera: juego.jugadorAnterior?.barrera.length,
-      nDeck: juego.jugadorAnterior?.deck.length,
-      mano: juego.jugadorAnterior?.mano,
-      enTurno: juego.jugadorAnterior?.enTurno
+      nombre: jugadorAnterior.nombre,
+      nBarrera: jugadorAnterior.barrera.length,
+      nDeck: jugadorAnterior.deck.length,
+      mano: jugadorAnterior.mano,
+      enTurno: jugadorAnterior.enTurno
     }
     respEvent.payload.jugadorEnemigo = {
-      nombre: juego.jugadorActual?.nombre,
-      nBarrera: juego.jugadorActual?.barrera.length,
-      nDeck: juego.jugadorActual?.deck.length,
-      nMano: juego.jugadorActual?.mano.length,
-      enTurno: juego.jugadorActual?.enTurno
+      nombre: jugadorActual.nombre,
+      nBarrera: jugadorActual.barrera.length,
+      nDeck: jugadorActual.deck.length,
+      nMano: jugadorActual.mano.length,
+      enTurno: jugadorActual.enTurno
     }
 
     sendMessage(ws, respEvent)
     respEvent.payload.jugador = {
-      nombre: juego.jugadorActual?.nombre,
-      nBarrera: juego.jugadorActual?.barrera.length,
-      nDeck: juego.jugadorActual?.deck.length,
-      mano: juego.jugadorActual?.mano,
-      enTurno: juego.jugadorActual?.enTurno
+      nombre: jugadorActual.nombre,
+      nBarrera: jugadorActual.barrera.length,
+      nDeck: jugadorActual.deck.length,
+      mano: jugadorActual.mano,
+      enTurno: jugadorActual.enTurno
     }
     respEvent.payload.jugadorEnemigo = {
-      nombre: juego.jugadorAnterior?.nombre,
-      nBarrera: juego.jugadorAnterior?.barrera.length,
-      nDeck: juego.jugadorAnterior?.deck.length,
-      nMano: juego.jugadorAnterior?.mano.length,
-      enTurno: juego.jugadorAnterior?.enTurno
+      nombre: jugadorAnterior.nombre,
+      nBarrera: jugadorAnterior.barrera.length,
+      nDeck: jugadorAnterior.deck.length,
+      nMano: jugadorAnterior.mano.length,
+      enTurno: jugadorAnterior.enTurno
     }
     sendMessageToOthers(ws, respEvent)
   }
@@ -244,7 +244,7 @@ function atacarCarta (ws: WebSocket, message: AtacarCartaRequest) {
   respAtacarCarta.event = WebsocketEventTitle.ATACAN_TU_CARTA
   respAtacarCarta.payload.idCartaAtacante = idZonaBatalla
   respAtacarCarta.payload.idCartaAtacada = idZonaBatallaEnemiga
-  sendMessageToOthers(ws, message)
+  sendMessageToOthers(ws, respAtacarCarta)
   if (respAtacarCarta.payload.sinBarreras as boolean) {
     cerrarSockets()
   }
@@ -315,7 +315,7 @@ function procesarAccion (ws: WebSocket, message: string) {
 
 function finalizarPorDesconexion (ws: WebSocketJugador) {
   if (juego.jugador.length === 2 && juego.pantalla === Pantalla.EN_JUEGO) {
-    const message = {
+    const message: EnemigoDesconectadoResponse = {
       event: WebsocketEventTitle.ENEMIGO_DESCONECTADO,
       payload: {
         nombreJugadorDerrotado: ws.jugador.nombre,

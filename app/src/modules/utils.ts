@@ -1,12 +1,8 @@
 
 const pantallas = document.querySelectorAll('body > div')
-export const bienvenida = document.getElementById('bienvenida')
+export const bienvenida = document.getElementById('bienvenida') as HTMLDivElement
 
-/**
- *
- * @param {HTMLElement} pantalla
- */
-export function cambiarPantalla (pantalla) {
+export function cambiarPantalla(pantalla: HTMLElement) {
   Array.from(pantallas).forEach((p) => {
     p.classList.remove('mostrarPantalla')
   })

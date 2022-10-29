@@ -1,3 +1,4 @@
+import { RptaAtacarBarrera } from './../../api/src/clases/jugador';
 import { Carta } from './carta'
 
 export interface WebsocketEvent {
@@ -14,23 +15,44 @@ export interface UnirASalaResponse extends WebsocketEvent {
     }
 }
 
+interface JugadorResponse{
+    nombre: string
+    nBarrera: number
+    nDeck: number
+    mano: Carta[]
+    enTurno: boolean
+}
+
+interface JugadorEnemigoResponse{
+    nombre: string
+    nBarrera: number
+    nDeck: number
+    nMano: number
+    enTurno: boolean
+}
+
 export interface IniciarJuegoResponse extends WebsocketEvent {
     payload: {
         respuesta: string
-        jugador?: {
-            nombre?: string
-            nBarrera?: number
-            nDeck?: number
-            mano?: Carta[]
-            enTurno?: boolean
+        jugador?: JugadorResponse
+        jugadorEnemigo?: JugadorEnemigoResponse
+    }
+}
+
+export interface TerminarTurnoResponse extends WebsocketEvent {
+    payload: {
+        jugador: {
+            enTurno: boolean
+            nDeck: number
         }
-        jugadorEnemigo?: {
-            nombre?: string
-            nBarrera?: number
-            nDeck?: number
-            nMano?: number
-            enTurno?: boolean
+        jugadorEnemigo: {
+            enTurno: boolean
+            nDeck: number
         }
+        nombreJugadorDerrotado?: string
+        nombreJugadorVictorioso?: string
+        resultado?: string
+        carta?: Carta
     }
 }
 
@@ -57,23 +79,6 @@ export interface SeleccionarZonaBatallaResponse extends WebsocketEvent {
         puedeAtacarCarta: string
         puedeAtacarBarrera: string
         puedeCambiarPosicion: string
-    }
-}
-
-export interface TerminarTurnoResponse extends WebsocketEvent {
-    payload: {
-        jugador: {
-            enTurno: boolean
-            nDeck: number
-        }
-        jugadorEnemigo: {
-            enTurno: boolean
-            nDeck: number
-        }
-        nombreJugadorDerrotado?: string
-        nombreJugadorVictorioso?: string
-        resultado?: string
-        carta?: Carta
     }
 }
 
@@ -104,6 +109,14 @@ export interface AtacarCartaResponse extends WebsocketEvent {
     }
 }
 
+export interface RptaAtacarBarrera {
+    resultado: string;
+    idBarreraEliminada?: number;
+    sinBarreras?: boolean;
+    nombreJugadorDerrotado?: string;
+    nombreJugadorVictorioso?: string;
+  }
+
 export interface AtacarBarreraResponse extends WebsocketEvent {
     payload: RptaAtacarBarrera
 }
@@ -114,5 +127,13 @@ export interface CambiarPosicionResponse extends WebsocketEvent {
         respuesta: string;
         posBatalla: string;
         carta: Carta | null;
+    }
+}
+
+export interface EnemigoDesconectadoResponse extends WebsocketEvent{
+    payload:{
+        nombreJugadorDerrotado: string;
+        nombreJugadorVictorioso: string;
+        resultado: string
     }
 }

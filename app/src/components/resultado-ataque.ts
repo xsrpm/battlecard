@@ -1,4 +1,4 @@
-class ResultadoAtaque extends HTMLElement {
+export class ResultadoAtaque extends HTMLElement {
   constructor () {
     super()
     this.attachShadow({ mode: 'open' })
@@ -9,12 +9,12 @@ class ResultadoAtaque extends HTMLElement {
     return ['mostrar']
   }
 
-  attributeChangedCallback (attr, oldVal, newVal) {
+  attributeChangedCallback (attr: string, _oldVal: any, newVal: string) {
     if (attr === 'mostrar') {
       if (newVal === 'true') {
-        this.shadowRoot.children[0].classList.add('mostrar')
+        (this.shadowRoot as ShadowRoot).children[0].classList.add('mostrar')
       } else {
-        this.shadowRoot.children[0].classList.remove('mostrar')
+        (this.shadowRoot as ShadowRoot).children[0].classList.remove('mostrar')
       }
     }
   }
@@ -133,7 +133,7 @@ class ResultadoAtaque extends HTMLElement {
   }
 
   render () {
-    this.shadowRoot.appendChild(this.getTemplate().content.cloneNode(true))
+    (this.shadowRoot as ShadowRoot).appendChild(this.getTemplate().content.cloneNode(true))
   }
 }
 

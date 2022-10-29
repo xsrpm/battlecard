@@ -1,21 +1,22 @@
 import { cambiarPantalla } from './utils'
 import { nombreJugadorVictorioso, nombreJugadorDerrotado, idCartaZBSeleccionada, stepAccion, setStepAccion, posicionBatalla, setPosicionBatalla } from './estadoGlobal'
 import { sendMessage } from './socket'
-import { colocarCarta, Estado, jugDown } from './tablero'
+import { colocarCarta, jugDown } from './tablero'
+import { PosBatalla } from '../constants/celdabatalla'
 
-export const btnFinDeJuego = document.getElementById('btnFinDeJuego')
-export const finDeJuego = document.getElementById('finDeJuego')
-export const btnTerminarTurno = document.getElementById('btnTerminarTurno')
-export const btnCambiarPosicion = document.getElementById('btnCambiarPosicion')
-export const btnAtacarBarrera = document.getElementById('btnAtacarBarrera')
-export const btnAtacarCarta = document.getElementById('btnAtacarCarta')
-export const mensajeBotones = document.getElementById('mensajeBotones')
-export const btnColocarEnDefensa = document.getElementById('btnColocarEnDefensa')
-export const btnColocarEnAtaque = document.getElementById('btnColocarEnAtaque')
+export const btnFinDeJuego = document.getElementById('btnFinDeJuego') as HTMLButtonElement
+export const finDeJuego = document.getElementById('finDeJuego') as HTMLDivElement
+export const btnTerminarTurno = document.getElementById('btnTerminarTurno') as HTMLButtonElement
+export const btnCambiarPosicion = document.getElementById('btnCambiarPosicion') as HTMLButtonElement
+export const btnAtacarBarrera = document.getElementById('btnAtacarBarrera') as HTMLButtonElement
+export const btnAtacarCarta = document.getElementById('btnAtacarCarta') as HTMLButtonElement
+export const mensajeBotones = document.getElementById('mensajeBotones') as HTMLParagraphElement
+export const btnColocarEnDefensa = document.getElementById('btnColocarEnDefensa') as HTMLButtonElement
+export const btnColocarEnAtaque = document.getElementById('btnColocarEnAtaque') as HTMLButtonElement
 
 btnFinDeJuego.addEventListener('click', function () {
-  finDeJuego.children[0].children[1].innerText = nombreJugadorVictorioso
-  finDeJuego.children[1].children[1].innerText = nombreJugadorDerrotado
+  finDeJuego.children[0].children[1].innerHTML = nombreJugadorVictorioso
+  finDeJuego.children[1].children[1].innerHTML = nombreJugadorDerrotado
   cambiarPantalla(finDeJuego)
 })
 
@@ -59,7 +60,7 @@ btnColocarEnDefensa.addEventListener('click', () => {
   if (stepAccion === 'SELECCIONAR MANO') {
     setStepAccion('COLOCAR CARTA')
     console.log('stepAccion: ' + stepAccion)
-    setPosicionBatalla(Estado.POS_BATALLA_DEF_ABAJO)
+    setPosicionBatalla(PosBatalla.DEF_ABAJO)
     console.log('posicionBatalla: ' + posicionBatalla)
     colocarCarta()
   }
@@ -69,13 +70,13 @@ btnColocarEnAtaque.addEventListener('click', () => {
   if (stepAccion === 'SELECCIONAR MANO') {
     setStepAccion('COLOCAR CARTA')
     console.log('stepAccion: ' + stepAccion)
-    setPosicionBatalla(Estado.POS_BATALLA_ATAQUE)
+    setPosicionBatalla(PosBatalla.ATAQUE)
     console.log('posicionBatalla: ' + posicionBatalla)
     colocarCarta()
   }
 })
 
-export function habilitacionBotonera () {
+export function habilitacionBotonera() {
   if (jugDown.getAttribute('en-turno') === 'true') {
     btnColocarEnAtaque.classList.add('ocultar')
     btnColocarEnDefensa.classList.add('ocultar')

@@ -1,5 +1,7 @@
-let socket
-let url
+import { WebsocketEvent } from '../../../shared/types/response'
+
+let socket: WebSocket
+let url: string
 
 if (process.env.NODE_ENV !== 'production') {
   url = 'ws://localhost:8080'
@@ -11,13 +13,13 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-export function sendMessage (message) {
+export function sendMessage(message: WebsocketEvent) {
   socket.send(JSON.stringify(message))
   console.log('sended:')
   console.log(message)
 }
 
-export function initSocket (onopen, onmessage, onclose, onerror) {
+export function initSocket(onopen: () => any, onmessage: (e: any) => void, onclose: (e: any) => void, onerror: (e: any) => void) {
   socket = new WebSocket(url)
   socket.onopen = onopen
   socket.onmessage = onmessage
