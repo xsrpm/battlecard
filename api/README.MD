@@ -30,3 +30,36 @@ para instalaciones globales:
  
  Validating & Structuring JSON over WebSockets - JavaScript Tutorial
  https://www.youtube.com/watch?v=mmZmtOUIBsg
+
+## API
+
+### Unir a Sala
+Request1
+
+    {
+        "event": "Unir a sala",
+        "payload": {
+            "nombreJugador": "cesar"
+        }
+    }
+
+Response1
+
+    {
+        "event":"Unir a sala",
+        "payload":{
+            "resultado":"Exito",
+            "jugadores":["cesar"],
+            "iniciar":false
+        }
+    }
+
+Request2
+
+    { "event": "Unir a sala", "payload": { "nombreJugador": "krister" } }
+
+Response2
+
+    {"event":"Unir a sala","payload":{"resultado":"Exito","jugadores":["cesar","krister"],"iniciar":true}}
+
+
