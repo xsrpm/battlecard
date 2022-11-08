@@ -10,6 +10,11 @@ export let posicionBatalla: PosBatalla
 export let message: WebsocketEvent
 export let juegoFinalizado: boolean
 export let sinBarrerasFlag: boolean
+export let jugadorId: string
+
+export const setJugadorId = (value: string) => {
+  jugadorId = value
+}
 
 export const setSinBarrerasFlag = (value: boolean) => {
   sinBarrerasFlag = value

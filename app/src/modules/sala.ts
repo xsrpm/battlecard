@@ -1,5 +1,5 @@
 import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, UnirASalaResponse } from './../../../shared/types/response.d'
-import { message, setMessage } from './estadoGlobal'
+import { jugadorId, message, setJugadorId, setMessage } from './estadoGlobal'
 import { encuentraError, enemigoDesconectadoResponse, iniciarJuegoResponse, terminarTurno as terminarTurnoResponse } from './juego'
 import { inNombreJugador, recepcion } from './recepcion'
 import { initSocket, sendMessage } from './socket'
@@ -12,10 +12,11 @@ const h2 = sala.getElementsByTagName('h2')
 const btnUnirASala = document.getElementById('btnUnirASala') as HTMLButtonElement
 
 function unirASalaResponse (message: UnirASalaResponse) {
-  const { jugadores, iniciar } = message.payload
+  const { jugadores, iniciar, jugadorId } = message.payload
   h2[0].innerText = '(Sin Jugador)'
   h2[1].innerText = '(Sin Jugador)'
   if (encuentraError()) return
+  if (jugadorId !== undefined) setJugadorId(jugadorId)
   for (let i = 0; i < jugadores.length; i++) {
     h2[i].innerText = jugadores[i]
   }
@@ -26,7 +27,12 @@ function unirASalaResponse (message: UnirASalaResponse) {
 }
 
 btnIniciarJuego?.addEventListener('click', () => {
-  sendMessage({ event: 'Iniciar juego' })
+  sendMessage({
+    event: 'Iniciar juego',
+    payload: {
+      jugadorId
+    }
+  })
 })
 
 btnUnirASala.addEventListener('click', () => {

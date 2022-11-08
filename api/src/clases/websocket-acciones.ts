@@ -1,5 +1,5 @@
 import { ResultadoUnirASala, ResultadoIniciarJuego } from './../constants/juego';
-import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent } from './../../../shared/types/response.d';
+import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated } from './../../../shared/types/response.d';
 import { SeleccionarZonaBatallaRequest } from '../schemas/seleccionar-zona-batalla.schema'
 import { Jugador } from './jugador'
 import WebSocket from 'ws'
@@ -16,37 +16,40 @@ import { CambiarPosicionRequest } from '../schemas/cambiar-posicion.schema'
 import { PosBatalla } from '../constants/celdabatalla'
 import { Pantalla } from '../constants/juego'
 import { ResultadoCogerCarta } from '../constants/jugador';
+import { IniciarJuegoRequest } from '../schemas/iniciar-juego.schema';
 const juego = new Juego()
 
 export const WebSocketServer = wss
 
-interface WebSocketJugador extends WebSocket {
-  jugador: Jugador
-}
-
-function unirASala (ws: WebSocketJugador, reqEvent: UnirASalaRequest) {
-  const nombreJugador = reqEvent.payload.nombreJugador
-  const respUnirASala = juego.unirASala(nombreJugador)
-  const respEvent: WebsocketEvent = {
-    event: WebsocketEventTitle.UNIR_A_SALA
-  }
-  if (respUnirASala.resultado === ResultadoUnirASala.EXITO) {
-    ws.jugador = respUnirASala.jugador as Jugador
-    respEvent.payload = {
-      resultado: respUnirASala.resultado,
-      jugadores: respUnirASala.jugadores as string[],
-      iniciar: respUnirASala.iniciar as boolean
+function unirASala (ws: WebSocket, reqEvent: UnirASalaRequest) {
+  const {nombreJugador} = reqEvent.payload
+  const { jugadorConectado, resultado, jugadores, iniciar} = juego.unirASala(nombreJugador)
+ 
+  if (resultado === ResultadoUnirASala.EXITO) {
+    const respEvent: UnirASalaResponse = {
+      event: WebsocketEventTitle.UNIR_A_SALA,
+      payload : {
+        resultado,
+        jugadores: jugadores as string[],
+        iniciar: iniciar as boolean,
+        jugadorId : jugadorConectado?.uuid
+      }
     }
     sendMessage(ws, respEvent)
+    delete respEvent.payload.jugadorId
     sendMessageToOthers(ws, respEvent)
   } else {
-    respEvent.error = respUnirASala.resultado
+    const respEvent: WebsocketEvent = {
+      event: WebsocketEventTitle.UNIR_A_SALA,
+      error: resultado
+    }
     sendMessage(ws, respEvent)
     ws.close()
   }
 }
 
-function iniciarJuego (ws: WebSocketJugador) {
+function iniciarJuego (ws: WebSocket, reqEvent: IniciarJuegoRequest) {
+  const {jugadorId} = reqEvent.payload
   const respIniciarJuego = juego.iniciarJuego()
   const respEvent: IniciarJuegoResponse = {
     event: WebsocketEventTitle.INICIAR_JUEGO,
@@ -59,9 +62,9 @@ function iniciarJuego (ws: WebSocketJugador) {
     ws.close()
     return
   }
-  const jugadorActual = (juego.jugadorActual as Jugador)
-  const jugadorAnterior = (juego.jugadorAnterior as Jugador)
-  if (ws.jugador === juego.jugadorActual) {
+  const jugadorActual = (juego.jugadorActual?.jugador as Jugador)
+  const jugadorAnterior = (juego.jugadorAnterior?.jugador as Jugador)
+  if (jugadorId === juego.jugadorActual?.uuid) {
     respEvent.payload.jugador = {
       nombre: jugadorActual.nombre,
       nBarrera: jugadorActual.barrera.length,
@@ -127,13 +130,13 @@ function iniciarJuego (ws: WebSocketJugador) {
 }
 
 function colocarCarta (ws: WebSocket, reqEvent: ColocarCartaRequest) {
-  if (!accionAutorizada(ws as WebSocketJugador, reqEvent)) return
+  if (!accionAutorizada(ws, reqEvent as any)) return
   const { posicion, idZonaBatalla, idMano } = reqEvent.payload
   const respColocarCarta = juego.colocarCarta(idZonaBatalla, idMano, posicion as PosBatalla)
   const respEvent: ColocarCartaResponse = {
     event: WebsocketEventTitle.COLOCAR_CARTA,
     payload: {
-      mano: juego.jugadorActual?.mano as Carta[],
+      mano: juego.jugadorActual?.jugador.mano as Carta[],
       resultado: respColocarCarta.resultado
     }
   }
@@ -153,7 +156,7 @@ function colocarCarta (ws: WebSocket, reqEvent: ColocarCartaRequest) {
 }
 
 function seleccionarZonaBatalla (ws: WebSocket, reqEvent: SeleccionarZonaBatallaRequest) {
-  if (!accionAutorizada(ws as WebSocketJugador, reqEvent)) return
+  if (!accionAutorizada(ws, reqEvent as any)) return
   const { idZonaBatalla } = reqEvent.payload
   const respOpcSelZB = juego.opcionesSeleccionarZonaBatalla(idZonaBatalla)
   const respSeleccionarZB: SeleccionarZonaBatallaResponse = {
@@ -166,7 +169,7 @@ function seleccionarZonaBatalla (ws: WebSocket, reqEvent: SeleccionarZonaBatalla
 }
 
 function terminarTurno (ws: WebSocket, message: WebsocketEvent) {
-  if (!accionAutorizada(ws as WebSocketJugador, message)) return
+  if (!accionAutorizada(ws , message as any)) return
   const res = juego.terminarTurno()
   let respTerminarTurno: TerminarTurnoResponse = {
     event: WebsocketEventTitle.TERMINAR_TURNO,
@@ -199,8 +202,9 @@ function terminarTurno (ws: WebSocket, message: WebsocketEvent) {
   }
 }
 
-function accionAutorizada (ws: WebSocketJugador, message: WebsocketEvent) {
-  if (ws.jugador === juego.jugadorActual) {
+function accionAutorizada (ws: WebSocket, message: WebsocketEventAuthenticated) {
+  const {jugadorId} = message.payload
+  if(jugadorId === juego.jugadorActual?.uuid){
     return true
   }
   message.error = 'Usuario no está autorizado a realizar acción'
@@ -209,7 +213,7 @@ function accionAutorizada (ws: WebSocketJugador, message: WebsocketEvent) {
 }
 
 function seleccionarMano (ws: WebSocket, message: SeleccionarManoRequest) {
-  if (!accionAutorizada(ws as WebSocketJugador, message)) return
+  if (!accionAutorizada(ws as WebSocket, message as any)) return
   const { idMano } = message.payload
   const respSeleccionarMano: SeleccionarManoResponse = {
     event: WebsocketEventTitle.SELECCIONAR_MANO,
@@ -221,7 +225,7 @@ function seleccionarMano (ws: WebSocket, message: SeleccionarManoRequest) {
 }
 
 function atacarCarta (ws: WebSocket, message: AtacarCartaRequest) {
-  if (!accionAutorizada(ws as WebSocketJugador, message)) return
+  if (!accionAutorizada(ws, message as any)) return
   const { idZonaBatalla, idZonaBatallaEnemiga } = message.payload
   const respAtacarCarta: AtacarCartaResponse = {
     event: WebsocketEventTitle.ATACAR_CARTA,
@@ -240,7 +244,7 @@ function atacarCarta (ws: WebSocket, message: AtacarCartaRequest) {
 }
 
 function atacarBarrera (ws: WebSocket, message: AtacarBarreraRequest) {
-  if (!accionAutorizada(ws as WebSocketJugador, message)) return
+  if (!accionAutorizada(ws , message as any)) return
   const { idZonaBatalla } = message.payload
   const rptaAtacarBarrera: AtacarBarreraResponse = {
     event: WebsocketEventTitle.ATACAR_BARRERA,
@@ -255,7 +259,7 @@ function atacarBarrera (ws: WebSocket, message: AtacarBarreraRequest) {
 }
 
 function cambiarPosicion (ws: WebSocket, message: CambiarPosicionRequest) {
-  if (!accionAutorizada(ws as WebSocketJugador, message)) return
+  if (!accionAutorizada(ws, message as any)) return
   const { idZonaBatalla } = message.payload
   const respCambiarPosicion: CambiarPosicionResponse = {
     event: WebsocketEventTitle.CAMBIAR_POSICION,
@@ -273,10 +277,10 @@ function procesarAccion (ws: WebSocket, message: string) {
   console.log(objMessage)
   switch (objMessage.event) {
     case WebsocketEventTitle.UNIR_A_SALA:
-      unirASala(ws as WebSocketJugador, objMessage)
+      unirASala(ws, objMessage)
       break
     case WebsocketEventTitle.INICIAR_JUEGO:
-      iniciarJuego(ws as WebSocketJugador)
+      iniciarJuego(ws, objMessage)
       break
     case WebsocketEventTitle.COLOCAR_CARTA:
       colocarCarta(ws, objMessage)
@@ -302,14 +306,14 @@ function procesarAccion (ws: WebSocket, message: string) {
   }
 }
 
-function finalizarPorDesconexion (ws: WebSocketJugador) {
-  if (juego.jugador.length === 2 && juego.pantalla === Pantalla.EN_JUEGO) {
+function finalizarPorDesconexion (ws: WebSocket, jugadorDesconectado: Jugador) {
+  if (juego.jugadoresConectados.length === 2 && juego.pantalla === Pantalla.EN_JUEGO) {
     const message: EnemigoDesconectadoResponse = {
       event: WebsocketEventTitle.ENEMIGO_DESCONECTADO,
       payload: {
-        nombreJugadorDerrotado: ws.jugador.nombre,
-        nombreJugadorVictorioso: juego.jugadorEnemigo(ws.jugador).nombre,
-        resultado: `${ws.jugador.nombre} se desconectó del juego`
+        nombreJugadorDerrotado: jugadorDesconectado.nombre,
+        nombreJugadorVictorioso: juego.jugadorEnemigo(jugadorDesconectado).nombre,
+        resultado: `${jugadorDesconectado.nombre} se desconectó del juego`
       }
     }
     sendMessageToOthers(ws, message)
@@ -318,7 +322,7 @@ function finalizarPorDesconexion (ws: WebSocketJugador) {
   }
 }
 
-wss.on('connection', (ws: WebSocketJugador) => {
+wss.on('connection', (ws: WebSocket) => {
   ws.on('message', (data: any) => {
     procesarAccion(ws, data)
   })
@@ -326,7 +330,11 @@ wss.on('connection', (ws: WebSocketJugador) => {
     console.log(event)
   })
   ws.on('close', (code: number) => {
-    console.info(`close ws code:${code}, player: ${ws.jugador.nombre}`)
-    finalizarPorDesconexion(ws)
+    for( const jg of juego.jugadoresConectados){
+      if((jg?.websocket as any) === ws){
+        console.info(`close ws code:${code}, player: ${jg.jugador.nombre}`)
+        finalizarPorDesconexion(ws, jg.jugador)
+      }
+    }
   })
 })

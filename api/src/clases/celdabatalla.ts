@@ -1,5 +1,5 @@
 import { DispAtaque, PosBatalla, DispCambio } from './../constants/celdabatalla';
-import { CeldaBatalla as ICeldaBatalla } from '../../../shared/types/celdabatalla';
+import { CeldaBatalla as ICeldaBatalla } from '../types';
 import { Carta } from './carta'
 
 export class CeldaBatalla implements ICeldaBatalla{

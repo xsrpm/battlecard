@@ -7,11 +7,18 @@ export interface WebsocketEvent {
     error?: string
 }
 
+export interface WebsocketEventAuthenticated extends WebsocketEvent{
+    payload: {
+        jugadorId: string
+    }
+}
+
 export interface UnirASalaResponse extends WebsocketEvent {
     payload: {
         resultado: string
         jugadores: string[]
-        iniciar: boolean
+        iniciar: boolean,
+        jugadorId?: string
     }
 }
 

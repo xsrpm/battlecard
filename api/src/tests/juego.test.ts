@@ -13,7 +13,7 @@ describe('Juego objeto', () => {
 
   describe('crea objeto valido', () => {
     test('exitoso', () => {
-      expect(juego.jugador).toEqual([])
+      expect(juego.jugadoresConectados).toEqual([])
       expect(juego.jugadorActual).toBeNull()
       expect(juego.jugadorAnterior).toBeNull()
       expect(juego.idCartaManoSel).toBe(0)
@@ -63,10 +63,10 @@ describe('Juego objeto', () => {
       juego.unirASala('Marco')
       const res = juego.iniciarJuego()
       expect(res).toBe('JUEGO INICIADO')
-      expect(juego.jugador[0].deck.length).toBeGreaterThan(0)
-      expect(juego.jugador[1].deck.length).toBeGreaterThan(0)
-      expect(juego.jugadorActual).toEqual(juego.jugador[0])
-      expect(juego.jugadorAnterior).toEqual(juego.jugador[1])
+      expect(juego.jugadoresConectados[0].deck.length).toBeGreaterThan(0)
+      expect(juego.jugadoresConectados[1].deck.length).toBeGreaterThan(0)
+      expect(juego.jugadorActual).toEqual(juego.jugadoresConectados[0])
+      expect(juego.jugadorAnterior).toEqual(juego.jugadoresConectados[1])
       expect(juego.pantalla).toBe(Pantalla.EN_JUEGO)
       expect(juego.estadoSala).toBe(Sala.SALA_INICIADA)
     })

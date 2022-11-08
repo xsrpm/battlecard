@@ -1,13 +1,15 @@
+import { v4 as uuidv4 } from 'uuid';
 import { ResultadoCogerCarta } from './../constants/jugador';
 import { ResultadoIniciarJuego } from './../constants/juego';
 import { Jugador, RptaCogerUnaCartaDelDeck } from './jugador'
-import {Juego as IJuego } from '../../../shared/types/juego'
+import {Juego as IJuego } from '../types'
 import { Pantalla, ResultadoUnirASala, Sala } from '../constants/juego'
 import { PosBatalla } from '../constants/celdabatalla'
 
+
 interface RptaUnirASala {
   resultado: string
-  jugador?: Jugador
+  jugadorConectado?: JugadorConectado
   jugadores?: string[]
   iniciar?: boolean
 }
@@ -28,10 +30,16 @@ interface RptaTerminarJuego extends RptaCogerUnaCartaDelDeckJuego {
   }
 }
 
+interface JugadorConectado{
+  uuid : string,
+  jugador: Jugador,
+  websocket?: WebSocket
+}
+
 export class Juego implements IJuego{
-  jugador: Jugador[]
-  jugadorActual: Jugador | null
-  jugadorAnterior: Jugador | null
+  jugadoresConectados: JugadorConectado[]
+  jugadorActual: JugadorConectado | null
+  jugadorAnterior: JugadorConectado | null
   idCartaZonaBSel
   idCartaZonaBSelEnemigo
   idCartaManoSel
@@ -40,7 +48,7 @@ export class Juego implements IJuego{
   momento: any
 
   constructor() {
-    this.jugador = []
+    this.jugadoresConectados = []
     this.jugadorActual = null
     this.jugadorAnterior = null
     this.idCartaZonaBSel = 0
@@ -54,15 +62,18 @@ export class Juego implements IJuego{
   unirASala (nombreJugador: string): RptaUnirASala {
     if (this.estadoSala !== Sala.SALA_ABIERTA) return { resultado: ResultadoUnirASala.SALA_LLENA_NO_PUEDEN_ENTRAR_JUGADORES }
     else if (nombreJugador === '') return { resultado: ResultadoUnirASala.NO_INDICO_NOMBRE_JUGADOR }
-    else if (this.jugador.filter((j) => j.nombre === nombreJugador).length >= 1) return { resultado: ResultadoUnirASala.NOMBRE_EN_USO }
+    else if (this.jugadoresConectados.filter((j) => j.jugador.nombre === nombreJugador).length >= 1) return { resultado: ResultadoUnirASala.NOMBRE_EN_USO }
     else {
-      const jug = new Jugador(nombreJugador)
-      this.jugador.push(jug)
-      this.jugador.length < 2 ? this.estadoSala = Sala.SALA_ABIERTA : this.estadoSala = Sala.SALA_CERRADA
+      const jugadorConectado: JugadorConectado = {
+        jugador : new Jugador(nombreJugador),
+        uuid: uuidv4()
+      }
+      this.jugadoresConectados.push(jugadorConectado)
+      this.jugadoresConectados.length < 2 ? this.estadoSala = Sala.SALA_ABIERTA : this.estadoSala = Sala.SALA_CERRADA
       this.pantalla = Pantalla.EN_SALA_DE_ESPERA
       return {
         resultado: ResultadoUnirASala.EXITO,
-        jugador: jug,
+        jugadorConectado,
         jugadores: this.obtenerNombreJugadores(),
         iniciar: this.estadoSala === Sala.SALA_CERRADA
       }
@@ -71,8 +82,8 @@ export class Juego implements IJuego{
 
   obtenerNombreJugadores () {
     const jugNames = []
-    for (const j of this.jugador) {
-      jugNames.push(j.nombre)
+    for (const jc of this.jugadoresConectados) {
+      jugNames.push(jc.jugador.nombre)
     }
     return jugNames
   }
@@ -85,13 +96,13 @@ export class Juego implements IJuego{
     if (this.estadoSala === Sala.SALA_CERRADA &&
     this.pantalla === Pantalla.EN_SALA_DE_ESPERA) {
       this.estadoSala = Sala.SALA_INICIADA
-      this.jugador[0].repartirCartas()
-      this.jugador[1].repartirCartas()
-      this.jugadorActual = this.jugador[0]
-      this.jugadorAnterior = this.jugador[1]
-      this.jugadorActual.setEnTurno(true)
-      this.jugadorAnterior.setEnTurno(false)
-      this.jugadorActual.iniciarTurno()
+      this.jugadoresConectados[0].jugador.repartirCartas()
+      this.jugadoresConectados[1].jugador.repartirCartas()
+      this.jugadorActual = this.jugadoresConectados[0]
+      this.jugadorAnterior = this.jugadoresConectados[1]
+      this.jugadorActual.jugador.setEnTurno(true)
+      this.jugadorAnterior.jugador.setEnTurno(false)
+      this.jugadorActual.jugador.iniciarTurno()
       this.pantalla = Pantalla.EN_JUEGO
       return ResultadoIniciarJuego.JUEGO_INICIADO
     } else {
@@ -101,7 +112,7 @@ export class Juego implements IJuego{
 
   finalizarJuego () {
     this.pantalla = Pantalla.FIN_DE_JUEGO
-    this.jugador = []
+    this.jugadoresConectados = []
     this.jugadorActual = null
     this.jugadorAnterior = null
     this.idCartaZonaBSel = 0
@@ -116,18 +127,18 @@ export class Juego implements IJuego{
     const jugadorTmp = this.jugadorActual
     this.jugadorActual = this.jugadorAnterior
     this.jugadorAnterior = jugadorTmp
-    this.jugadorActual?.iniciarTurno()
-    this.jugadorActual?.setEnTurno(true)
-    this.jugadorAnterior?.setEnTurno(false)
+    this.jugadorActual?.jugador.iniciarTurno()
+    this.jugadorActual?.jugador.setEnTurno(true)
+    this.jugadorAnterior?.jugador.setEnTurno(false)
   }
 
   cogerUnaCartaDelDeck (): RptaCogerUnaCartaDelDeckJuego {
-    const res = (this.jugadorActual as Jugador).cogerUnaCartaDelDeck()
+    const res = (this.jugadorActual?.jugador as Jugador).cogerUnaCartaDelDeck()
     if (res?.resultado === ResultadoCogerCarta.DECK_VACIO) {
       return {
         ...res,
-        nombreJugadorDerrotado: this.jugadorActual?.nombre,
-        nombreJugadorVictorioso: this.jugadorAnterior?.nombre
+        nombreJugadorDerrotado: this.jugadorActual?.jugador.nombre,
+        nombreJugadorVictorioso: this.jugadorAnterior?.jugador.nombre
       }
     } else return res
   }
@@ -141,18 +152,18 @@ export class Juego implements IJuego{
     return {
       ...res,
       jugador: {
-        enTurno: (this.jugadorAnterior as Jugador).enTurno,
-        nDeck: (this.jugadorAnterior as Jugador).deck.length
+        enTurno: (this.jugadorAnterior?.jugador as Jugador).enTurno,
+        nDeck: (this.jugadorAnterior?.jugador as Jugador).deck.length
       },
       jugadorEnemigo: {
-        enTurno: (this.jugadorActual as Jugador).enTurno,
-        nDeck: (this.jugadorActual as Jugador).deck.length
+        enTurno: (this.jugadorActual?.jugador as Jugador).enTurno,
+        nDeck: (this.jugadorActual?.jugador as Jugador).deck.length
       }
     }
   }
 
   colocarCarta(idPosZB: number, idCartaMano: number, posBatalla: PosBatalla) {
-    return (this.jugadorActual as Jugador).colocarCarta(
+    return (this.jugadorActual?.jugador as Jugador).colocarCarta(
       idPosZB,
       idCartaMano,
       posBatalla
@@ -161,22 +172,22 @@ export class Juego implements IJuego{
 
   opcionesSeleccionarZonaBatalla (idZonaBatalla: number) {
     return {
-      existeCarta: (this.jugadorActual as Jugador).existeCartaEnCeldaBatalla(idZonaBatalla),
-      puedeAtacarCarta: (this.jugadorActual as Jugador).puedeAtacarCartaDesdeId((this.jugadorAnterior as Jugador), idZonaBatalla),
-      puedeAtacarBarrera: (this.jugadorActual as Jugador).posibilidadAtacarBarrera((this.jugadorAnterior as Jugador), idZonaBatalla),
-      puedeCambiarPosicion: (this.jugadorActual as Jugador).posibilidadCambiarPosicionBatallaEnCarta(idZonaBatalla)
+      existeCarta: (this.jugadorActual?.jugador as Jugador).existeCartaEnCeldaBatalla(idZonaBatalla),
+      puedeAtacarCarta: (this.jugadorActual?.jugador as Jugador).puedeAtacarCartaDesdeId((this.jugadorAnterior?.jugador as Jugador), idZonaBatalla),
+      puedeAtacarBarrera: (this.jugadorActual?.jugador as Jugador).posibilidadAtacarBarrera((this.jugadorAnterior?.jugador as Jugador), idZonaBatalla),
+      puedeCambiarPosicion: (this.jugadorActual?.jugador as Jugador).posibilidadCambiarPosicionBatallaEnCarta(idZonaBatalla)
     }
   }
 
   opcionesSeleccionarMano (idMano: number) {
     return {
-      existeCarta: (this.jugadorActual as Jugador).tieneCartaEnMano(idMano),
-      puedeColocarCarta: (this.jugadorActual as Jugador).puedeColocarCartaDesdeId(idMano)
+      existeCarta: (this.jugadorActual?.jugador as Jugador).tieneCartaEnMano(idMano),
+      puedeColocarCarta: (this.jugadorActual?.jugador as Jugador).puedeColocarCartaDesdeId(idMano)
     }
   }
 
   atacarBarrera (idCartaAtacante: number) {
-    const res = (this.jugadorActual as Jugador).atacarBarrera((this.jugadorAnterior as Jugador), idCartaAtacante)
+    const res = (this.jugadorActual?.jugador as Jugador).atacarBarrera((this.jugadorAnterior?.jugador as Jugador), idCartaAtacante)
     if (typeof res.sinBarreras !== 'undefined') {
       if (res.sinBarreras) {
         this.finalizarJuego()
@@ -186,7 +197,7 @@ export class Juego implements IJuego{
   }
 
   atacarCarta (idCartaAtacante: number, idCartaAtacada: number) {
-    const res = (this.jugadorActual as Jugador).atacarCarta((this.jugadorAnterior as Jugador), idCartaAtacante, idCartaAtacada)
+    const res = (this.jugadorActual?.jugador as Jugador).atacarCarta((this.jugadorAnterior?.jugador as Jugador), idCartaAtacante, idCartaAtacada)
     if (typeof res.sinBarreras !== 'undefined') {
       if (res.sinBarreras) {
         this.finalizarJuego()
@@ -196,10 +207,10 @@ export class Juego implements IJuego{
   }
 
   cambiarPosicionBatalla (idCarta: number) {
-    return (this.jugadorActual as Jugador).cambiarPosicionBatalla(idCarta)
+    return (this.jugadorActual?.jugador as Jugador).cambiarPosicionBatalla(idCarta)
   }
 
   jugadorEnemigo (jugador: Jugador) {
-    return this.jugador.filter(j => j.nombre !== jugador.nombre)[0]
+    return this.jugadoresConectados.filter(j => j.jugador.nombre !== jugador.nombre)[0].jugador
   }
 }

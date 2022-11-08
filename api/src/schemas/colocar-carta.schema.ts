@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const colocarCartaSchema = z.object({
   event: z.string(),
   payload: z.object({
+    jugadorId: z.string(),
     posicion: z.string(),
     idZonaBatalla: z.number(),
     idMano: z.number()

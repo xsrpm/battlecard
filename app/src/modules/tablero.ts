@@ -1,7 +1,7 @@
 import { ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse } from './../../../shared/types/response.d'
 import { Carta } from './../../../shared/types/carta.d'
 import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './botonera'
-import { idCartaZBSeleccionada, juegoFinalizado, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from './estadoGlobal'
+import { idCartaZBSeleccionada, juegoFinalizado, jugadorId, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from './estadoGlobal'
 import { info } from './info'
 import { encuentraError } from './juego'
 import { resultadoAtaque } from './resultado-ataque'
@@ -82,6 +82,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
       sendMessage({
         event: 'Colocar Carta',
         payload: {
+          jugadorId,
           posicion: posicionBatalla,
           idZonaBatalla: idCartaZBSeleccionada,
           idMano: idCartaManoSeleccionada
@@ -101,6 +102,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
       sendMessage({
         event: 'Seleccionar Zona Batalla',
         payload: {
+          jugadorId,
           idZonaBatalla: idCartaZBSeleccionada
         }
       })
@@ -296,6 +298,7 @@ manoYo.addEventListener('click', function (e) {
     sendMessage({
       event: 'Seleccionar Mano',
       payload: {
+        jugadorId,
         idMano: idCartaManoSeleccionada
       }
     })
@@ -480,6 +483,7 @@ zonaBatallaEnemiga.addEventListener('click', function (e) {
       sendMessage({
         event: 'Atacar Carta',
         payload: {
+          jugadorId,
           idZonaBatalla: idCartaZBSeleccionada,
           idZonaBatallaEnemiga: idCartaZBEnemigaSeleccionada
         }

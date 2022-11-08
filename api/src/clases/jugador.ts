@@ -1,3 +1,4 @@
+
 import {
   EstadoCarta,
   MAX_BARRERA_CARDS,
@@ -14,7 +15,7 @@ import {
 } from "./../constants/celdabatalla";
 import { Carta } from "./carta";
 import { CeldaBatalla } from "./celdabatalla";
-import { Jugador as IJugador } from "../../../shared/types/jugador";
+import { Jugador as IJugador } from "../types";
 import {
   Elemento,
   MAX_VALOR_CARTA,

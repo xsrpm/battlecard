@@ -1,5 +1,5 @@
 import { cambiarPantalla } from './utils'
-import { nombreJugadorVictorioso, nombreJugadorDerrotado, idCartaZBSeleccionada, stepAccion, setStepAccion, posicionBatalla, setPosicionBatalla } from './estadoGlobal'
+import { nombreJugadorVictorioso, nombreJugadorDerrotado, idCartaZBSeleccionada, stepAccion, setStepAccion, posicionBatalla, setPosicionBatalla, jugadorId } from './estadoGlobal'
 import { sendMessage } from './socket'
 import { colocarCarta, jugDown } from './tablero'
 import { PosBatalla } from '../constants/celdabatalla'
@@ -21,7 +21,12 @@ btnFinDeJuego.addEventListener('click', function () {
 })
 
 btnTerminarTurno.addEventListener('click', () => {
-  sendMessage({ event: 'Terminar Turno' })
+  sendMessage({
+    event: 'Terminar Turno',
+    payload: {
+      jugadorId
+    }
+  })
 })
 
 btnCambiarPosicion.addEventListener('click', () => {
@@ -32,6 +37,7 @@ btnCambiarPosicion.addEventListener('click', () => {
     sendMessage({
       event: 'Cambiar Posicion',
       payload: {
+        jugadorId,
         idZonaBatalla: idCartaZBSeleccionada
       }
     })
@@ -42,6 +48,7 @@ btnAtacarBarrera.addEventListener('click', () => {
   sendMessage({
     event: 'Atacar Barrera',
     payload: {
+      jugadorId,
       idZonaBatalla: idCartaZBSeleccionada
     }
   })
