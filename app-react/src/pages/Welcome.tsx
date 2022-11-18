@@ -1,4 +1,4 @@
-export function Welcome() {
+export default function Welcome() {
   const handleClick = () => {};
   return (
     <article className="flex flex-col justify-center items-center w-screen h-screen bg-yellow-200">
