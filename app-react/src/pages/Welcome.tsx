@@ -1,5 +1,9 @@
+import { useNavigate } from 'react-router-dom'
 export default function Welcome() {
-  const handleClick = () => {}
+  const navigate = useNavigate()
+  const handleClick = () => {
+    navigate('/')
+  }
   return (
     <article className='flex flex-col justify-center items-center w-screen h-screen bg-yellow-200'>
       <h1>BattleCard</h1>
