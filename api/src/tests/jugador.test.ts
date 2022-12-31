@@ -1,5 +1,4 @@
 import { ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion } from "./../constants/jugador";
-import { expect, describe, test, beforeEach } from "@jest/globals";
 import {
   PosBatalla,
   DispAtaque,

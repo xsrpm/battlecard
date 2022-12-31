@@ -1,6 +1,5 @@
 import { ResultadoColocarCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion } from './../constants/jugador';
 import { ResultadoIniciarJuego } from './../constants/juego';
-import { expect, describe, test, beforeEach } from '@jest/globals'
 import { PosBatalla } from './../constants/celdabatalla';
 import { Juego } from '../clases/juego'
 import { Pantalla, Sala } from '../constants/juego';

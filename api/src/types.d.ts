@@ -32,3 +32,8 @@ export  interface Juego{
     pantalla: string | null
     momento: any
 }
+
+export interface Carta{
+	valor: number
+	elemento: string
+}

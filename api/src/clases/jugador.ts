@@ -27,7 +27,7 @@ import {
   ResultadoCogerCarta,
   VeredictoAtaque,
 } from "../constants/jugador";
-import { RptaAtacarBarrera } from '../../../shared/types/response';
+import { RptaAtacarBarrera } from '../response';
 
 interface RptaColocarCarta {
   resultado: string;

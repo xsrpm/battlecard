@@ -1,17 +1,7 @@
 import { WebsocketEvent } from '../../../shared/types/response'
 
 let socket: WebSocket
-let url: string
-
-if (process.env.NODE_ENV !== 'production') {
-  url = 'ws://localhost:8080'
-} else {
-  if (location.protocol === 'http:' && location.hostname === 'localhost') {
-    url = `ws://${location.host}/ws`
-  } else {
-    url = `wss://${location.host}/ws`
-  }
-}
+let url = import.meta.env.VITE_WEBSOCKET_URL_BACKEND +"/ws"
 
 export function sendMessage(message: WebsocketEvent) {
   socket.send(JSON.stringify(message))

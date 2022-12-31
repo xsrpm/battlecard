@@ -1,5 +1,4 @@
 import { PosBatalla, DispAtaque, DispCambio } from './../constants/celdabatalla';
-import { expect, describe, test, beforeEach } from '@jest/globals'
 import { Carta } from '../clases/carta'
 import { CeldaBatalla } from '../clases/celdabatalla'
 import { Elemento } from '../constants/carta'

@@ -1,4 +1,4 @@
-import { Carta as ICarta } from '../../../shared/types/carta';
+import { Carta as ICarta } from '../types';
 import { Elemento } from '../constants/carta';
 
 export class Carta implements ICarta{

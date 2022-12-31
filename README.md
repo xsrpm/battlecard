@@ -137,3 +137,5 @@ El juego termina bajo cualquiera de las siguientes condiciones:
 - https://developers.refinitiv.com/en/article-catalog/article/how-to-implement-elektron-websocket-api-javascript-application-typescript
 - [Monorepo multipaquete con NPM Workspaces](https://www.youtube.com/watch?v=KEkRy4q_0oI)
 - [Crea un monorepositorio multipaquete con npm workspaces y releases de paquetes](https://www.youtube.com/watch?v=2QSBXhuqSlI)
+- https://vitejs.dev/config/#environment-variables
+- https://vitejs.dev/guide/env-and-mode.html
