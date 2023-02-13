@@ -12,10 +12,10 @@ const h2 = sala.getElementsByTagName('h2')
 const btnUnirASala = document.getElementById('btnUnirASala') as HTMLButtonElement
 
 function unirASalaResponse (message: UnirASalaResponse) {
+  if (encuentraError()) return
   const { jugadores, iniciar, jugadorId } = message.payload
   h2[0].innerText = '(Sin Jugador)'
   h2[1].innerText = '(Sin Jugador)'
-  if (encuentraError()) return
   if (jugadorId !== undefined) setJugadorId(jugadorId)
   for (let i = 0; i < jugadores.length; i++) {
     h2[i].innerText = jugadores[i]
