@@ -2,7 +2,7 @@ import { EnemigoDesconectadoResponse, IniciarJuegoResponse, JugadorEnemigoRespon
 import { Carta } from './../../../shared/types/carta.d'
 import { btnFinDeJuego, btnTerminarTurno, habilitacionBotonera } from './botonera.js'
 import { message, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag } from './estadoGlobal'
-import { info } from './info'
+import { info } from '../components/info'
 import { resultadoAtaque } from './resultado-ataque'
 import { barreraEnemiga, barreraYo, jugDown, jugUp, manoEnemigo, manoYo, mostrarCartaCogida, mostrarJugadorEnTurno, quitarSeleccionEnCartas, zonaBatallaEnemiga, zonaBatallaYo } from './tablero'
 import { cambiarPantalla } from './utils'

@@ -1,4 +1,5 @@
-import { cambiarPantalla, bienvenida } from './utils'
+import { cambiarPantalla } from '../modules/utils'
+import { bienvenida } from './bienvenida'
 
 const btnVolverInicio = document.getElementById('btnVolverInicio') as HTMLButtonElement
 

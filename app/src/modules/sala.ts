@@ -1,7 +1,7 @@
 import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, UnirASalaResponse } from './../../../shared/types/response.d'
 import { jugadorId, message, setJugadorId, setMessage } from './estadoGlobal'
 import { encuentraError, enemigoDesconectadoResponse, iniciarJuegoResponse, terminarTurno as terminarTurnoResponse } from './juego'
-import { inNombreJugador, recepcion } from './recepcion'
+import { inNombreJugador, recepcion } from '../pages/recepcion'
 import { initSocket, sendMessage } from './socket'
 import { atacanTuBarreraResponse, atacanTuCartaResponse, atacarBarreraResponse, atacarCartaResponse, cambiaPosicionEnemigoResponse, cambiarPosicionResponse, colocaCartaOtroJugadorResponse, colocarCartaResponse, seleccionarManoResponse, seleccionarZonaBatallaResponse } from './tablero'
 import { cambiarPantalla } from './utils'

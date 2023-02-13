@@ -1,5 +1,5 @@
 import { sinBarrerasFlag } from './estadoGlobal'
-import { info } from './info'
+import { info } from '../components/info'
 
 export const resultadoAtaque = document.querySelector('resultado-ataque') as HTMLDivElement
 
