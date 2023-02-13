@@ -47,3 +47,12 @@ export const setIdCartaZBSeleccionada = (id: number) => {
 export const setStepAccion = (step: string) => {
   stepAccion = step
 }
+
+export function encuentraError () {
+  if (typeof message.error !== 'undefined') {
+    console.log(message.error)
+    window.alert(message.error)
+    return true
+  }
+  return false
+}

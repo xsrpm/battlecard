@@ -1,9 +1,8 @@
 import { ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse } from './../../../shared/types/response.d'
 import { Carta } from './../../../shared/types/carta.d'
 import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './botonera'
-import { idCartaZBSeleccionada, juegoFinalizado, jugadorId, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from './estadoGlobal'
+import { encuentraError, idCartaZBSeleccionada, juegoFinalizado, jugadorId, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from './estadoGlobal'
 import { info } from '../components/info'
-import { encuentraError } from './juego'
 import { resultadoAtaque } from './resultado-ataque'
 import { sendMessage } from './socket'
 

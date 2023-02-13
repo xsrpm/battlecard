@@ -1,4 +1,3 @@
-
 const pantallas = document.querySelectorAll('body > div')
 
 export function cambiarPantalla(pantalla: HTMLElement) {

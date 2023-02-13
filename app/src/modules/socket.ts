@@ -1,7 +1,8 @@
 import { WebsocketEvent } from '../../../shared/types/response'
 
+const VITE_WEBSOCKET_URL_BACKEND: string = import.meta.env.VITE_WEBSOCKET_URL_BACKEND
 let socket: WebSocket
-let url = import.meta.env.VITE_WEBSOCKET_URL_BACKEND +"/ws"
+const url = `${VITE_WEBSOCKET_URL_BACKEND}/ws`
 
 export function sendMessage(message: WebsocketEvent) {
   socket.send(JSON.stringify(message))

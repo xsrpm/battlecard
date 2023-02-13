@@ -1,7 +1,7 @@
 import { EnemigoDesconectadoResponse, IniciarJuegoResponse, JugadorEnemigoResponse, JugadorResponse, TerminarTurnoResponse } from '../../../shared/types/response'
 import { Carta } from './../../../shared/types/carta.d'
 import { btnFinDeJuego, btnTerminarTurno, habilitacionBotonera } from './botonera.js'
-import { message, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag } from './estadoGlobal'
+import { encuentraError, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag } from './estadoGlobal'
 import { info } from '../components/info'
 import { resultadoAtaque } from './resultado-ataque'
 import { barreraEnemiga, barreraYo, jugDown, jugUp, manoEnemigo, manoYo, mostrarCartaCogida, mostrarJugadorEnTurno, quitarSeleccionEnCartas, zonaBatallaEnemiga, zonaBatallaYo } from './tablero'
@@ -76,13 +76,4 @@ export function enemigoDesconectadoResponse (message: EnemigoDesconectadoRespons
   btnTerminarTurno.classList.add('ocultar')
   info.classList.add('mostrarResultado')
   setJuegoFinalizado(true)
-}
-
-export function encuentraError () {
-  if (typeof message.error !== 'undefined') {
-    console.log(message.error)
-    window.alert(message.error)
-    return true
-  }
-  return false
 }
