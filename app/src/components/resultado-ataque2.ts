@@ -1,5 +1,5 @@
-import { sinBarrerasFlag } from './estadoGlobal'
-import { info } from '../components/info'
+import { sinBarrerasFlag } from '../modules/estadoGlobal'
+import { info } from './info'
 
 export const resultadoAtaque = document.querySelector('resultado-ataque') as HTMLDivElement
 

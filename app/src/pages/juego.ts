@@ -1,11 +1,11 @@
 import { EnemigoDesconectadoResponse, IniciarJuegoResponse, JugadorEnemigoResponse, JugadorResponse, TerminarTurnoResponse } from '../../../shared/types/response'
-import { Carta } from './../../../shared/types/carta.d'
-import { btnFinDeJuego, btnTerminarTurno, habilitacionBotonera } from './botonera.js'
-import { encuentraError, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag } from './estadoGlobal'
+import { Carta } from '../../../shared/types/carta'
+import { btnFinDeJuego, btnTerminarTurno, habilitacionBotonera } from '../components/botonera.js'
+import { encuentraError, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag } from '../modules/estadoGlobal'
 import { info } from '../components/info'
-import { resultadoAtaque } from './resultado-ataque'
-import { barreraEnemiga, barreraYo, jugDown, jugUp, manoEnemigo, manoYo, mostrarCartaCogida, mostrarJugadorEnTurno, quitarSeleccionEnCartas, zonaBatallaEnemiga, zonaBatallaYo } from './tablero'
-import { cambiarPantalla } from './utils'
+import { resultadoAtaque } from '../components/resultado-ataque2'
+import { barreraEnemiga, barreraYo, jugDown, jugUp, manoEnemigo, manoYo, mostrarCartaCogida, mostrarJugadorEnTurno, quitarSeleccionEnCartas, zonaBatallaEnemiga, zonaBatallaYo } from '../components/tablero'
+import { cambiarPantalla } from '../modules/utils'
 
 const juego = document.getElementById('juego') as HTMLDivElement
 

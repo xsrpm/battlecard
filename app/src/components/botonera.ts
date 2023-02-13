@@ -1,6 +1,6 @@
-import { cambiarPantalla } from './utils'
-import { nombreJugadorVictorioso, nombreJugadorDerrotado, idCartaZBSeleccionada, stepAccion, setStepAccion, posicionBatalla, setPosicionBatalla, jugadorId } from './estadoGlobal'
-import { sendMessage } from './socket'
+import { cambiarPantalla } from '../modules/utils'
+import { nombreJugadorVictorioso, nombreJugadorDerrotado, idCartaZBSeleccionada, stepAccion, setStepAccion, posicionBatalla, setPosicionBatalla, jugadorId } from '../modules/estadoGlobal'
+import { sendMessage } from '../modules/socket'
 import { colocarCarta, jugDown } from './tablero'
 import { PosBatalla } from '../constants/celdabatalla'
 

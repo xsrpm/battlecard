@@ -1,10 +1,10 @@
-import { ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse } from './../../../shared/types/response.d'
-import { Carta } from './../../../shared/types/carta.d'
+import { ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse } from '../../../shared/types/response'
+import { Carta } from '../../../shared/types/carta'
 import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './botonera'
-import { encuentraError, idCartaZBSeleccionada, juegoFinalizado, jugadorId, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from './estadoGlobal'
-import { info } from '../components/info'
-import { resultadoAtaque } from './resultado-ataque'
-import { sendMessage } from './socket'
+import { encuentraError, idCartaZBSeleccionada, juegoFinalizado, jugadorId, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from '../modules/estadoGlobal'
+import { info } from './info'
+import { resultadoAtaque } from './resultado-ataque2'
+import { sendMessage } from '../modules/socket'
 
 export const Estado = {
   NO_HAY_CARTA: 'No hay carta',
