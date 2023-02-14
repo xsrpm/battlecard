@@ -33,8 +33,7 @@ WebSocketServer.on('connection', (ws: WebSocket) => {
 
 function unirASala (ws: WebSocket, reqEvent: UnirASalaRequest) {
   const {nombreJugador} = reqEvent.payload
-  const { jugadorConectado, resultado, jugadores, iniciar} = juego.unirASala(nombreJugador)
- 
+  const { jugadorConectado, resultado, jugadores, iniciar} = juego.unirASala(nombreJugador, ws)
   if (resultado === ResultadoUnirASala.EXITO) {
     const respEvent: UnirASalaResponse = {
       event: WebsocketEventTitle.UNIR_A_SALA,

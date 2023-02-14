@@ -5,7 +5,7 @@ import { Jugador, RptaCogerUnaCartaDelDeck } from './jugador'
 import {Juego as IJuego } from '../types'
 import { Pantalla, ResultadoUnirASala, Sala } from '../constants/juego'
 import { PosBatalla } from '../constants/celdabatalla'
-
+import WebSocket from 'ws'
 
 interface RptaUnirASala {
   resultado: string
@@ -30,7 +30,7 @@ interface RptaTerminarJuego extends RptaCogerUnaCartaDelDeckJuego {
   }
 }
 
-interface JugadorConectado{
+export interface JugadorConectado{
   uuid : string,
   jugador: Jugador,
   websocket?: WebSocket
@@ -59,14 +59,15 @@ export class Juego implements IJuego{
     this.estadoSala = Sala.SALA_ABIERTA
   }
 
-  unirASala (nombreJugador: string): RptaUnirASala {
+  unirASala (nombreJugador: string, ws :WebSocket): RptaUnirASala {
     if (this.estadoSala !== Sala.SALA_ABIERTA) return { resultado: ResultadoUnirASala.SALA_LLENA_NO_PUEDEN_ENTRAR_JUGADORES }
     else if (nombreJugador === '') return { resultado: ResultadoUnirASala.NO_INDICO_NOMBRE_JUGADOR }
     else if (this.jugadoresConectados.filter((j) => j.jugador.nombre === nombreJugador).length >= 1) return { resultado: ResultadoUnirASala.NOMBRE_EN_USO }
     else {
       const jugadorConectado: JugadorConectado = {
         jugador : new Jugador(nombreJugador),
-        uuid: uuidv4()
+        uuid: uuidv4(),
+        websocket: ws
       }
       this.jugadoresConectados.push(jugadorConectado)
       this.jugadoresConectados.length < 2 ? this.estadoSala = Sala.SALA_ABIERTA : this.estadoSala = Sala.SALA_CERRADA
