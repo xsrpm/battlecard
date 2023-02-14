@@ -1,6 +1,6 @@
-import express, { Request } from 'express'
+import express from 'express'
 import cors from 'cors'
-import { WebSocketServer } from './clases/websocket-acciones'
+import {WebSocketServer} from './clases/websocket-acciones'
 
 const app = express()
 app.use(cors())
@@ -11,8 +11,8 @@ const server = app.listen(port, () => {
   console.log(`Iniciado en http://localhost:${port}`)
 })
 
-server.on('upgrade', (request: Request, socket: any, head: any) => {
-  WebSocketServer.handleUpgrade(request, socket, head, (socket: any) => {
-    WebSocketServer.emit('connection', socket, request)
+server.on('upgrade', (request, socket, head) => {
+  WebSocketServer.handleUpgrade(request, socket, head, function done(ws){
+    WebSocketServer.emit('connection', ws, request)
   })
 })
