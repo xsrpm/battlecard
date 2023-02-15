@@ -22,9 +22,9 @@ export interface Jugador{
 }
 
 export  interface Juego{
-    jugadoresConectados: JugadorConectado[]
-    jugadorActual: JugadorConectado | null
-    jugadorAnterior: JugadorConectado | null
+    jugadores: Jugador[]
+    jugadorActual: Jugador | null
+    jugadorAnterior: Jugador | null
     idCartaZonaBSel: number
     idCartaZonaBSelEnemigo: number
     idCartaManoSel:number

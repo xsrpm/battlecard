@@ -11,7 +11,8 @@
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
     "dev": "ts-node-dev src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "deploy:fly.io": "flyctl deploy"
   },
   "dependencies": {
     "cors": "2.8.5",
