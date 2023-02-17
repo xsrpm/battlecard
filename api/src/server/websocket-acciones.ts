@@ -5,11 +5,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { ResultadoUnirASala, ResultadoIniciarJuego } from '../constants/juego';
 import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated } from '../response';
 import { SeleccionarZonaBatallaRequest } from '../schemas/seleccionar-zona-batalla.schema'
-import { Jugador } from '../clases/jugador'
-import { Juego } from '../clases/juego'
+import { Jugador } from '../classes/jugador'
+import { Juego } from '../classes/juego'
 import { UnirASalaRequest } from '../schemas/unir-a-sala.schema'
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
-import { Carta } from '../clases/carta'
+import { Carta } from '../classes/carta'
 import { ColocarCartaRequest } from '../schemas/colocar-carta.schema'
 import { SeleccionarManoRequest } from '../schemas/seleccionar-mano.schema'
 import { AtacarCartaRequest } from '../schemas/atacar-carta.schema'

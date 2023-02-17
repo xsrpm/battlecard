@@ -1,10 +1,10 @@
 
-import { ResultadoColocarCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion } from './../constants/jugador';
-import { ResultadoIniciarJuego, ResultadoSalirDeSala } from './../constants/juego';
-import { PosBatalla } from './../constants/celdabatalla';
-import { Juego } from '../clases/juego'
-import { Pantalla, Sala } from '../constants/juego';
-import { Jugador } from '../clases/jugador';
+import { ResultadoColocarCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion } from './../../constants/jugador';
+import { ResultadoIniciarJuego, ResultadoSalirDeSala } from './../../constants/juego';
+import { PosBatalla } from './../../constants/celdabatalla';
+import { Juego } from '../../classes/juego'
+import { Pantalla, Sala } from '../../constants/juego';
+import { Jugador } from '../../classes/jugador';
 
 describe('Juego objeto', () => {
   let juego: Juego

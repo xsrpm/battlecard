@@ -1,4 +1,4 @@
-import { RptaAtacarBarrera } from './clases/jugador';
+import { RptaAtacarBarrera } from './classes/jugador';
 import { Carta } from './carta'
 
 export interface WebsocketEvent {

@@ -1,6 +1,6 @@
 
-import { ResultadoCogerCarta } from './../constants/jugador';
-import { ResultadoIniciarJuego, ResultadoSalirDeSala } from './../constants/juego';
+import { ResultadoCogerCarta } from '../constants/jugador';
+import { ResultadoIniciarJuego, ResultadoSalirDeSala } from '../constants/juego';
 import {  Jugador, RptaCogerUnaCartaDelDeck } from './jugador'
 import {Juego as IJuego } from '../types'
 import { Pantalla, ResultadoUnirASala, Sala } from '../constants/juego'

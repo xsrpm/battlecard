@@ -1,6 +1,6 @@
 
-import { Carta } from '../clases/carta'
-import { Elemento, MAX_VALOR_CARTA, MIN_VALOR_CARTA } from '../constants/carta'
+import { Carta } from '../../classes/carta'
+import { Elemento, MAX_VALOR_CARTA, MIN_VALOR_CARTA } from '../../constants/carta'
 
 describe('Carta', () => {
 

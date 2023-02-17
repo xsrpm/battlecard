@@ -1,7 +1,7 @@
-import { PosBatalla, DispAtaque, DispCambio } from './../constants/celdabatalla';
-import { Carta } from '../clases/carta'
-import { CeldaBatalla } from '../clases/celdabatalla'
-import { Elemento } from '../constants/carta'
+import { PosBatalla, DispAtaque, DispCambio } from './../../constants/celdabatalla';
+import { Carta } from '../../classes/carta'
+import { CeldaBatalla } from '../../classes/celdabatalla'
+import { Elemento } from '../../constants/carta'
 
 describe('CeldaBatalla objeto', () => {
   const carta = new Carta(12, Elemento.COCO)

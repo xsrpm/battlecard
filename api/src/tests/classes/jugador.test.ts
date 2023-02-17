@@ -1,19 +1,19 @@
-import { ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion } from "./../constants/jugador";
+import { ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion } from "./../../constants/jugador";
 import {
   PosBatalla,
   DispAtaque,
   DispCambio,
-} from "./../constants/celdabatalla";
-import { Jugador } from "../clases/jugador";
-import { Carta } from "../clases/carta";
-import { CeldaBatalla } from "../clases/celdabatalla";
-import { Elemento } from "../constants/carta";
+} from "./../../constants/celdabatalla";
+import { Jugador } from "../../classes/jugador";
+import { Carta } from "../../classes/carta";
+import { CeldaBatalla } from "../../classes/celdabatalla";
+import { Elemento } from "../../constants/carta";
 import {
   EstadoCarta,
   ResultadoCogerCarta,
   ResultadoColocarCarta,
   VeredictoAtaque,
-} from "../constants/jugador";
+} from "../../constants/jugador";
 
 describe("Jugador objeto", () => {
   /**

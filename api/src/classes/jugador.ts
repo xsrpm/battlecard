@@ -7,12 +7,12 @@ import {
   ResultadoAtacarCarta,
   ResultadoCambiarPosicion,
   ResultadoColocarCarta,
-} from "./../constants/jugador";
+} from "../constants/jugador";
 import {
   PosBatalla,
   DispAtaque,
   DispCambio,
-} from "./../constants/celdabatalla";
+} from "../constants/celdabatalla";
 import { Carta } from "./carta";
 import { CeldaBatalla } from "./celdabatalla";
 import { Jugador as IJugador } from "../types";

@@ -16,6 +16,7 @@ https://jestjs.io/docs/getting-started#using-typescript
 https://jestjs.io/docs/getting-started#via-ts-jest
 https://github.com/kulshekhar/ts-jest
 https://jestjs.io/docs/api
+- [Tests con websockets ](https://www.npmjs.com/package/superwstest)
 
 ## Nodemon
 
@@ -61,5 +62,4 @@ Request2
 Response2
 
     {"event":"Unir a sala","payload":{"resultado":"Exito","jugadores":["cesar","krister"],"iniciar":true}}
-
 
