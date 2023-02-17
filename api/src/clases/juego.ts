@@ -1,6 +1,6 @@
 
 import { ResultadoCogerCarta } from './../constants/jugador';
-import { ResultadoIniciarJuego } from './../constants/juego';
+import { ResultadoIniciarJuego, ResultadoSalirDeSala } from './../constants/juego';
 import {  Jugador, RptaCogerUnaCartaDelDeck } from './jugador'
 import {Juego as IJuego } from '../types'
 import { Pantalla, ResultadoUnirASala, Sala } from '../constants/juego'
@@ -74,6 +74,24 @@ export class Juego implements IJuego{
         jugadores: this.obtenerNombreJugadores(),
         iniciar: this.estadoSala === Sala.SALA_CERRADA
       }
+    }
+  }
+
+  salirDeSala(pJugador: Jugador){
+    const resp = this.jugadores.find((jugador)=> jugador === pJugador )
+    if(!resp){
+      return {
+        resultado: ResultadoSalirDeSala.NO_ESTA_EN_SALA,
+        jugadores :  this.obtenerNombreJugadores(),
+        iniciar: this.estadoSala === Sala.SALA_CERRADA
+      }
+    }
+    this.jugadores = this.jugadores.filter((jugador) => jugador === resp)
+    this.jugadores.length < 2 ? this.estadoSala = Sala.SALA_ABIERTA : this.estadoSala = Sala.SALA_CERRADA
+    return {
+      resultado: ResultadoSalirDeSala.SALIO_DE_SALA,
+      jugadores :  this.obtenerNombreJugadores(),
+      iniciar: this.estadoSala === Sala.SALA_CERRADA
     }
   }
 

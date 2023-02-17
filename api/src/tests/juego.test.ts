@@ -1,8 +1,10 @@
+
 import { ResultadoColocarCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion } from './../constants/jugador';
-import { ResultadoIniciarJuego } from './../constants/juego';
+import { ResultadoIniciarJuego, ResultadoSalirDeSala } from './../constants/juego';
 import { PosBatalla } from './../constants/celdabatalla';
 import { Juego } from '../clases/juego'
 import { Pantalla, Sala } from '../constants/juego';
+import { Jugador } from '../clases/jugador';
 
 describe('Juego objeto', () => {
   let juego: Juego
@@ -53,6 +55,28 @@ describe('Juego objeto', () => {
       const resp = juego.unirASala('Krister')
       expect(resp.resultado).toBe('Sala llena, no pueden entrar jugadores')
       expect(juego.estadoSala).toBe(Sala.SALA_CERRADA)
+    })
+  })
+
+  describe('salir de sala',()=>{
+    test('exitosa', ()=>{
+      const resp1 = juego.unirASala('Cesar')
+      const jugador = resp1.jugador as Jugador
+      juego.unirASala('Marco')
+      const {resultado, jugadores, iniciar} = juego.salirDeSala(jugador)
+      expect(resultado).toBe(ResultadoSalirDeSala.SALIO_DE_SALA)
+      expect(jugadores).toEqual([resp1.jugador?.nombre])
+      expect(iniciar).toBe(false)
+    })
+
+    test('fallida cuando jugador no está en sala',()=>{
+      const resp1 = juego.unirASala('Cesar')
+      const resp2 = juego.unirASala('Marco')
+      const jugador = new Jugador('Krister')
+      const {resultado, jugadores, iniciar} = juego.salirDeSala(jugador)
+      expect(resultado).toBe(ResultadoSalirDeSala.NO_ESTA_EN_SALA)
+      expect(jugadores).toEqual([resp1.jugador?.nombre, resp2.jugador?.nombre])
+      expect(iniciar).toBe(true)
     })
   })
 

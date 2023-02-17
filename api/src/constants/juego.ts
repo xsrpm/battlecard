@@ -17,6 +17,11 @@ export enum ResultadoUnirASala {
     NOMBRE_EN_USO = 'Nombre de Jugador/Nick ya está en uso'
 }
 
+export enum ResultadoSalirDeSala {
+    SALIO_DE_SALA = 'SALIO DE SALA',
+    NO_ESTA_EN_SALA = 'NO ESTA EN SALA'
+}
+
 export enum ResultadoIniciarJuego {
     NO_SE_TIENEN_2_JUGADORES_PARA_EMPEZAR = 'No se tienen 2 jugadores para empezar',
     JUEGO_INICIADO = 'JUEGO INICIADO',

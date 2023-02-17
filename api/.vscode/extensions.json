@@ -12,6 +12,7 @@
     "esbenp.prettier-vscode",
     "streetsidesoftware.code-spell-checker-spanish",
     "chakrounanas.turbo-console-log",
-    "naumovs.color-highlight"
+    "naumovs.color-highlight",
+    "firsttris.vscode-jest-runner"
   ]
 }
