@@ -1,14 +1,15 @@
+
 import WebSocket from 'ws'
 import { v4 as uuidv4 } from 'uuid';
 
-import { ResultadoUnirASala, ResultadoIniciarJuego } from './../constants/juego';
-import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated } from './../response.d';
+import { ResultadoUnirASala, ResultadoIniciarJuego } from '../constants/juego';
+import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated } from '../response';
 import { SeleccionarZonaBatallaRequest } from '../schemas/seleccionar-zona-batalla.schema'
-import { Jugador } from './jugador'
-import { Juego } from './juego'
+import { Jugador } from '../clases/jugador'
+import { Juego } from '../clases/juego'
 import { UnirASalaRequest } from '../schemas/unir-a-sala.schema'
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
-import { Carta } from './carta'
+import { Carta } from '../clases/carta'
 import { ColocarCartaRequest } from '../schemas/colocar-carta.schema'
 import { SeleccionarManoRequest } from '../schemas/seleccionar-mano.schema'
 import { AtacarCartaRequest } from '../schemas/atacar-carta.schema'
@@ -18,7 +19,79 @@ import { PosBatalla } from '../constants/celdabatalla'
 import { Pantalla } from '../constants/juego'
 import { ResultadoCogerCarta } from '../constants/jugador';
 import { IniciarJuegoRequest } from '../schemas/iniciar-juego.schema';
-import { cerrarSockets, sendMessage, sendMessageToOthers } from '../websocket-server';
+import { cerrarSockets, sendMessage, sendMessageToOthers, server, WebSocketServer } from './websocket-server';
+
+WebSocketServer.on('connection', (ws: WebSocket) => {
+  ws.on('message', (data: any) => {
+    procesarAccion(ws, data)
+  })
+  ws.on('error', function (event: any) {
+    console.log(event)
+  })
+  ws.on('close', (code: number) => {
+    procesarDesconexion(ws,code)
+  })
+})
+
+function procesarAccion (ws: WebSocket, message: string) {
+  const objMessage = JSON.parse(message)
+  console.log('received:')
+  console.log(objMessage)
+  switch (objMessage.event) {
+    case WebsocketEventTitle.UNIR_A_SALA:
+      unirASala(ws, objMessage)
+      break
+    case WebsocketEventTitle.INICIAR_JUEGO:
+      iniciarJuego(ws, objMessage)
+      break
+    case WebsocketEventTitle.COLOCAR_CARTA:
+      colocarCarta(ws, objMessage)
+      break
+    case WebsocketEventTitle.SELECCIONAR_ZONA_BATALLA:
+      seleccionarZonaBatalla(ws, objMessage)
+      break
+    case WebsocketEventTitle.SELECCIONAR_MANO:
+      seleccionarMano(ws, objMessage)
+      break
+    case WebsocketEventTitle.ATACAR_CARTA:
+      atacarCarta(ws, objMessage)
+      break
+    case WebsocketEventTitle.ATACAR_BARRERA:
+      atacarBarrera(ws, objMessage)
+      break
+    case WebsocketEventTitle.CAMBIAR_POSICION:
+      cambiarPosicion(ws, objMessage)
+      break
+    case WebsocketEventTitle.TERMINAR_TURNO:
+      terminarTurno(ws, objMessage)
+      break
+  }
+}
+
+const procesarDesconexion = (ws: WebSocket, code: number) =>{
+  for( const jg of jugadoresConectados){
+    if((jg?.websocket as any) === ws){
+      console.info(`close ws code:${code}, player: ${jg.jugador.nombre}`)
+      finalizarPorDesconexion(ws, jg.jugador)
+    }
+  }
+}
+
+function finalizarPorDesconexion (ws: WebSocket, jugadorDesconectado: Jugador) {
+  if (jugadoresConectados.length === 2 && juego.pantalla === Pantalla.EN_JUEGO) {
+    const message: EnemigoDesconectadoResponse = {
+      event: WebsocketEventTitle.ENEMIGO_DESCONECTADO,
+      payload: {
+        nombreJugadorDerrotado: jugadorDesconectado.nombre,
+        nombreJugadorVictorioso: juego.jugadorEnemigo(jugadorDesconectado).nombre,
+        resultado: `${jugadorDesconectado.nombre} se desconectó del juego`
+      }
+    }
+    sendMessageToOthers(ws, message)
+    juego.finalizarJuego()
+    cerrarSockets()
+  }
+}
 
 const juego = new Juego()
 
@@ -291,67 +364,4 @@ function cambiarPosicion (ws: WebSocket, message: CambiarPosicionRequest) {
   sendMessageToOthers(ws, respCambiarPosicion)
 }
 
-export function procesarAccion (ws: WebSocket, message: string) {
-  const objMessage = JSON.parse(message)
-  console.log('received:')
-  console.log(objMessage)
-  switch (objMessage.event) {
-    case WebsocketEventTitle.UNIR_A_SALA:
-      unirASala(ws, objMessage)
-      break
-    case WebsocketEventTitle.INICIAR_JUEGO:
-      iniciarJuego(ws, objMessage)
-      break
-    case WebsocketEventTitle.COLOCAR_CARTA:
-      colocarCarta(ws, objMessage)
-      break
-    case WebsocketEventTitle.SELECCIONAR_ZONA_BATALLA:
-      seleccionarZonaBatalla(ws, objMessage)
-      break
-    case WebsocketEventTitle.SELECCIONAR_MANO:
-      seleccionarMano(ws, objMessage)
-      break
-    case WebsocketEventTitle.ATACAR_CARTA:
-      atacarCarta(ws, objMessage)
-      break
-    case WebsocketEventTitle.ATACAR_BARRERA:
-      atacarBarrera(ws, objMessage)
-      break
-    case WebsocketEventTitle.CAMBIAR_POSICION:
-      cambiarPosicion(ws, objMessage)
-      break
-    case WebsocketEventTitle.TERMINAR_TURNO:
-      terminarTurno(ws, objMessage)
-      break
-  }
-}
-
-function finalizarPorDesconexion (ws: WebSocket, jugadorDesconectado: Jugador) {
-  if (jugadoresConectados.length === 2 && juego.pantalla === Pantalla.EN_JUEGO) {
-    const message: EnemigoDesconectadoResponse = {
-      event: WebsocketEventTitle.ENEMIGO_DESCONECTADO,
-      payload: {
-        nombreJugadorDerrotado: jugadorDesconectado.nombre,
-        nombreJugadorVictorioso: juego.jugadorEnemigo(jugadorDesconectado).nombre,
-        resultado: `${jugadorDesconectado.nombre} se desconectó del juego`
-      }
-    }
-    sendMessageToOthers(ws, message)
-    juego.finalizarJuego()
-    cerrarSockets()
-  }
-}
-
-export const procesarDesconexion = (ws: WebSocket, code: number) =>{
-  for( const jg of jugadoresConectados){
-    if((jg?.websocket as any) === ws){
-      console.info(`close ws code:${code}, player: ${jg.jugador.nombre}`)
-      finalizarPorDesconexion(ws, jg.jugador)
-    }
-  }
-}
-
-
-
-
-
+export default server

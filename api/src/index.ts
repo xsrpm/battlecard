@@ -1,4 +1,4 @@
-import { server } from './websocket-server'
+import server from './server/websocket-acciones'
 
 const port = process.env.PORT ?? 8080
 
