@@ -144,3 +144,10 @@ export interface EnemigoDesconectadoResponse extends WebsocketEvent{
         resultado: string
     }
 }
+
+export interface JugadorDesconectadoResponse extends WebsocketEvent {
+    payload: {
+        jugadores: Array<String>,
+        resultado: String
+    }
+}
