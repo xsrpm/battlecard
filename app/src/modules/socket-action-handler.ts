@@ -1,7 +1,7 @@
-import { UnirASalaResponse, IniciarJuegoResponse, ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse, EnemigoDesconectadoResponse } from '../../../shared/types/response'
+import { UnirASalaResponse, IniciarJuegoResponse, ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse, EnemigoDesconectadoResponse, JugadorDesconectadoResponse } from '../../../shared/types/response'
 import { message, setMessage } from './estadoGlobal'
 import { enemigoDesconectadoResponse, iniciarJuegoResponse, terminarTurno as terminarTurnoResponse } from '../pages/juego'
-import { unirASalaResponse } from '../pages/sala'
+import { jugadorDesconectadoResponse, unirASalaResponse } from '../pages/sala'
 import { atacanTuBarreraResponse, atacanTuCartaResponse, atacarBarreraResponse, atacarCartaResponse, cambiaPosicionEnemigoResponse, cambiarPosicionResponse, colocaCartaOtroJugadorResponse, colocarCartaResponse, seleccionarManoResponse, seleccionarZonaBatallaResponse } from '../components/tablero'
 
 export const handleMessageSocket = (e: any) => {
@@ -50,6 +50,9 @@ export const handleMessageSocket = (e: any) => {
       break
     case 'Enemigo Desconectado':
       enemigoDesconectadoResponse(message as EnemigoDesconectadoResponse)
+      break
+    case 'Jugador Desconectado':
+      jugadorDesconectadoResponse(message as JugadorDesconectadoResponse)
       break
   }
 }

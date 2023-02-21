@@ -92,12 +92,11 @@ function finalizarPorDesconexion (ws: WebSocket, jugadorDesconectado: Jugador) {
     cerrarSockets()
   }
   else if(juego.pantalla === Pantalla.EN_SALA_DE_ESPERA){
-    juego.salirDeSala(jugadorDesconectado)
+    const {jugadores, iniciar } = juego.salirDeSala(jugadorDesconectado)
     const message: JugadorDesconectadoResponse = {
       event : WebsocketEventTitle.JUGADOR_DESCONECTADO,
       payload: {
-        jugadores: juego.obtenerNombreJugadores(),
-        resultado: `${jugadorDesconectado.nombre} salio de la sala`
+        resultado: `${jugadorDesconectado.nombre} salió de la sala` , jugadores, iniciar
       }
     }
     sendMessageToOthers(ws, message)

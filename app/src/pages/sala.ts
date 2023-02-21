@@ -1,4 +1,4 @@
-import { UnirASalaResponse } from '../../../shared/types/response'
+import { UnirASalaResponse, JugadorDesconectadoResponse } from '../../../shared/types/response'
 import { encuentraError, setJugadorId, jugadorId } from '../modules/estadoGlobal'
 import { sendMessage } from '../modules/socket'
 import { cambiarPantalla } from '../modules/utils'
@@ -30,3 +30,16 @@ btnIniciarJuego?.addEventListener('click', () => {
     }
   })
 })
+
+export function jugadorDesconectadoResponse(message: JugadorDesconectadoResponse) {
+  if (encuentraError()) return
+  const { resultado, jugadores, iniciar } = message.payload
+
+  h2[0].innerText = '(Sin Jugador)'
+  h2[1].innerText = '(Sin Jugador)'
+  for (let i = 0; i < jugadores.length; i++) {
+    h2[i].innerText = jugadores[i]
+  }
+  iniciar ? (btnIniciarJuego.disabled = false) : (btnIniciarJuego.disabled = true)
+  console.log(resultado)
+}

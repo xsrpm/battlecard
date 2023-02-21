@@ -147,7 +147,8 @@ export interface EnemigoDesconectadoResponse extends WebsocketEvent{
 
 export interface JugadorDesconectadoResponse extends WebsocketEvent {
     payload: {
-        jugadores: Array<String>,
-        resultado: String
+        jugadores: Array<string>,
+        resultado: string,
+        iniciar: boolean
     }
 }
