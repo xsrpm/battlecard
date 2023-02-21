@@ -3,7 +3,7 @@ import WebSocket from 'ws'
 import { v4 as uuidv4 } from 'uuid';
 
 import { ResultadoUnirASala, ResultadoIniciarJuego } from '../constants/juego';
-import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated } from '../response';
+import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated, JugadorDesconectadoResponse } from '../response';
 import { SeleccionarZonaBatallaRequest } from '../schemas/seleccionar-zona-batalla.schema'
 import { Jugador } from '../classes/jugador'
 import { Juego } from '../classes/juego'
@@ -90,6 +90,18 @@ function finalizarPorDesconexion (ws: WebSocket, jugadorDesconectado: Jugador) {
     sendMessageToOthers(ws, message)
     juego.finalizarJuego()
     cerrarSockets()
+  }
+  else if(juego.pantalla === Pantalla.EN_SALA_DE_ESPERA){
+    juego.salirDeSala(jugadorDesconectado)
+    const message: JugadorDesconectadoResponse = {
+      event : WebsocketEventTitle.JUGADOR_DESCONECTADO,
+      payload: {
+        jugadores: juego.obtenerNombreJugadores(),
+        resultado: `${jugadorDesconectado.nombre} salio de la sala`
+      }
+    }
+    sendMessageToOthers(ws, message)
+    ws.close()
   }
 }
 

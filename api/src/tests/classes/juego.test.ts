@@ -61,11 +61,10 @@ describe('Juego objeto', () => {
   describe('salir de sala',()=>{
     test('exitosa', ()=>{
       const resp1 = juego.unirASala('Cesar')
-      const jugador = resp1.jugador as Jugador
-      juego.unirASala('Marco')
-      const {resultado, jugadores, iniciar} = juego.salirDeSala(jugador)
+      const resp2 = juego.unirASala('Marco')
+      const {resultado, jugadores, iniciar} = juego.salirDeSala(resp1.jugador as Jugador)
       expect(resultado).toBe(ResultadoSalirDeSala.SALIO_DE_SALA)
-      expect(jugadores).toEqual([resp1.jugador?.nombre])
+      expect(jugadores).toEqual([resp2.jugador?.nombre])
       expect(iniciar).toBe(false)
     })
 

@@ -86,7 +86,7 @@ export class Juego implements IJuego{
         iniciar: this.estadoSala === Sala.SALA_CERRADA
       }
     }
-    this.jugadores = this.jugadores.filter((jugador) => jugador === resp)
+    this.jugadores = this.jugadores.filter((jugador) => jugador !== resp)
     this.jugadores.length < 2 ? this.estadoSala = Sala.SALA_ABIERTA : this.estadoSala = Sala.SALA_CERRADA
     return {
       resultado: ResultadoSalirDeSala.SALIO_DE_SALA,
