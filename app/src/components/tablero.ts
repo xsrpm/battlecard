@@ -1,11 +1,11 @@
 import { ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse } from '../../../shared/types/response'
 import { Carta } from '../../../shared/types/carta'
 import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './botonera'
-import { idCartaZBSeleccionada, juegoFinalizado, jugadorId, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from '../modules/estadoGlobal'
+import { idCartaZBSeleccionada, juegoFinalizado, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from '../modules/estadoGlobal'
 import { info } from './info'
 import { resultadoAtaque } from './resultado-ataque2'
-import { encuentraError, sendMessage } from '../modules/socket'
-import { WebsocketEventTitle } from '../constants/websocket-event-title'
+import { encuentraError } from '../modules/socket'
+import { atacarCarta, colocarCartaEnZonaBatallaDesdeMano, seleccionarCeldaEnZonaBatalla, seleccionarMano } from '../modules/socket-messages'
 
 export const Estado = {
   NO_HAY_CARTA: 'No hay carta',
@@ -79,15 +79,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
     ) {
       console.log('stepAccion: ' + stepAccion)
       console.log(target)
-      sendMessage({
-        event: WebsocketEventTitle.COLOCAR_CARTA,
-        payload: {
-          jugadorId,
-          posicion: posicionBatalla,
-          idZonaBatalla: idCartaZBSeleccionada,
-          idMano: idCartaManoSeleccionada
-        }
-      })
+      colocarCartaEnZonaBatallaDesdeMano(idCartaManoSeleccionada)
     }
   } else {
     if (
@@ -98,14 +90,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
       setStepAccion('SELECCIONAR ZONA BATALLA')
       console.log('stepAccion: ' + stepAccion)
       console.log(target)
-
-      sendMessage({
-        event: WebsocketEventTitle.SELECCIONAR_ZONA_BATALLA,
-        payload: {
-          jugadorId,
-          idZonaBatalla: idCartaZBSeleccionada
-        }
-      })
+      seleccionarCeldaEnZonaBatalla()
     }
   }
 })
@@ -295,13 +280,7 @@ manoYo.addEventListener('click', function (e) {
     setStepAccion('SELECCIONAR MANO')
     console.log('stepAccion: ' + stepAccion)
     console.log(target)
-    sendMessage({
-      event: WebsocketEventTitle.SELECCIONAR_MANO,
-      payload: {
-        jugadorId,
-        idMano: idCartaManoSeleccionada
-      }
-    })
+    seleccionarMano(idCartaManoSeleccionada)
   }
 })
 
@@ -480,14 +459,7 @@ zonaBatallaEnemiga.addEventListener('click', function (e) {
       console.log('stepAccion: ' + stepAccion)
       console.log('target: ', target)
       idCartaZBEnemigaSeleccionada = Number(target.dataset.id)
-      sendMessage({
-        event: WebsocketEventTitle.ATACAR_CARTA,
-        payload: {
-          jugadorId,
-          idZonaBatalla: idCartaZBSeleccionada,
-          idZonaBatallaEnemiga: idCartaZBEnemigaSeleccionada
-        }
-      })
+      atacarCarta(idCartaZBEnemigaSeleccionada)
     }
   }
 })

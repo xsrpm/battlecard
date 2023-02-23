@@ -1,7 +1,7 @@
 
-import { WebsocketEventTitle } from '../constants/websocket-event-title'
-import { initSocket, sendMessage } from '../modules/socket'
+import { initSocket } from '../modules/socket'
 import { handleMessageSocket } from '../modules/socket-action-handler'
+import { unirASala } from '../modules/socket-messages'
 
 export const recepcion = document.getElementById('recepcion') as HTMLDivElement
 export const inNombreJugador: HTMLInputElement = document.getElementById('inNombreJugador') as HTMLInputElement
@@ -13,10 +13,7 @@ btnUnirASala.addEventListener('click', () => {
 })
 
 const handleOpenSocket = () => {
-  sendMessage({
-    event: WebsocketEventTitle.UNIR_A_SALA,
-    payload: { nombreJugador: inNombreJugador.value }
-  })
+  unirASala(inNombreJugador.value)
 }
 
 const handleCloseSocket = (e: any) => {

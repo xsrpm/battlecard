@@ -1,7 +1,7 @@
 import { UnirASalaResponse, JugadorDesconectadoResponse } from '../../../shared/types/response'
-import { WebsocketEventTitle } from '../constants/websocket-event-title'
-import { setJugadorId, jugadorId } from '../modules/estadoGlobal'
-import { encuentraError, sendMessage } from '../modules/socket'
+import { setJugadorId } from '../modules/estadoGlobal'
+import { encuentraError } from '../modules/socket'
+import { iniciarJuego } from '../modules/socket-messages'
 import { cambiarPantalla } from '../modules/utils'
 
 const btnIniciarJuego = document.getElementById('btnIniciarJuego') as HTMLButtonElement
@@ -24,12 +24,7 @@ export function unirASalaResponse (message: UnirASalaResponse) {
 }
 
 btnIniciarJuego?.addEventListener('click', () => {
-  sendMessage({
-    event: WebsocketEventTitle.INICIAR_JUEGO,
-    payload: {
-      jugadorId
-    }
-  })
+  iniciarJuego()
 })
 
 export function jugadorDesconectadoResponse(message: JugadorDesconectadoResponse) {
