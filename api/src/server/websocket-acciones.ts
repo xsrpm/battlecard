@@ -294,7 +294,8 @@ function terminarTurno (ws: WebSocket, message: WebsocketEvent) {
     payload: {
       carta: res.carta,
       jugador: res.jugadorEnemigo,
-      jugadorEnemigo: res.jugador
+      jugadorEnemigo: res.jugador,
+      resultado: res.resultado
     }
   }
   sendMessageToOthers(ws, respTerminarTurno)
