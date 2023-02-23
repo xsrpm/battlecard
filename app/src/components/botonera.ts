@@ -3,6 +3,7 @@ import { nombreJugadorVictorioso, nombreJugadorDerrotado, idCartaZBSeleccionada,
 import { sendMessage } from '../modules/socket'
 import { colocarCarta, jugDown } from './tablero'
 import { PosBatalla } from '../constants/celdabatalla'
+import { WebsocketEventTitle } from '../constants/websocket-event-title'
 
 export const btnFinDeJuego = document.getElementById('btnFinDeJuego') as HTMLButtonElement
 export const finDeJuego = document.getElementById('finDeJuego') as HTMLDivElement
@@ -22,7 +23,7 @@ btnFinDeJuego.addEventListener('click', function () {
 
 btnTerminarTurno.addEventListener('click', () => {
   sendMessage({
-    event: 'Terminar Turno',
+    event: WebsocketEventTitle.TERMINAR_TURNO,
     payload: {
       jugadorId
     }
@@ -35,7 +36,7 @@ btnCambiarPosicion.addEventListener('click', () => {
     setStepAccion('CAMBIAR POSICION')
     habilitacionBotonera()
     sendMessage({
-      event: 'Cambiar Posicion',
+      event: WebsocketEventTitle.CAMBIAR_POSICION,
       payload: {
         jugadorId,
         idZonaBatalla: idCartaZBSeleccionada
@@ -46,7 +47,7 @@ btnCambiarPosicion.addEventListener('click', () => {
 
 btnAtacarBarrera.addEventListener('click', () => {
   sendMessage({
-    event: 'Atacar Barrera',
+    event: WebsocketEventTitle.ATACAR_BARRERA,
     payload: {
       jugadorId,
       idZonaBatalla: idCartaZBSeleccionada

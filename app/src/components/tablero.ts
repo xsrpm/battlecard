@@ -5,6 +5,7 @@ import { idCartaZBSeleccionada, juegoFinalizado, jugadorId, posicionBatalla, set
 import { info } from './info'
 import { resultadoAtaque } from './resultado-ataque2'
 import { encuentraError, sendMessage } from '../modules/socket'
+import { WebsocketEventTitle } from '../constants/websocket-event-title'
 
 export const Estado = {
   NO_HAY_CARTA: 'No hay carta',
@@ -79,7 +80,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
       console.log('stepAccion: ' + stepAccion)
       console.log(target)
       sendMessage({
-        event: 'Colocar Carta',
+        event: WebsocketEventTitle.COLOCAR_CARTA,
         payload: {
           jugadorId,
           posicion: posicionBatalla,
@@ -99,7 +100,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
       console.log(target)
 
       sendMessage({
-        event: 'Seleccionar Zona Batalla',
+        event: WebsocketEventTitle.SELECCIONAR_ZONA_BATALLA,
         payload: {
           jugadorId,
           idZonaBatalla: idCartaZBSeleccionada
@@ -295,7 +296,7 @@ manoYo.addEventListener('click', function (e) {
     console.log('stepAccion: ' + stepAccion)
     console.log(target)
     sendMessage({
-      event: 'Seleccionar Mano',
+      event: WebsocketEventTitle.SELECCIONAR_MANO,
       payload: {
         jugadorId,
         idMano: idCartaManoSeleccionada
@@ -480,7 +481,7 @@ zonaBatallaEnemiga.addEventListener('click', function (e) {
       console.log('target: ', target)
       idCartaZBEnemigaSeleccionada = Number(target.dataset.id)
       sendMessage({
-        event: 'Atacar Carta',
+        event: WebsocketEventTitle.ATACAR_CARTA,
         payload: {
           jugadorId,
           idZonaBatalla: idCartaZBSeleccionada,

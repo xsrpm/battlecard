@@ -1,4 +1,5 @@
 import { UnirASalaResponse, JugadorDesconectadoResponse } from '../../../shared/types/response'
+import { WebsocketEventTitle } from '../constants/websocket-event-title'
 import { setJugadorId, jugadorId } from '../modules/estadoGlobal'
 import { encuentraError, sendMessage } from '../modules/socket'
 import { cambiarPantalla } from '../modules/utils'
@@ -24,7 +25,7 @@ export function unirASalaResponse (message: UnirASalaResponse) {
 
 btnIniciarJuego?.addEventListener('click', () => {
   sendMessage({
-    event: 'Iniciar juego',
+    event: WebsocketEventTitle.INICIAR_JUEGO,
     payload: {
       jugadorId
     }

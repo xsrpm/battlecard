@@ -1,4 +1,5 @@
 
+import { WebsocketEventTitle } from '../constants/websocket-event-title'
 import { initSocket, sendMessage } from '../modules/socket'
 import { handleMessageSocket } from '../modules/socket-action-handler'
 
@@ -13,7 +14,7 @@ btnUnirASala.addEventListener('click', () => {
 
 const handleOpenSocket = () => {
   sendMessage({
-    event: 'Unir a sala',
+    event: WebsocketEventTitle.UNIR_A_SALA,
     payload: { nombreJugador: inNombreJugador.value }
   })
 }
