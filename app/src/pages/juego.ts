@@ -1,16 +1,17 @@
 import { EnemigoDesconectadoResponse, IniciarJuegoResponse, JugadorEnemigoResponse, JugadorResponse, TerminarTurnoResponse } from '../../../shared/types/response'
 import { Carta } from '../../../shared/types/carta'
 import { btnFinDeJuego, btnTerminarTurno, habilitacionBotonera } from '../components/botonera.js'
-import { encuentraError, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag } from '../modules/estadoGlobal'
+import { setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag } from '../modules/estadoGlobal'
 import { info } from '../components/info'
 import { resultadoAtaque } from '../components/resultado-ataque2'
 import { barreraEnemiga, barreraYo, jugDown, jugUp, manoEnemigo, manoYo, mostrarCartaCogida, mostrarJugadorEnTurno, quitarSeleccionEnCartas, zonaBatallaEnemiga, zonaBatallaYo } from '../components/tablero'
 import { cambiarPantalla } from '../modules/utils'
+import { encuentraError } from '../modules/socket'
 
 const juego = document.getElementById('juego') as HTMLDivElement
 
 function inicializarJuego (message: IniciarJuegoResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const jugador = message.payload.jugador as JugadorResponse
   const jugadorEnemigo = message.payload.jugadorEnemigo as JugadorEnemigoResponse
   for (let i = 0; i < jugador.nBarrera; i++) {
@@ -51,7 +52,7 @@ function inicializarJuego (message: IniciarJuegoResponse) {
 }
 
 export function iniciarJuegoResponse (message: IniciarJuegoResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   inicializarJuego(message)
   mostrarJugadorEnTurno(message as TerminarTurnoResponse)
   habilitacionBotonera()
@@ -59,7 +60,7 @@ export function iniciarJuegoResponse (message: IniciarJuegoResponse) {
 }
 
 export function terminarTurno (message: TerminarTurnoResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   mostrarJugadorEnTurno(message)
   habilitacionBotonera()
   quitarSeleccionEnCartas()
@@ -67,7 +68,7 @@ export function terminarTurno (message: TerminarTurnoResponse) {
 }
 
 export function enemigoDesconectadoResponse (message: EnemigoDesconectadoResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const { nombreJugadorVictorioso, nombreJugadorDerrotado, resultado } = message.payload
   setNombreJugadorVictorioso(nombreJugadorVictorioso)
   setNombreJugadorDerrotado(nombreJugadorDerrotado)

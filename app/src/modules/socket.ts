@@ -17,3 +17,12 @@ export function initSocket(onopen: () => any, onmessage: (e: any) => void, onclo
   socket.onerror = onerror
   socket.onclose = onclose
 }
+
+export function encuentraError (message: WebsocketEvent) {
+  if (typeof message.error !== 'undefined') {
+    console.log(message.error)
+    window.alert(message.error)
+    return true
+  }
+  return false
+}

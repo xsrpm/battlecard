@@ -1,6 +1,6 @@
 import { UnirASalaResponse, JugadorDesconectadoResponse } from '../../../shared/types/response'
-import { encuentraError, setJugadorId, jugadorId } from '../modules/estadoGlobal'
-import { sendMessage } from '../modules/socket'
+import { setJugadorId, jugadorId } from '../modules/estadoGlobal'
+import { encuentraError, sendMessage } from '../modules/socket'
 import { cambiarPantalla } from '../modules/utils'
 
 const btnIniciarJuego = document.getElementById('btnIniciarJuego') as HTMLButtonElement
@@ -8,7 +8,7 @@ const sala = document.getElementById('sala') as HTMLDivElement
 const h2 = sala.getElementsByTagName('h2')
 
 export function unirASalaResponse (message: UnirASalaResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const { jugadores, iniciar, jugadorId } = message.payload
   h2[0].innerText = '(Sin Jugador)'
   h2[1].innerText = '(Sin Jugador)'
@@ -32,7 +32,7 @@ btnIniciarJuego?.addEventListener('click', () => {
 })
 
 export function jugadorDesconectadoResponse(message: JugadorDesconectadoResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const { resultado, jugadores, iniciar } = message.payload
 
   h2[0].innerText = '(Sin Jugador)'

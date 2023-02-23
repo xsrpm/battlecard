@@ -1,10 +1,10 @@
 import { ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse } from '../../../shared/types/response'
 import { Carta } from '../../../shared/types/carta'
 import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './botonera'
-import { encuentraError, idCartaZBSeleccionada, juegoFinalizado, jugadorId, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from '../modules/estadoGlobal'
+import { idCartaZBSeleccionada, juegoFinalizado, jugadorId, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from '../modules/estadoGlobal'
 import { info } from './info'
 import { resultadoAtaque } from './resultado-ataque2'
-import { sendMessage } from '../modules/socket'
+import { encuentraError, sendMessage } from '../modules/socket'
 
 export const Estado = {
   NO_HAY_CARTA: 'No hay carta',
@@ -110,7 +110,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
 })
 
 export function seleccionarZonaBatallaResponse (message: SeleccionarZonaBatallaResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const {
     existeCarta,
     puedeAtacarCarta,
@@ -148,7 +148,7 @@ export function quitarSeleccionEnCartas () {
 }
 
 export function seleccionarManoResponse (message: SeleccionarManoResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const { existeCarta, puedeColocarCarta } = message.payload
   if (existeCarta) {
     habilitacionBotonera()
@@ -165,7 +165,7 @@ export function seleccionarManoResponse (message: SeleccionarManoResponse) {
 }
 
 export function mostrarCartaCogida (message: TerminarTurnoResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const { carta, resultado, nombreJugadorDerrotado, nombreJugadorVictorioso } = message.payload
   if (resultado === 'EXITO') {
     if (typeof carta !== 'undefined') {
@@ -190,7 +190,7 @@ export function mostrarCartaCogida (message: TerminarTurnoResponse) {
 }
 
 export function atacarCartaResponse (message: AtacarCartaResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const {
     estadoAtaque,
     cartaAtacante,
@@ -305,7 +305,7 @@ manoYo.addEventListener('click', function (e) {
 })
 
 export function colocarCartaResponse (message: ColocarCartaResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const { resultado, mano } = message.payload
   if (resultado === 'Carta colocada') {
     habilitacionBotonera()
@@ -337,7 +337,7 @@ export function colocarCartaResponse (message: ColocarCartaResponse) {
 }
 
 export function colocaCartaOtroJugadorResponse (message: ColocarCartaOtroJugadorResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
 
   const { posicion, idZonaBatalla, idMano, resultado, carta } = message.payload
   if (resultado === 'Carta colocada') {
@@ -356,7 +356,7 @@ export function colocaCartaOtroJugadorResponse (message: ColocarCartaOtroJugador
 }
 
 export function atacanTuCartaResponse (message: AtacarCartaResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const {
     estadoAtaque,
     cartaAtacante,
@@ -423,7 +423,7 @@ export function atacanTuCartaResponse (message: AtacarCartaResponse) {
 }
 
 export function atacarBarreraResponse (message: AtacarBarreraResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const { resultado, idBarreraEliminada, nombreJugadorDerrotado, nombreJugadorVictorioso, sinBarreras } = message.payload
   if (resultado === 'Barrera destruida') {
     barreraEnemiga.children[idBarreraEliminada].classList.remove('barrera')
@@ -447,7 +447,7 @@ export function atacarBarreraResponse (message: AtacarBarreraResponse) {
 }
 
 export function atacanTuBarreraResponse (message: AtacarBarreraResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const { resultado, idBarreraEliminada, sinBarreras, nombreJugadorDerrotado, nombreJugadorVictorioso } = message.payload
   if (resultado === 'Barrera destruida') {
     barreraYo.children[idBarreraEliminada].classList.remove('barrera')
@@ -492,7 +492,7 @@ zonaBatallaEnemiga.addEventListener('click', function (e) {
 })
 
 export function cambiarPosicionResponse (message: CambiarPosicionResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const { respuesta, posBatalla } = message.payload
   if (stepAccion !== 'CAMBIAR POSICION') {
     return
@@ -507,7 +507,7 @@ export function cambiarPosicionResponse (message: CambiarPosicionResponse) {
 }
 
 export function cambiaPosicionEnemigoResponse (message: CambiarPosicionResponse) {
-  if (encuentraError()) return
+  if (encuentraError(message)) return
   const { respuesta, posBatalla, idZonaBatalla, carta } = message.payload
   if (respuesta === 'Posicion cambiada') {
     zonaBatallaEnemiga.children[idZonaBatalla as number].children[0].innerHTML =
