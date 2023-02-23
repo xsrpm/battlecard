@@ -1,10 +1,11 @@
 import { WebsocketEvent } from '../../../shared/types/response'
+import { STEP_ACTION } from '../constants/stepAction'
 import { PosBatalla } from './../constants/celdabatalla'
 
 export let nombreJugadorVictorioso = ''
 export let nombreJugadorDerrotado = ''
 export let idCartaZBSeleccionada: number
-export let stepAccion = 'STAND BY'
+export let stepAccion = STEP_ACTION.STAND_BY
 export let posicionBatalla: PosBatalla
 export let message: WebsocketEvent
 export let juegoFinalizado: boolean

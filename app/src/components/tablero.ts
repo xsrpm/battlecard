@@ -6,6 +6,7 @@ import { info } from './info'
 import { resultadoAtaque } from './resultado-ataque2'
 import { encuentraError } from '../modules/socket'
 import { atacarCarta, colocarCartaEnZonaBatallaDesdeMano, seleccionarCeldaEnZonaBatalla, seleccionarMano } from '../modules/socket-messages'
+import { STEP_ACTION } from '../constants/stepAction'
 
 export const Estado = {
   NO_HAY_CARTA: 'No hay carta',
@@ -44,7 +45,7 @@ export function colocarCarta () {
       celda.classList.add('seleccionado')
     }
   }
-  setStepAccion('COLOCAR SELECCIONAR ZONA BATALLA')
+  setStepAccion(STEP_ACTION.COLOCAR_SELECCIONAR_ZONA_BATALLA)
 }
 
 export function mostrarJugadorEnTurno (message: TerminarTurnoResponse) {
@@ -69,7 +70,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
   while (!target.classList.contains('slot') && target.id !== zonaBatallaYo.getAttribute('id')) target = target.parentElement as HTMLElement
   setIdCartaZBSeleccionada(Number(target.dataset.id))
   cartaZBSeleccionada = target
-  if (stepAccion === 'COLOCAR SELECCIONAR ZONA BATALLA') {
+  if (stepAccion === STEP_ACTION.COLOCAR_SELECCIONAR_ZONA_BATALLA) {
     if (
       !(
         target.classList.contains('ataque') ||
@@ -87,7 +88,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
         target.classList.contains('defensa') ||
         target.classList.contains('oculto')
     ) {
-      setStepAccion('SELECCIONAR ZONA BATALLA')
+      setStepAccion(STEP_ACTION.SELECCIONAR_ZONA_BATALLA)
       console.log('stepAccion: ' + stepAccion)
       console.log(target)
       seleccionarCeldaEnZonaBatalla()
@@ -277,7 +278,7 @@ manoYo.addEventListener('click', function (e) {
   idCartaManoSeleccionada = Number(target.dataset.id)
   cartaManoSeleccionada = target
   if (target.classList.contains('mano')) {
-    setStepAccion('SELECCIONAR MANO')
+    setStepAccion(STEP_ACTION.SELECCIONAR_MANO)
     console.log('stepAccion: ' + stepAccion)
     console.log(target)
     seleccionarMano(idCartaManoSeleccionada)
@@ -311,7 +312,7 @@ export function colocarCartaResponse (message: ColocarCartaResponse) {
     } else {
       zonaBatallaYo.children[idCartaZBSeleccionada].classList.add('defensa')
     }
-    setStepAccion('STAND BY')
+    setStepAccion(STEP_ACTION.STAND_BY)
     console.log('CARTA COLOCADA')
   }
 }
@@ -330,7 +331,7 @@ export function colocaCartaOtroJugadorResponse (message: ColocarCartaOtroJugador
     } else {
       zonaBatallaEnemiga.children[idZonaBatalla].classList.add('oculto')
     }
-    setStepAccion('STAND BY')
+    setStepAccion(STEP_ACTION.STAND_BY)
     console.log('CARTA COLOCADA POR ENEMIGO')
   }
 }
@@ -450,7 +451,7 @@ zonaBatallaEnemiga.addEventListener('click', function (e) {
   if (juegoFinalizado) return
   let target = e.target as HTMLElement
   while (!target.classList.contains('slot') && target.id !== zonaBatallaEnemiga.getAttribute('id')) target = (target.parentElement as HTMLElement)
-  if (stepAccion === 'ATACAR CARTA SELECCIONAR ZB ENEMIGA') {
+  if (stepAccion === STEP_ACTION.ATACAR_CARTA_SELECCIONAR_ZB_ENEMIGA) {
     if (
       target.classList.contains('ataque') ||
       target.classList.contains('defensa') ||
@@ -467,7 +468,7 @@ zonaBatallaEnemiga.addEventListener('click', function (e) {
 export function cambiarPosicionResponse (message: CambiarPosicionResponse) {
   if (encuentraError(message)) return
   const { respuesta, posBatalla } = message.payload
-  if (stepAccion !== 'CAMBIAR POSICION') {
+  if (stepAccion !== STEP_ACTION.CAMBIAR_POSICION) {
     return
   }
   if (respuesta === 'Posicion cambiada') {

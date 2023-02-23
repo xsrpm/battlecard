@@ -3,6 +3,7 @@ import { nombreJugadorVictorioso, nombreJugadorDerrotado, stepAccion, setStepAcc
 import { colocarCarta, jugDown } from './tablero'
 import { PosBatalla } from '../constants/celdabatalla'
 import { atacarBarreraDesdeZonaBatallaSeleccionada, cambiarPosicionEnZonaBatallaSeleccionada, terminarTurno } from '../modules/socket-messages'
+import { STEP_ACTION } from '../constants/stepAction'
 
 export const btnFinDeJuego = document.getElementById('btnFinDeJuego') as HTMLButtonElement
 export const finDeJuego = document.getElementById('finDeJuego') as HTMLDivElement
@@ -25,9 +26,9 @@ btnTerminarTurno.addEventListener('click', () => {
 })
 
 btnCambiarPosicion.addEventListener('click', () => {
-  if (stepAccion === 'SELECCIONAR ZONA BATALLA') {
-    console.log('CAMBIAR POSICION')
-    setStepAccion('CAMBIAR POSICION')
+  if (stepAccion === STEP_ACTION.SELECCIONAR_ZONA_BATALLA) {
+    console.log(STEP_ACTION.CAMBIAR_POSICION)
+    setStepAccion(STEP_ACTION.CAMBIAR_POSICION)
     habilitacionBotonera()
     cambiarPosicionEnZonaBatallaSeleccionada()
   }
@@ -38,17 +39,17 @@ btnAtacarBarrera.addEventListener('click', () => {
 })
 
 btnAtacarCarta.addEventListener('click', () => {
-  if (stepAccion === 'SELECCIONAR ZONA BATALLA') {
-    console.log('ATACAR CARTA')
-    setStepAccion('ATACAR CARTA SELECCIONAR ZB ENEMIGA')
+  if (stepAccion === STEP_ACTION.SELECCIONAR_ZONA_BATALLA) {
+    console.log(STEP_ACTION.ATACAR_CARTA)
+    setStepAccion(STEP_ACTION.ATACAR_CARTA_SELECCIONAR_ZB_ENEMIGA)
     habilitacionBotonera()
     mensajeBotones.innerText = 'Seleccione objetivo...'
   }
 })
 
 btnColocarEnDefensa.addEventListener('click', () => {
-  if (stepAccion === 'SELECCIONAR MANO') {
-    setStepAccion('COLOCAR CARTA')
+  if (stepAccion === STEP_ACTION.SELECCIONAR_MANO) {
+    setStepAccion(STEP_ACTION.COLOCAR_CARTA)
     console.log('stepAccion: ' + stepAccion)
     setPosicionBatalla(PosBatalla.DEF_ABAJO)
     console.log('posicionBatalla: ' + posicionBatalla)
@@ -57,8 +58,8 @@ btnColocarEnDefensa.addEventListener('click', () => {
 })
 
 btnColocarEnAtaque.addEventListener('click', () => {
-  if (stepAccion === 'SELECCIONAR MANO') {
-    setStepAccion('COLOCAR CARTA')
+  if (stepAccion === STEP_ACTION.SELECCIONAR_MANO) {
+    setStepAccion(STEP_ACTION.COLOCAR_CARTA)
     console.log('stepAccion: ' + stepAccion)
     setPosicionBatalla(PosBatalla.ATAQUE)
     console.log('posicionBatalla: ' + posicionBatalla)
