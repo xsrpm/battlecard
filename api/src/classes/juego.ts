@@ -108,8 +108,9 @@ export class Juego implements IJuego{
     this.pantalla === Pantalla.EN_SALA_DE_ESPERA) {
       return ResultadoIniciarJuego.NO_SE_TIENEN_2_JUGADORES_PARA_EMPEZAR
     }
-    if (this.estadoSala === Sala.SALA_CERRADA &&
-    this.pantalla === Pantalla.EN_SALA_DE_ESPERA) {
+    else{
+      // this.estadoSala === Sala.SALA_CERRADA &&
+      this.pantalla === Pantalla.EN_SALA_DE_ESPERA
       this.estadoSala = Sala.SALA_INICIADA
       this.jugadores[0].repartirCartas()
       this.jugadores[1].repartirCartas()
@@ -120,13 +121,10 @@ export class Juego implements IJuego{
       this.jugadorActual.iniciarTurno()
       this.pantalla = Pantalla.EN_JUEGO
       return ResultadoIniciarJuego.JUEGO_INICIADO
-    } else {
-      return ResultadoIniciarJuego.CONDICION_NO_MANEJADA_AL_INICIAR_JUEGO
     }
   }
 
   finalizarJuego () {
-    this.pantalla = Pantalla.FIN_DE_JUEGO
     this.jugadores = []
     this.jugadorActual = null
     this.jugadorAnterior = null
@@ -196,8 +194,8 @@ export class Juego implements IJuego{
 
   opcionesSeleccionarMano (idMano: number) {
     return {
-      existeCarta: (this.jugadorActual as Jugador).tieneCartaEnMano(idMano),
-      puedeColocarCarta: (this.jugadorActual as Jugador).puedeColocarCartaDesdeId(idMano)
+      existeCarta: (this.jugadorActual as Jugador).tieneCartaEnManoEnPosicion(idMano),
+      puedeColocarCarta: (this.jugadorActual as Jugador).puedeColocarCartaDesdeManoEnPosicion(idMano)
     }
   }
 

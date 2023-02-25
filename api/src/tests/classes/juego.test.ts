@@ -1,6 +1,6 @@
 
-import { ResultadoColocarCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion } from './../../constants/jugador';
-import { ResultadoIniciarJuego, ResultadoSalirDeSala } from './../../constants/juego';
+import { ResultadoColocarCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, ResultadoCogerCarta } from './../../constants/jugador';
+import { ResultadoIniciarJuego, ResultadoSalirDeSala, ResultadoUnirASala } from './../../constants/juego';
 import { PosBatalla } from './../../constants/celdabatalla';
 import { Juego } from '../../classes/juego'
 import { Pantalla, Sala } from '../../constants/juego';
@@ -45,11 +45,18 @@ describe('Juego objeto', () => {
   })
 
   describe('unir a sala', () => {
-    test('sala sin llenar', () => {
+    test('inválido, no indicó nombre de jugador', () => {
+      expect(juego.unirASala('').resultado).toBe(ResultadoUnirASala.NO_INDICO_NOMBRE_JUGADOR)
+    })
+    test('inválido, nombre de jugador en uso', () => {
+      juego.unirASala('César')
+      expect(juego.unirASala('César').resultado).toBe(ResultadoUnirASala.NOMBRE_EN_USO)
+    })
+    test('válido, sala sin llenar', () => {
       juego.unirASala('Cesar')
       expect(juego.estadoSala).toBe(Sala.SALA_ABIERTA)
     })
-    test('sala llena', () => {
+    test('válido, sala llena', () => {
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
       const resp = juego.unirASala('Krister')
@@ -59,7 +66,7 @@ describe('Juego objeto', () => {
   })
 
   describe('salir de sala',()=>{
-    test('exitosa', ()=>{
+    test('válido, sala abierta', ()=>{
       const resp1 = juego.unirASala('Cesar')
       const resp2 = juego.unirASala('Marco')
       const {resultado, jugadores, iniciar} = juego.salirDeSala(resp1.jugador as Jugador)
@@ -77,6 +84,7 @@ describe('Juego objeto', () => {
       expect(jugadores).toEqual([resp1.jugador?.nombre, resp2.jugador?.nombre])
       expect(iniciar).toBe(true)
     })
+
   })
 
   describe('iniciar juego', () => {
@@ -98,6 +106,21 @@ describe('Juego objeto', () => {
       expect(res).toBe(ResultadoIniciarJuego.NO_SE_TIENEN_2_JUGADORES_PARA_EMPEZAR)
     })
 
+  })
+
+  describe('finalizar juego',()=>{
+    test('válido',()=>{
+      juego.finalizarJuego()
+      expect(juego.jugadores).toEqual([])
+      expect(juego.jugadorActual).toEqual(null)
+      expect(juego.jugadorAnterior).toEqual(null)
+      expect(juego.idCartaZonaBSel).toBe(0)
+      expect(juego.idCartaZonaBSelEnemigo).toBe(0)
+      expect(juego.idCartaManoSel).toBe(0)
+      expect(juego.pantalla).toEqual(null)
+      expect(juego.momento).toEqual(null)
+      expect(juego.estadoSala).toBe(Sala.SALA_ABIERTA)
+    })
   })
 
   describe('cambiar de jugador actual', () => {
@@ -165,4 +188,68 @@ describe('Juego objeto', () => {
       expect(juego.cambiarPosicionBatalla(0).respuesta).toBe(ResultadoCambiarPosicion.POSICION_CAMBIADA)
     })
   })
+
+  describe('coger una carta del deck',()=>{
+    test('deck no vacío',()=>{
+      juego.unirASala('Cesar')
+      juego.unirASala('Marco')
+      juego.iniciarJuego()
+      const res = juego.cogerUnaCartaDelDeck()
+      expect(res.resultado).not.toBe(ResultadoCogerCarta.DECK_VACIO)
+    })
+    test('deck vacío', ()=>{
+      juego.unirASala('Cesar')
+      juego.unirASala('Marco')
+      juego.iniciarJuego();
+      juego.colocarCarta(0,0,PosBatalla.ATAQUE);
+      (juego.jugadorActual as Jugador).deck = [];
+      (juego.jugadorAnterior as Jugador).deck = []
+      const res = juego.cogerUnaCartaDelDeck()
+      expect(res.resultado).toBe(ResultadoCogerCarta.DECK_VACIO)
+    })
+  })
+
+  describe('terminar turno',()=>{
+    test('válido, ',()=>{
+      juego.unirASala('Cesar')
+      juego.unirASala('Marco')
+      juego.iniciarJuego();
+      juego.terminarTurno()
+    })
+  })
+  
+  describe('lista opciones de seleccionar zona de batalla',()=>{
+    test('válido',()=>{
+      juego.unirASala('Cesar')
+      juego.unirASala('Marco')
+      juego.iniciarJuego();
+      const resp = juego.opcionesSeleccionarZonaBatalla(0)
+      expect(resp.existeCarta).toBe(false)
+      expect(resp.puedeAtacarBarrera).toBe(ResultadoAtacarBarrera.SIN_CARTAS_EN_ZONA_BATALLA)
+      expect(resp.puedeAtacarCarta).toBe(ResultadoAtacarCarta.ATAQUES_SOLO_SE_REALIZAN_EN_SEGUNDO_TURNO)
+      expect(resp.puedeCambiarPosicion).toBe(ResultadoCambiarPosicion.SIN_CARTAS_EN_ZONA_BATALLA)
+    })
+  })
+
+  describe('lista opciones de seleccionar mano',()=>{
+    test('válido', ()=>{
+      juego.unirASala('Cesar')
+      juego.unirASala('Marco')
+      juego.iniciarJuego();
+      const resp = juego.opcionesSeleccionarMano (0)
+      expect(resp.existeCarta).toBe(true)
+      expect(resp.puedeColocarCarta).toBe(ResultadoColocarCarta.POSIBLE)
+    })
+  })
+
+  describe('devuelve la referencia a su jugador enemigo / contrincante',()=>{
+    test('válido',()=>{
+      const jug1 = juego.unirASala('Cesar')
+      const jug2 = juego.unirASala('Marco')
+      juego.iniciarJuego();
+      expect(juego.jugadorEnemigo((jug1?.jugador as Jugador) )).toEqual(jug2.jugador)
+    })
+  })
 })
+
+

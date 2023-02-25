@@ -1,4 +1,3 @@
-
 import {
   EstadoCarta,
   MAX_BARRERA_CARDS,
@@ -8,11 +7,7 @@ import {
   ResultadoCambiarPosicion,
   ResultadoColocarCarta,
 } from "../constants/jugador";
-import {
-  PosBatalla,
-  DispAtaque,
-  DispCambio,
-} from "../constants/celdabatalla";
+import { PosBatalla, DispAtaque, DispCambio } from "../constants/celdabatalla";
 import { Carta } from "./carta";
 import { CeldaBatalla } from "./celdabatalla";
 import { Jugador as IJugador } from "../types";
@@ -27,7 +22,7 @@ import {
   ResultadoCogerCarta,
   VeredictoAtaque,
 } from "../constants/jugador";
-import { RptaAtacarBarrera } from '../response';
+import { RptaAtacarBarrera } from "../response";
 
 interface RptaColocarCarta {
   resultado: string;
@@ -106,18 +101,6 @@ export class Jugador implements IJugador {
   }
   // region Operaciones (Reglas)
 
-  estadoActual() {
-    return {
-      zonaBatalla: this.zonaBatalla,
-      deck: this.deck,
-      mano: this.mano,
-      barrera: this.barrera,
-      nTurnos: this.nTurnos,
-      enTurno: this.enTurno,
-      nombre: this.nombre,
-    };
-  }
-
   sinBarreras() {
     return this.barrera.length === 0;
   }
@@ -177,17 +160,17 @@ export class Jugador implements IJugador {
     return ResultadoColocarCarta.POSIBLE;
   }
 
-  puedeColocarCartaDesdeId(idCartaMano: number) {
+  puedeColocarCartaDesdeManoEnPosicion(idCartaMano: number) {
     const resp = this.puedeColocarCartas();
     if (resp !== ResultadoColocarCarta.POSIBLE) return resp;
-    if (!this.tieneCartaEnMano(idCartaMano)) {
+    if (!this.tieneCartaEnManoEnPosicion(idCartaMano)) {
       return ResultadoColocarCarta.NO_HAY_CARTA_EN_LA_MANO_EN_ESA_POSICION;
     }
     return ResultadoColocarCarta.POSIBLE;
   }
 
   posibilidadColocarCartaEnPosicion(idPosZB: number, idCartaMano: number) {
-    const resp = this.puedeColocarCartaDesdeId(idCartaMano);
+    const resp = this.puedeColocarCartaDesdeManoEnPosicion(idCartaMano);
     if (resp !== ResultadoColocarCarta.POSIBLE) return resp;
     if (this.tieneCartaColocada(idPosZB)) {
       return ResultadoColocarCarta.POSICION_EN_ZONA_BATALLA_OCUPADA;
@@ -269,30 +252,30 @@ export class Jugador implements IJugador {
       jugadorAtacado,
       idCartaAtacante
     );
-    if (resultado === ResultadoAtacarBarrera.POSIBLE) {
-      const idBarreraEliminada = jugadorAtacado.barrera.length - 1;
-      let sinBarreras = false;
-      let nombreJugadorDerrotado;
-      let nombreJugadorVictorioso;
-      jugadorAtacado.barrera.pop();
-      this.ataqueRealizado(idCartaAtacante);
-      if (jugadorAtacado.sinBarreras()) {
-        sinBarreras = true;
-        nombreJugadorDerrotado = jugadorAtacado.nombre;
-        nombreJugadorVictorioso = this.nombre;
-      }
-      return {
-        resultado: ResultadoAtacarBarrera.BARRERA_DESTRUIDA,
-        idBarreraEliminada,
-        sinBarreras,
-        nombreJugadorDerrotado,
-        nombreJugadorVictorioso,
-      };
-    } else {
+    if (resultado !== ResultadoAtacarBarrera.POSIBLE) {
       return {
         resultado,
       };
     }
+
+    const idBarreraEliminada = jugadorAtacado.barrera.length - 1;
+    let sinBarreras = false;
+    let nombreJugadorDerrotado;
+    let nombreJugadorVictorioso;
+    jugadorAtacado.barrera.pop();
+    this.ataqueRealizado(idCartaAtacante);
+    if (jugadorAtacado.sinBarreras()) {
+      sinBarreras = true;
+      nombreJugadorDerrotado = jugadorAtacado.nombre;
+      nombreJugadorVictorioso = this.nombre;
+    }
+    return {
+      resultado: ResultadoAtacarBarrera.BARRERA_DESTRUIDA,
+      idBarreraEliminada,
+      sinBarreras,
+      nombreJugadorDerrotado,
+      nombreJugadorVictorioso,
+    };
   }
 
   puedeAtacarCartas(jugadorAtacado: Jugador) {
@@ -314,10 +297,10 @@ export class Jugador implements IJugador {
   }
 
   existeCartaEnCeldaBatalla(idZonaBatalla: number) {
-    return this.zonaBatalla[idZonaBatalla]?.carta !== null;
+    return this.zonaBatalla[idZonaBatalla].carta !== null;
   }
 
-  tieneCartaEnMano(idPosicionMano: number) {
+  tieneCartaEnManoEnPosicion(idPosicionMano: number) {
     return (
       this.mano[idPosicionMano] !== null &&
       this.mano[idPosicionMano] !== undefined
@@ -328,22 +311,19 @@ export class Jugador implements IJugador {
     return this.zonaBatalla[idPosicionManoZB].carta !== null;
   }
 
-  puedeAtacarCartaDesdeId(
-    jugadorAtacado: Jugador,
-    idZonaBatalla: number
-  ) {
+  puedeAtacarCartaDesdeId(jugadorAtacado: Jugador, idZonaBatalla: number) {
     const resp = this.puedeAtacarCartas(jugadorAtacado);
     if (resp !== ResultadoAtacarCarta.POSIBLE) return resp;
     if (!this.existeCartaEnCeldaBatalla(idZonaBatalla)) {
-      return ResultadoAtacarCarta.NO_HAY_CARTA_EN_TU_UBICACION_EN_ZONA_BATALLA
+      return ResultadoAtacarCarta.NO_HAY_CARTA_EN_TU_UBICACION_EN_ZONA_BATALLA;
     }
     if (
       this.zonaBatalla[idZonaBatalla].dispAtaque === DispAtaque.NO_DISPONIBLE
     ) {
-      return ResultadoAtacarCarta.CARTA_ATACANTE_NO_TIENE_ATAQUE_DISPONIBLE
+      return ResultadoAtacarCarta.CARTA_ATACANTE_NO_TIENE_ATAQUE_DISPONIBLE;
     }
     if (this.zonaBatalla[idZonaBatalla].posBatalla !== PosBatalla.ATAQUE) {
-      return ResultadoAtacarCarta.CARTA_ATACANTE_NO_EN_POSICION_ATAQUE
+      return ResultadoAtacarCarta.CARTA_ATACANTE_NO_EN_POSICION_ATAQUE;
     }
     return ResultadoAtacarCarta.POSIBLE;
   }
@@ -353,10 +333,7 @@ export class Jugador implements IJugador {
     idCartaAtacada: number,
     idCartaAtacante: number
   ) {
-    const resp = this.puedeAtacarCartaDesdeId(
-      jugadorAtacado,
-      idCartaAtacante
-    );
+    const resp = this.puedeAtacarCartaDesdeId(jugadorAtacado, idCartaAtacante);
     if (resp !== ResultadoAtacarCarta.POSIBLE) return resp;
     if (jugadorAtacado.zonaBatalla[idCartaAtacada].carta === null) {
       return ResultadoAtacarCarta.NO_HAY_CARTA_EN_UBICACION_EN_ZONA_BATALLA_ENEMIGA;
@@ -435,128 +412,126 @@ export class Jugador implements IJugador {
       idCartaAtacada,
       idCartaAtacante
     );
-
-    if (estadoAtaque === ResultadoAtacarCarta.POSIBLE) {
-      let idBarreraEliminada = 0;
-      let estadoCartaAtacante = EstadoCarta.ACTIVA;
-      let estadoCartaAtacada = EstadoCarta.ACTIVA;
-      let estadoBarrera = EstadoCarta.ACTIVA;
-      let sinBarreras = false;
-      let nombreJugadorDerrotado = "";
-      let nombreJugadorVictorioso = "";
-      const cartaAtacante =
-        this.zonaBatalla[idCartaAtacante].carta ?? new Carta(0, Elemento.COCO);
-      const cartaAtacada =
-        jugadorAtacado.zonaBatalla[idCartaAtacada].carta ??
-        new Carta(0, Elemento.COCO);
-      const {
-        calculoVAtacante,
-        calculoVAtacada,
-        bonifCartaAtacante,
-        bonifCartaAtacada,
-      } = this.calculoValorAtaque(cartaAtacante, cartaAtacada);
-
-      const veredicto = this.obtenerVeredictoAtaque(
-        calculoVAtacante,
-        calculoVAtacada
-      );
-
-      // Setear resultados
-
-      // Jugador Atacado en defensa cara abajo, se coloca cara arriba.
-      if (
-        jugadorAtacado.zonaBatalla[idCartaAtacada].posBatalla ===
-        PosBatalla.DEF_ABAJO
-      ) {
-        jugadorAtacado.zonaBatalla[idCartaAtacada].posBatalla =
-          PosBatalla.DEF_ARRIBA;
-      }
-      const posicionCartaAtacada =
-        jugadorAtacado.zonaBatalla[idCartaAtacada].posBatalla;
-
-      // Jugador Atacado al Ataque
-      if (posicionCartaAtacada === PosBatalla.ATAQUE) {
-        if (veredicto === VeredictoAtaque.GANA_ATACANTE) {
-          // gana atacante
-          jugadorAtacado.zonaBatalla[idCartaAtacada].quitarCarta();
-          idBarreraEliminada = jugadorAtacado.barrera.length - 1;
-          jugadorAtacado.barrera.pop();
-          jugadorAtacado.nCartasEnZB--;
-          estadoCartaAtacante = EstadoCarta.ACTIVA;
-          estadoCartaAtacada = EstadoCarta.DESTRUIDA;
-          estadoBarrera = EstadoCarta.DESTRUIDA;
-          if (jugadorAtacado.sinBarreras()) {
-            sinBarreras = true;
-            nombreJugadorDerrotado = jugadorAtacado.nombre;
-            nombreJugadorVictorioso = this.nombre;
-          }
-        } else if (veredicto === VeredictoAtaque.PIERDE_ATACANTE) {
-          // pierde atacante
-          this.zonaBatalla[idCartaAtacante].quitarCarta();
-          estadoCartaAtacante = EstadoCarta.DESTRUIDA;
-          estadoCartaAtacada = EstadoCarta.ACTIVA;
-          estadoBarrera = EstadoCarta.ACTIVA;
-          this.nCartasEnZB--;
-        } else {
-          // Empate
-          jugadorAtacado.zonaBatalla[idCartaAtacada].quitarCarta();
-          this.zonaBatalla[idCartaAtacante].quitarCarta();
-          estadoCartaAtacante = EstadoCarta.DESTRUIDA;
-          estadoCartaAtacada = EstadoCarta.DESTRUIDA;
-          estadoBarrera = EstadoCarta.ACTIVA;
-          jugadorAtacado.nCartasEnZB--;
-          this.nCartasEnZB--;
-        }
-      } else if (posicionCartaAtacada === PosBatalla.DEF_ARRIBA) {
-        // Jugador Atacado a la Defensa
-        if (veredicto === VeredictoAtaque.GANA_ATACANTE) {
-          // gana atacante
-          jugadorAtacado.zonaBatalla[idCartaAtacada].quitarCarta();
-          estadoCartaAtacante = EstadoCarta.ACTIVA;
-          estadoCartaAtacada = EstadoCarta.DESTRUIDA;
-          estadoBarrera = EstadoCarta.ACTIVA;
-          jugadorAtacado.nCartasEnZB--;
-        } else if (veredicto === VeredictoAtaque.PIERDE_ATACANTE) {
-          // pierde atacante
-          this.zonaBatalla[idCartaAtacante].quitarCarta();
-          estadoCartaAtacante = EstadoCarta.DESTRUIDA;
-          estadoCartaAtacada = EstadoCarta.ACTIVA;
-          estadoBarrera = EstadoCarta.ACTIVA;
-          this.nCartasEnZB--;
-        } else {
-          // Empate
-          estadoCartaAtacante = EstadoCarta.ACTIVA;
-          estadoCartaAtacada = EstadoCarta.ACTIVA;
-          estadoBarrera = EstadoCarta.ACTIVA;
-        }
-      }
-      estadoAtaque = ResultadoAtacarCarta.ATAQUE_REALIZADO;
-
-      this.ataqueRealizado(idCartaAtacante);
-      return {
-        cartaAtacante,
-        cartaAtacada,
-        veredicto,
-        idBarreraEliminada,
-        estadoCartaAtacante,
-        estadoCartaAtacada,
-        estadoBarrera,
-        sinBarreras,
-        bonifCartaAtacante,
-        bonifCartaAtacada,
-        nombreJugadorDerrotado,
-        nombreJugadorVictorioso,
-        estadoAtaque,
-      };
-    } else {
+    if (estadoAtaque !== ResultadoAtacarCarta.POSIBLE) {
       return {
         estadoAtaque,
       };
     }
+
+    let idBarreraEliminada = 0;
+    let estadoCartaAtacante = EstadoCarta.ACTIVA;
+    let estadoCartaAtacada = EstadoCarta.ACTIVA;
+    let estadoBarrera = EstadoCarta.ACTIVA;
+    let sinBarreras = false;
+    let nombreJugadorDerrotado = "";
+    let nombreJugadorVictorioso = "";
+    const cartaAtacante = this.zonaBatalla[idCartaAtacante].carta as Carta;
+    const cartaAtacada = jugadorAtacado.zonaBatalla[idCartaAtacada]
+      .carta as Carta;
+    const {
+      calculoVAtacante,
+      calculoVAtacada,
+      bonifCartaAtacante,
+      bonifCartaAtacada,
+    } = this.calculoValorAtaque(cartaAtacante, cartaAtacada);
+
+    const veredicto = this.obtenerVeredictoAtaque(
+      calculoVAtacante,
+      calculoVAtacada
+    );
+
+    // Setear resultados
+
+    // Jugador Atacado en defensa cara abajo, se coloca cara arriba.
+    if (
+      jugadorAtacado.zonaBatalla[idCartaAtacada].posBatalla ===
+      PosBatalla.DEF_ABAJO
+    ) {
+      jugadorAtacado.zonaBatalla[idCartaAtacada].posBatalla =
+        PosBatalla.DEF_ARRIBA;
+    }
+    const posicionCartaAtacada =
+      jugadorAtacado.zonaBatalla[idCartaAtacada].posBatalla;
+
+    // Jugador Atacado al Ataque
+    if (posicionCartaAtacada === PosBatalla.ATAQUE) {
+      if (veredicto === VeredictoAtaque.GANA_ATACANTE) {
+        // gana atacante
+        jugadorAtacado.zonaBatalla[idCartaAtacada].quitarCarta();
+        idBarreraEliminada = jugadorAtacado.barrera.length - 1;
+        jugadorAtacado.barrera.pop();
+        jugadorAtacado.nCartasEnZB--;
+        estadoCartaAtacante = EstadoCarta.ACTIVA;
+        estadoCartaAtacada = EstadoCarta.DESTRUIDA;
+        estadoBarrera = EstadoCarta.DESTRUIDA;
+        if (jugadorAtacado.sinBarreras()) {
+          sinBarreras = true;
+          nombreJugadorDerrotado = jugadorAtacado.nombre;
+          nombreJugadorVictorioso = this.nombre;
+        }
+      } else if (veredicto === VeredictoAtaque.PIERDE_ATACANTE) {
+        // pierde atacante
+        this.zonaBatalla[idCartaAtacante].quitarCarta();
+        estadoCartaAtacante = EstadoCarta.DESTRUIDA;
+        estadoCartaAtacada = EstadoCarta.ACTIVA;
+        estadoBarrera = EstadoCarta.ACTIVA;
+        this.nCartasEnZB--;
+      } else {
+        // Empate
+        jugadorAtacado.zonaBatalla[idCartaAtacada].quitarCarta();
+        this.zonaBatalla[idCartaAtacante].quitarCarta();
+        estadoCartaAtacante = EstadoCarta.DESTRUIDA;
+        estadoCartaAtacada = EstadoCarta.DESTRUIDA;
+        estadoBarrera = EstadoCarta.ACTIVA;
+        jugadorAtacado.nCartasEnZB--;
+        this.nCartasEnZB--;
+      }
+    } else if (posicionCartaAtacada === PosBatalla.DEF_ARRIBA) {
+      // Jugador Atacado a la Defensa
+      if (veredicto === VeredictoAtaque.GANA_ATACANTE) {
+        // gana atacante
+        jugadorAtacado.zonaBatalla[idCartaAtacada].quitarCarta();
+        estadoCartaAtacante = EstadoCarta.ACTIVA;
+        estadoCartaAtacada = EstadoCarta.DESTRUIDA;
+        estadoBarrera = EstadoCarta.ACTIVA;
+        jugadorAtacado.nCartasEnZB--;
+      } else if (veredicto === VeredictoAtaque.PIERDE_ATACANTE) {
+        // pierde atacante
+        this.zonaBatalla[idCartaAtacante].quitarCarta();
+        estadoCartaAtacante = EstadoCarta.DESTRUIDA;
+        estadoCartaAtacada = EstadoCarta.ACTIVA;
+        estadoBarrera = EstadoCarta.ACTIVA;
+        this.nCartasEnZB--;
+      } else {
+        // Empate
+        estadoCartaAtacante = EstadoCarta.ACTIVA;
+        estadoCartaAtacada = EstadoCarta.ACTIVA;
+        estadoBarrera = EstadoCarta.ACTIVA;
+      }
+    }
+    estadoAtaque = ResultadoAtacarCarta.ATAQUE_REALIZADO;
+
+    this.ataqueRealizado(idCartaAtacante);
+    return {
+      cartaAtacante,
+      cartaAtacada,
+      veredicto,
+      idBarreraEliminada,
+      estadoCartaAtacante,
+      estadoCartaAtacada,
+      estadoBarrera,
+      sinBarreras,
+      bonifCartaAtacante,
+      bonifCartaAtacada,
+      nombreJugadorDerrotado,
+      nombreJugadorVictorioso,
+      estadoAtaque,
+    };
   }
 
   puedeCambiarPosicion() {
-    if (this.nCartasEnZB === 0) return ResultadoCambiarPosicion.SIN_CARTAS_EN_ZONA_BATALLA;
+    if (this.nCartasEnZB === 0)
+      return ResultadoCambiarPosicion.SIN_CARTAS_EN_ZONA_BATALLA;
     if (this.nCambiosPosicionesDisponibles === 0) {
       return ResultadoCambiarPosicion.SIN_CAMBIOS_DE_POSICION_DISPONIBLES;
     }
