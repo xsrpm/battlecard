@@ -48,8 +48,7 @@ export enum ResultadoAtacarCarta {
   NO_HAY_CARTA_EN_TU_UBICACION_EN_ZONA_BATALLA = "No hay carta en tu ubicación de zona de batalla",
   CARTA_ATACANTE_NO_TIENE_ATAQUE_DISPONIBLE = "Carta atacante no tiene ataque disponible",
   CARTA_ATACANTE_NO_EN_POSICION_ATAQUE = "Carta atacante no está en posición de ataque",
-  NO_HAY_CARTA_EN_UBICACION_EN_ZONA_BATALLA_ENEMIGA = "No hay carta en ubicación de zona de batalla enemiga",
-  ATAQUE_REALIZADO = "Ataque realizado"
+  NO_HAY_CARTA_EN_UBICACION_EN_ZONA_BATALLA_ENEMIGA = "No hay carta en ubicación de zona de batalla enemiga"
 }
 
 export enum ResultadoCambiarPosicion {

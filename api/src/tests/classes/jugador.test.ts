@@ -628,17 +628,11 @@ describe("Jugador", () => {
     });
   });
 
-  describe("acción atacar carta", () => {
+  describe("atacar carta", () => {
     let jugadorEnemigo: Jugador;
     let cartaAtacante, cartaAtacada;
     beforeEach(() => {
       jugadorEnemigo = new Jugador("Enemigo");
-    });
-    test("no posible", () => {
-      const resultadoAtaque = jugador.atacarCarta(jugadorEnemigo, 0, 0);
-      expect(resultadoAtaque.veredicto).not.toBe(
-        ResultadoAtacarCarta.ATAQUE_REALIZADO
-      );
     });
     test("posible, jugador atacado en posición de ataque - gana atacante", () => {
       cartaAtacante = new Carta(13, Elemento.COCO);
@@ -651,9 +645,6 @@ describe("Jugador", () => {
       jugadorEnemigo.colocarCarta(0, 0, PosBatalla.ATAQUE);
       jugador.nTurnos = 3;
       const resultadoAtaque = jugador.atacarCarta(jugadorEnemigo, 0, 0);
-      expect(resultadoAtaque.estadoAtaque).toBe(
-        ResultadoAtacarCarta.ATAQUE_REALIZADO
-      );
       expect(resultadoAtaque.veredicto).toBe(VeredictoAtaque.GANA_ATACANTE);
       expect(resultadoAtaque.cartaAtacante).toEqual(cartaAtacante);
       expect(jugador.nAtaquesDisponibles).toBe(0);
@@ -675,9 +666,6 @@ describe("Jugador", () => {
       jugadorEnemigo.colocarCarta(0, 0, PosBatalla.ATAQUE);
       jugador.nTurnos = 3;
       const resultadoAtaque = jugador.atacarCarta(jugadorEnemigo, 0, 0);
-      expect(resultadoAtaque.estadoAtaque).toBe(
-        ResultadoAtacarCarta.ATAQUE_REALIZADO
-      );
       expect(resultadoAtaque.veredicto).toBe(VeredictoAtaque.PIERDE_ATACANTE);
       expect(resultadoAtaque.cartaAtacante).toEqual(cartaAtacante);
       expect(jugador.nAtaquesDisponibles).toBe(0);
@@ -699,9 +687,6 @@ describe("Jugador", () => {
       jugadorEnemigo.colocarCarta(0, 0, PosBatalla.ATAQUE);
       jugador.nTurnos = 3;
       const resultadoAtaque = jugador.atacarCarta(jugadorEnemigo, 0, 0);
-      expect(resultadoAtaque.estadoAtaque).toBe(
-        ResultadoAtacarCarta.ATAQUE_REALIZADO
-      );
       expect(resultadoAtaque.veredicto).toBe(VeredictoAtaque.EMPATE);
       expect(resultadoAtaque.cartaAtacante).toEqual(cartaAtacante);
       expect(jugador.nAtaquesDisponibles).toBe(0);
@@ -723,9 +708,6 @@ describe("Jugador", () => {
       jugadorEnemigo.colocarCarta(0, 0, PosBatalla.DEF_ABAJO);
       jugador.nTurnos = 3;
       const resultadoAtaque = jugador.atacarCarta(jugadorEnemigo, 0, 0);
-      expect(resultadoAtaque.estadoAtaque).toBe(
-        ResultadoAtacarCarta.ATAQUE_REALIZADO
-      );
       expect(resultadoAtaque.veredicto).toBe(VeredictoAtaque.GANA_ATACANTE);
       expect(resultadoAtaque.cartaAtacante).toEqual(cartaAtacante);
       expect(jugador.nAtaquesDisponibles).toBe(0);
@@ -747,9 +729,6 @@ describe("Jugador", () => {
       jugadorEnemigo.colocarCarta(0, 0, PosBatalla.DEF_ARRIBA);
       jugador.nTurnos = 3;
       const resultadoAtaque = jugador.atacarCarta(jugadorEnemigo, 0, 0);
-      expect(resultadoAtaque.estadoAtaque).toBe(
-        ResultadoAtacarCarta.ATAQUE_REALIZADO
-      );
       expect(resultadoAtaque.veredicto).toBe(VeredictoAtaque.PIERDE_ATACANTE);
       expect(resultadoAtaque.cartaAtacante).toEqual(cartaAtacante);
       expect(jugador.nAtaquesDisponibles).toBe(0);
@@ -771,9 +750,6 @@ describe("Jugador", () => {
       jugadorEnemigo.colocarCarta(0, 0, PosBatalla.DEF_ABAJO);
       jugador.nTurnos = 3;
       const resultadoAtaque = jugador.atacarCarta(jugadorEnemigo, 0, 0);
-      expect(resultadoAtaque.estadoAtaque).toBe(
-        ResultadoAtacarCarta.ATAQUE_REALIZADO
-      );
       expect(resultadoAtaque.veredicto).toBe(VeredictoAtaque.EMPATE);
       expect(resultadoAtaque.cartaAtacante).toEqual(cartaAtacante);
       expect(jugador.nAtaquesDisponibles).toBe(0);
@@ -786,7 +762,7 @@ describe("Jugador", () => {
     });
   });
 
-  describe("puede cambiar posicion", () => {
+  describe("puede cambiar posición", () => {
     test("no, sin cartas en zona de batalla", () => {
       expect(jugador.puedeCambiarPosicion()).toBe(
         ResultadoCambiarPosicion.SIN_CARTAS_EN_ZONA_BATALLA

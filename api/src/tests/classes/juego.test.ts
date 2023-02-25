@@ -173,7 +173,7 @@ describe('Juego objeto', () => {
       juego.cambioDeJugadorActual()
       juego.colocarCarta(0, 0, PosBatalla.ATAQUE)
       juego.cambioDeJugadorActual()
-      expect(juego.atacarCarta(0, 0).estadoAtaque).toBe(ResultadoAtacarCarta.ATAQUE_REALIZADO)
+      expect(juego.atacarCarta(0, 0).estadoAtaque).toBe(ResultadoAtacarCarta.POSIBLE)
     })
   })
 

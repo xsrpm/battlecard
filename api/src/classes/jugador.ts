@@ -37,19 +37,18 @@ interface RptaCalculoValorAtaque {
 }
 
 interface RptaAtacarCarta {
-  estadoAtaque: string;
-  cartaAtacante?: Carta;
-  cartaAtacada?: Carta;
-  bonifCartaAtacante?: number;
-  bonifCartaAtacada?: number;
-  veredicto?: string;
-  idBarreraEliminada?: number;
-  estadoCartaAtacante?: string;
-  estadoCartaAtacada?: string;
-  estadoBarrera?: string;
-  sinBarreras?: boolean;
-  nombreJugadorDerrotado?: string;
-  nombreJugadorVictorioso?: string;
+  cartaAtacante: Carta;
+  cartaAtacada: Carta;
+  bonifCartaAtacante: number;
+  bonifCartaAtacada: number;
+  veredicto: string;
+  idBarreraEliminada: number;
+  estadoCartaAtacante: string;
+  estadoCartaAtacada: string;
+  estadoBarrera: string;
+  sinBarreras: boolean;
+  nombreJugadorDerrotado: string;
+  nombreJugadorVictorioso: string;
 }
 
 export interface RptaCogerUnaCartaDelDeck {
@@ -407,16 +406,6 @@ export class Jugador implements IJugador {
     idCartaAtacada: number
   ): RptaAtacarCarta {
     // Sistema de produccion
-    let estadoAtaque = this.posibilidadAtacarCarta(
-      jugadorAtacado,
-      idCartaAtacada,
-      idCartaAtacante
-    );
-    if (estadoAtaque !== ResultadoAtacarCarta.POSIBLE) {
-      return {
-        estadoAtaque,
-      };
-    }
 
     let idBarreraEliminada = 0;
     let estadoCartaAtacante = EstadoCarta.ACTIVA;
@@ -509,7 +498,6 @@ export class Jugador implements IJugador {
         estadoBarrera = EstadoCarta.ACTIVA;
       }
     }
-    estadoAtaque = ResultadoAtacarCarta.ATAQUE_REALIZADO;
 
     this.ataqueRealizado(idCartaAtacante);
     return {
@@ -524,8 +512,7 @@ export class Jugador implements IJugador {
       bonifCartaAtacante,
       bonifCartaAtacada,
       nombreJugadorDerrotado,
-      nombreJugadorVictorioso,
-      estadoAtaque,
+      nombreJugadorVictorioso
     };
   }
 
