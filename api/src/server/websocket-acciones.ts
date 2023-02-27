@@ -1,12 +1,10 @@
-import { Jugador } from './../classes/jugador';
-
 import WebSocket from 'ws'
 import { v4 as uuidv4 } from 'uuid';
 
 import { ResultadoUnirASala, ResultadoIniciarJuego } from '../constants/juego';
 import { AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated, JugadorDesconectadoResponse } from '../response';
 import { SeleccionarZonaBatallaRequest } from '../schemas/seleccionar-zona-batalla.schema'
-import { Jugador } from '../classes/jugador'
+import { Jugador } from './../classes/jugador';
 import { Juego } from '../classes/juego'
 import { UnirASalaRequest } from '../schemas/unir-a-sala.schema'
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
@@ -337,6 +335,7 @@ function atacarCarta (ws: WebSocket, message: AtacarCartaRequest) {
   respAtacarCarta.payload.idCartaAtacada = idZonaBatallaEnemiga
   sendMessageToOthers(ws, respAtacarCarta)
   if (respAtacarCarta.payload.sinBarreras as boolean) {
+    juego.finalizarJuego()
     cerrarSockets()
   }
 }

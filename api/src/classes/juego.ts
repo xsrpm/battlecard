@@ -216,9 +216,6 @@ export class Juego {
         idCartaAtacante,
         idCartaAtacada
       );
-      if (respAtacarCarta.sinBarreras) {
-        this.finalizarJuego();
-      }
     }
     return {
       estadoAtaque,

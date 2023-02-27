@@ -165,7 +165,7 @@ describe('Juego objeto', () => {
   })
 
   describe('atacar Carta', () => {
-    test('carta atacada', () => {
+    test('válido, es un ataque válido', () => {
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
       juego.iniciarJuego()
@@ -173,7 +173,16 @@ describe('Juego objeto', () => {
       juego.cambioDeJugadorActual()
       juego.colocarCarta(0, 0, PosBatalla.ATAQUE)
       juego.cambioDeJugadorActual()
-      expect(juego.atacarCarta(0, 0).estadoAtaque).toBe(ResultadoAtacarCarta.POSIBLE)
+      const resp = juego.atacarCarta(0, 0)
+      expect(resp.estadoAtaque).toBe(ResultadoAtacarCarta.POSIBLE)
+    })
+
+    test('inválido, el ataque no pudo ser realizado', ()=>{
+      juego.unirASala('Cesar')
+      juego.unirASala('Marco')
+      juego.iniciarJuego()
+      juego.colocarCarta(0, 0, PosBatalla.ATAQUE)
+      expect(juego.atacarCarta(0, 0).estadoAtaque).toBe(ResultadoAtacarCarta.ATAQUES_SOLO_SE_REALIZAN_EN_SEGUNDO_TURNO)
     })
   })
 
