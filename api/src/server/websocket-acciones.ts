@@ -1,3 +1,4 @@
+import { Jugador } from './../classes/jugador';
 
 import WebSocket from 'ws'
 import { v4 as uuidv4 } from 'uuid';
@@ -275,29 +276,23 @@ function terminarTurno (ws: WebSocket, message: WebsocketEvent) {
   let respTerminarTurno: TerminarTurnoResponse = {
     event: WebsocketEventTitle.TERMINAR_TURNO,
     payload: {
-      jugador: {
-        enTurno: res.jugador.enTurno,
-        nDeck: res.jugador.nDeck
-      },
-      jugadorEnemigo: {
-        enTurno: res.jugadorEnemigo.enTurno,
-        nDeck: res.jugadorEnemigo.nDeck
-      },
-      resultado: res.resultado
+      jugador: res.jugador,
+      jugadorEnemigo: res.jugadorEnemigo,
+      resultado: res.resultado,
     }
   }
+  if(res.resultado === ResultadoCogerCarta.DECK_VACIO){
+    respTerminarTurno.payload.nombreJugadorDerrotado = juego.jugadorActual?.nombre
+    respTerminarTurno.payload.nombreJugadorVictorioso = juego.jugadorAnterior?.nombre
+ }
   sendMessage(ws, respTerminarTurno)
-  respTerminarTurno = {
-    event: WebsocketEventTitle.TERMINAR_TURNO,
-    payload: {
-      carta: res.carta,
-      jugador: res.jugadorEnemigo,
-      jugadorEnemigo: res.jugador,
-      resultado: res.resultado
-    }
-  }
+  respTerminarTurno.payload.jugador = res.jugadorEnemigo
+  respTerminarTurno.payload.carta = res.carta
+  respTerminarTurno.payload.jugadorEnemigo = res.jugador
+  respTerminarTurno.payload.resultado = res.resultado
   sendMessageToOthers(ws, respTerminarTurno)
   if (res.resultado === ResultadoCogerCarta.DECK_VACIO) {
+    juego.finalizarJuego();
     cerrarSockets()
   }
 }

@@ -1,6 +1,5 @@
 import {
   ResultadoAtacarCarta,
-  ResultadoCogerCarta,
 } from "../constants/jugador";
 import {
   ResultadoIniciarJuego,
@@ -70,13 +69,11 @@ export class Juego {
       };
     }
     this.jugadores = this.jugadores.filter((jugador) => jugador !== resp);
-    this.jugadores.length < 2
-      ? (this.estadoSala = Sala.SALA_ABIERTA)
-      : (this.estadoSala = Sala.SALA_CERRADA);
+    this.estadoSala = Sala.SALA_ABIERTA;
     return {
       resultado: ResultadoSalirDeSala.SALIO_DE_SALA,
       jugadores: this.obtenerNombreJugadores(),
-      iniciar: this.estadoSala === Sala.SALA_CERRADA,
+      iniciar: false,
     };
   }
 
@@ -123,31 +120,23 @@ export class Juego {
   }
 
   cambioDeJugadorActual() {
-    const jugadorTmp = this.jugadorActual;
-    this.jugadorActual = this.jugadorAnterior;
-    this.jugadorAnterior = jugadorTmp;
-    this.jugadorActual?.iniciarTurno();
-    this.jugadorActual?.setEnTurno(true);
-    this.jugadorAnterior?.setEnTurno(false);
+    if (this.jugadorActual && this.jugadorAnterior) {
+      const jugadorTmp = this.jugadorActual;
+      this.jugadorActual = this.jugadorAnterior;
+      this.jugadorAnterior = jugadorTmp;
+      this.jugadorActual.iniciarTurno();
+      this.jugadorActual.setEnTurno(true);
+      this.jugadorAnterior.setEnTurno(false);
+    }
   }
 
   cogerUnaCartaDelDeck() {
-    const res = (this.jugadorActual as Jugador).cogerUnaCartaDelDeck();
-    if (res?.resultado === ResultadoCogerCarta.DECK_VACIO) {
-      return {
-        ...res,
-        nombreJugadorDerrotado: this.jugadorActual?.nombre,
-        nombreJugadorVictorioso: this.jugadorAnterior?.nombre,
-      };
-    } else return res;
+      return (this.jugadorActual as Jugador).cogerUnaCartaDelDeck()
   }
 
   terminarTurno() {
     this.cambioDeJugadorActual();
     const res = this.cogerUnaCartaDelDeck();
-    if (res.resultado === ResultadoCogerCarta.DECK_VACIO) {
-      this.finalizarJuego();
-    }
     return {
       ...res,
       jugador: {
@@ -215,14 +204,12 @@ export class Juego {
   }
 
   atacarCarta(idCartaAtacante: number, idCartaAtacada: number) {
-    const estadoAtaque = (
-      this.jugadorActual as Jugador
-    ).posibilidadAtacarCarta(
+    const estadoAtaque = (this.jugadorActual as Jugador).posibilidadAtacarCarta(
       this.jugadorAnterior as Jugador,
       idCartaAtacada,
       idCartaAtacante
     );
-    let respAtacarCarta
+    let respAtacarCarta;
     if (estadoAtaque === ResultadoAtacarCarta.POSIBLE) {
       respAtacarCarta = (this.jugadorActual as Jugador).atacarCarta(
         this.jugadorAnterior as Jugador,
@@ -235,8 +222,8 @@ export class Juego {
     }
     return {
       estadoAtaque,
-      ...respAtacarCarta
-    }
+      ...respAtacarCarta,
+    };
   }
 
   cambiarPosicionBatalla(idCarta: number) {

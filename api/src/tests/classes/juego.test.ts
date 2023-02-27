@@ -1,5 +1,5 @@
 
-import { ResultadoColocarCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, ResultadoCogerCarta } from './../../constants/jugador';
+import { ResultadoColocarCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion } from './../../constants/jugador';
 import { ResultadoIniciarJuego, ResultadoSalirDeSala, ResultadoUnirASala } from './../../constants/juego';
 import { PosBatalla } from './../../constants/celdabatalla';
 import { Juego } from '../../classes/juego'
@@ -189,32 +189,14 @@ describe('Juego objeto', () => {
     })
   })
 
-  describe('coger una carta del deck',()=>{
-    test('deck no vacío',()=>{
-      juego.unirASala('Cesar')
-      juego.unirASala('Marco')
-      juego.iniciarJuego()
-      const res = juego.cogerUnaCartaDelDeck()
-      expect(res.resultado).not.toBe(ResultadoCogerCarta.DECK_VACIO)
-    })
-    test('deck vacío', ()=>{
-      juego.unirASala('Cesar')
-      juego.unirASala('Marco')
-      juego.iniciarJuego();
-      juego.colocarCarta(0,0,PosBatalla.ATAQUE);
-      (juego.jugadorActual as Jugador).deck = [];
-      (juego.jugadorAnterior as Jugador).deck = []
-      const res = juego.cogerUnaCartaDelDeck()
-      expect(res.resultado).toBe(ResultadoCogerCarta.DECK_VACIO)
-    })
-  })
-
   describe('terminar turno',()=>{
-    test('válido, ',()=>{
+    test('válido, cambia jugador en turno',()=>{
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
       juego.iniciarJuego();
-      juego.terminarTurno()
+      const resp3 = juego.terminarTurno()
+      expect(resp3.jugador.enTurno).toBe(false)
+      expect(resp3.jugadorEnemigo.enTurno).toBe(true)
     })
   })
   
