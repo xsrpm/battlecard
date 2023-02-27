@@ -3,7 +3,7 @@ import WebSocket from 'ws'
 import { v4 as uuidv4 } from 'uuid';
 
 import { ResultadoUnirASala, ResultadoIniciarJuego } from '../constants/juego';
-import { AtacarBarreraResponse, AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated, JugadorDesconectadoResponse } from '../response';
+import { AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated, JugadorDesconectadoResponse } from '../../../shared/types/response';
 import { SeleccionarZonaBatallaRequest } from '../schemas/seleccionar-zona-batalla.schema'
 import { Jugador } from '../classes/jugador'
 import { Juego } from '../classes/juego'
@@ -283,8 +283,6 @@ function terminarTurno (ws: WebSocket, message: WebsocketEvent) {
         enTurno: res.jugadorEnemigo.enTurno,
         nDeck: res.jugadorEnemigo.nDeck
       },
-      nombreJugadorDerrotado: res.nombreJugadorDerrotado as string,
-      nombreJugadorVictorioso: res.nombreJugadorVictorioso as string,
       resultado: res.resultado
     }
   }
@@ -351,7 +349,7 @@ function atacarCarta (ws: WebSocket, message: AtacarCartaRequest) {
 function atacarBarrera (ws: WebSocket, message: AtacarBarreraRequest) {
   if (!accionAutorizada(ws , message as any)) return
   const { idZonaBatalla } = message.payload
-  const rptaAtacarBarrera: AtacarBarreraResponse = {
+  const rptaAtacarBarrera = {
     event: WebsocketEventTitle.ATACAR_BARRERA,
     payload: juego.atacarBarrera(idZonaBatalla)
   }

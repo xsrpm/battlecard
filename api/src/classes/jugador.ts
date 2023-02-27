@@ -10,7 +10,6 @@ import {
 import { PosBatalla, DispAtaque, DispCambio } from "../constants/celdabatalla";
 import { Carta } from "./carta";
 import { CeldaBatalla } from "./celdabatalla";
-import { Jugador as IJugador } from "../types";
 import {
   Elemento,
   MAX_VALOR_CARTA,
@@ -22,47 +21,8 @@ import {
   ResultadoCogerCarta,
   VeredictoAtaque,
 } from "../constants/jugador";
-import { RptaAtacarBarrera } from "../response";
 
-interface RptaColocarCarta {
-  resultado: string;
-  carta?: Carta;
-}
-
-interface RptaCalculoValorAtaque {
-  calculoVAtacante: number;
-  calculoVAtacada: number;
-  bonifCartaAtacante: number;
-  bonifCartaAtacada: number;
-}
-
-interface RptaAtacarCarta {
-  cartaAtacante: Carta;
-  cartaAtacada: Carta;
-  bonifCartaAtacante: number;
-  bonifCartaAtacada: number;
-  veredicto: string;
-  idBarreraEliminada: number;
-  estadoCartaAtacante: string;
-  estadoCartaAtacada: string;
-  estadoBarrera: string;
-  sinBarreras: boolean;
-  nombreJugadorDerrotado: string;
-  nombreJugadorVictorioso: string;
-}
-
-export interface RptaCogerUnaCartaDelDeck {
-  resultado: ResultadoCogerCarta;
-  carta?: Carta;
-}
-
-export interface RptaCambiarPosicion {
-  respuesta: string;
-  posBatalla: string;
-  carta: Carta | null;
-}
-
-export class Jugador implements IJugador {
+export class Jugador {
   cartaColocada;
   nAtaquesDisponibles;
   nCambiosPosicionesDisponibles;
@@ -136,7 +96,7 @@ export class Jugador implements IJugador {
     }
   }
 
-  cogerUnaCartaDelDeck(): RptaCogerUnaCartaDelDeck {
+  cogerUnaCartaDelDeck() {
     if (this.mano.length === MAX_MANO_CARDS) {
       return { resultado: ResultadoCogerCarta.MANO_LLENA };
     }
@@ -181,7 +141,7 @@ export class Jugador implements IJugador {
     idPosZB: number,
     idCartaMano: number,
     posBatalla: PosBatalla
-  ): RptaColocarCarta {
+  ) {
     let resultado = this.posibilidadColocarCartaEnPosicion(
       idPosZB,
       idCartaMano
@@ -246,7 +206,7 @@ export class Jugador implements IJugador {
   atacarBarrera(
     jugadorAtacado: Jugador,
     idCartaAtacante: number
-  ): RptaAtacarBarrera {
+  ) {
     const resultado = this.posibilidadAtacarBarrera(
       jugadorAtacado,
       idCartaAtacante
@@ -343,7 +303,7 @@ export class Jugador implements IJugador {
   calculoValorAtaque(
     cartaAtacante: Carta,
     cartaAtacada: Carta
-  ): RptaCalculoValorAtaque {
+  ){
     let calculoVAtacante = cartaAtacante.valor;
     let calculoVAtacada = cartaAtacada.valor;
     let bonifCartaAtacante = 0;
@@ -404,7 +364,7 @@ export class Jugador implements IJugador {
     jugadorAtacado: Jugador,
     idCartaAtacante: number,
     idCartaAtacada: number
-  ): RptaAtacarCarta {
+  ){
     // Sistema de produccion
 
     let idBarreraEliminada = 0;

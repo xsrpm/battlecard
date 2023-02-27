@@ -6,41 +6,11 @@ import {
   ResultadoIniciarJuego,
   ResultadoSalirDeSala,
 } from "../constants/juego";
-import { Jugador, RptaCogerUnaCartaDelDeck } from "./jugador";
-import { Juego as IJuego } from "../types";
+import { Jugador } from "./jugador";
 import { Pantalla, ResultadoUnirASala, Sala } from "../constants/juego";
 import { PosBatalla } from "../constants/celdabatalla";
 
-interface RptaUnirASala {
-  resultado: string;
-  jugador?: Jugador;
-  jugadores?: string[];
-  iniciar?: boolean;
-}
-
-interface RptaCogerUnaCartaDelDeckJuego extends RptaCogerUnaCartaDelDeck {
-  nombreJugadorDerrotado?: string;
-  nombreJugadorVictorioso?: string;
-}
-
-interface RptaTerminarJuego extends RptaCogerUnaCartaDelDeckJuego {
-  jugador: {
-    enTurno: boolean;
-    nDeck: number;
-  };
-  jugadorEnemigo: {
-    enTurno: boolean;
-    nDeck: number;
-  };
-}
-
-export interface JugadorConectado {
-  uuid: string;
-  jugador: Jugador;
-  websocket?: WebSocket;
-}
-
-export class Juego implements IJuego {
+export class Juego {
   jugadores: Jugador[];
   jugadorActual: Jugador | null;
   jugadorAnterior: Jugador | null;
@@ -63,7 +33,7 @@ export class Juego implements IJuego {
     this.estadoSala = Sala.SALA_ABIERTA;
   }
 
-  unirASala(nombreJugador: string): RptaUnirASala {
+  unirASala(nombreJugador: string) {
     if (this.estadoSala !== Sala.SALA_ABIERTA)
       return {
         resultado: ResultadoUnirASala.SALA_LLENA_NO_PUEDEN_ENTRAR_JUGADORES,
@@ -161,7 +131,7 @@ export class Juego implements IJuego {
     this.jugadorAnterior?.setEnTurno(false);
   }
 
-  cogerUnaCartaDelDeck(): RptaCogerUnaCartaDelDeckJuego {
+  cogerUnaCartaDelDeck() {
     const res = (this.jugadorActual as Jugador).cogerUnaCartaDelDeck();
     if (res?.resultado === ResultadoCogerCarta.DECK_VACIO) {
       return {
@@ -172,7 +142,7 @@ export class Juego implements IJuego {
     } else return res;
   }
 
-  terminarTurno(): RptaTerminarJuego {
+  terminarTurno() {
     this.cambioDeJugadorActual();
     const res = this.cogerUnaCartaDelDeck();
     if (res.resultado === ResultadoCogerCarta.DECK_VACIO) {

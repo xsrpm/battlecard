@@ -1,5 +1,4 @@
-import { RptaAtacarBarrera } from './classes/jugador';
-import { Carta } from './carta'
+import { Carta } from './types'
 
 export interface WebsocketEvent {
     event: string
@@ -22,28 +21,24 @@ export interface UnirASalaResponse extends WebsocketEvent {
     }
 }
 
-interface JugadorResponse{
-    nombre: string
-    nBarrera: number
-    nDeck: number
-    mano: Carta[]
-    enTurno: boolean
-}
-
-interface JugadorEnemigoResponse{
-    nombre: string
-    nBarrera: number
-    nDeck: number
-    nMano: number
-    enTurno: boolean
-}
-
 export interface IniciarJuegoResponse extends WebsocketEvent {
-    payload: {
-        respuesta: string
-        jugador?: JugadorResponse
-        jugadorEnemigo?: JugadorEnemigoResponse
+  payload: {
+    respuesta: string;
+    jugador?: {
+      nombre: string;
+      nBarrera: number;
+      nDeck: number;
+      mano: Carta[];
+      enTurno: boolean;
     }
+    jugadorEnemigo?: {
+      nombre: string;
+      nBarrera: number;
+      nDeck: number;
+      nMano: number;
+      enTurno: boolean;
+    }
+  }
 }
 
 export interface TerminarTurnoResponse extends WebsocketEvent {
@@ -116,16 +111,14 @@ export interface AtacarCartaResponse extends WebsocketEvent {
     }
 }
 
-export interface RptaAtacarBarrera {
-    resultado: string;
-    idBarreraEliminada?: number;
-    sinBarreras?: boolean;
-    nombreJugadorDerrotado?: string;
-    nombreJugadorVictorioso?: string;
-  }
-
 export interface AtacarBarreraResponse extends WebsocketEvent {
-    payload: RptaAtacarBarrera
+  payload: {
+	resultado: string;
+	idBarreraEliminada?: number;
+	sinBarreras?: boolean;
+	nombreJugadorDerrotado?: string;
+	nombreJugadorVictorioso?: string;
+  }
 }
 
 export interface CambiarPosicionResponse extends WebsocketEvent {
@@ -147,8 +140,8 @@ export interface EnemigoDesconectadoResponse extends WebsocketEvent{
 
 export interface JugadorDesconectadoResponse extends WebsocketEvent {
     payload: {
+        resultado: string
         jugadores: Array<string>,
-        resultado: string,
         iniciar: boolean
     }
 }
