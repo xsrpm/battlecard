@@ -1,4 +1,4 @@
-import { UnirASalaResponse, JugadorDesconectadoResponse } from '../../../shared/types/response'
+import { UnirASalaResponse, JugadorDesconectadoResponse } from '../../../api/src/response'
 import { setJugadorId } from '../modules/estadoGlobal'
 import { encuentraError } from '../modules/socket'
 import { iniciarJuego } from '../modules/socket-messages'

@@ -3,7 +3,7 @@ import WebSocket from 'ws'
 import { v4 as uuidv4 } from 'uuid';
 
 import { ResultadoUnirASala, ResultadoIniciarJuego } from '../constants/juego';
-import { AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated, JugadorDesconectadoResponse } from '../../../shared/types/response';
+import { AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated, JugadorDesconectadoResponse } from '../response';
 import { SeleccionarZonaBatallaRequest } from '../schemas/seleccionar-zona-batalla.schema'
 import { Jugador } from '../classes/jugador'
 import { Juego } from '../classes/juego'

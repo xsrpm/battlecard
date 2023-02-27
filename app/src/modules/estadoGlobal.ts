@@ -1,4 +1,4 @@
-import { WebsocketEvent } from '../../../shared/types/response'
+import { WebsocketEvent } from '../../../api/src/response'
 import { STEP_ACTION } from '../constants/stepAction'
 import { PosBatalla } from './../constants/celdabatalla'
 

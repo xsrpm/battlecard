@@ -1,5 +1,5 @@
-import { ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse } from '../../../shared/types/response'
-import { Carta } from '../../../shared/types/carta'
+import { ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse } from '../../../api/src/response'
+import { Carta } from '../../../api/src/types'
 import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './botonera'
 import { idCartaZBSeleccionada, juegoFinalizado, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from '../modules/estadoGlobal'
 import { info } from './info'
@@ -406,14 +406,14 @@ export function atacanTuCartaResponse (message: AtacarCartaResponse) {
 export function atacarBarreraResponse (message: AtacarBarreraResponse) {
   if (encuentraError(message)) return
   const { resultado, idBarreraEliminada, nombreJugadorDerrotado, nombreJugadorVictorioso, sinBarreras } = message.payload
-  if (resultado === 'Barrera destruida') {
+  if (resultado === 'Barrera destruida' && idBarreraEliminada != null && sinBarreras != null && nombreJugadorDerrotado != null && nombreJugadorVictorioso != null) {
     barreraEnemiga.children[idBarreraEliminada].classList.remove('barrera')
     setSinBarrerasFlag(sinBarreras)
     habilitacionBotonera()
     if (sinBarrerasFlag) {
       setNombreJugadorDerrotado(nombreJugadorDerrotado)
       setNombreJugadorVictorioso(nombreJugadorVictorioso)
-      info.children[0].innerHTML = `${nombreJugadorDerrotado as string} se ha queda sin barreras`
+      info.children[0].innerHTML = `${nombreJugadorDerrotado} se ha queda sin barreras`
       btnFinDeJuego.classList.remove('ocultar')
       btnTerminarTurno.classList.add('ocultar')
       setJuegoFinalizado(true)
@@ -430,13 +430,13 @@ export function atacarBarreraResponse (message: AtacarBarreraResponse) {
 export function atacanTuBarreraResponse (message: AtacarBarreraResponse) {
   if (encuentraError(message)) return
   const { resultado, idBarreraEliminada, sinBarreras, nombreJugadorDerrotado, nombreJugadorVictorioso } = message.payload
-  if (resultado === 'Barrera destruida') {
+  if (resultado === 'Barrera destruida' && idBarreraEliminada != null && sinBarreras != null && nombreJugadorDerrotado != null && nombreJugadorVictorioso != null) {
     barreraYo.children[idBarreraEliminada].classList.remove('barrera')
     setSinBarrerasFlag(sinBarreras)
     if (sinBarrerasFlag) {
       setNombreJugadorDerrotado(nombreJugadorDerrotado)
       setNombreJugadorVictorioso(nombreJugadorVictorioso)
-      info.children[0].innerHTML = `${nombreJugadorDerrotado as string} se ha queda sin barreras`
+      info.children[0].innerHTML = `${nombreJugadorDerrotado} se ha queda sin barreras`
       btnFinDeJuego.classList.remove('ocultar')
       btnTerminarTurno.classList.add('ocultar')
       setJuegoFinalizado(true)

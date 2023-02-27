@@ -1,4 +1,4 @@
-import { WebsocketEvent } from '../../../shared/types/response'
+import { WebsocketEvent } from '../../../api/src/response'
 
 const VITE_WEBSOCKET_URL_BACKEND: string = import.meta.env.VITE_WEBSOCKET_URL_BACKEND
 let socket: WebSocket
