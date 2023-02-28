@@ -2,7 +2,7 @@ import WebSocket from 'ws'
 import { v4 as uuidv4 } from 'uuid';
 
 import { ResultadoUnirASala, ResultadoIniciarJuego } from '../constants/juego';
-import { AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated, JugadorDesconectadoResponse } from '../response';
+import { AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated, JugadorDesconectadoResponse, AtacarBarreraResponse } from '../response';
 import { SeleccionarZonaBatallaRequest } from '../schemas/seleccionar-zona-batalla.schema'
 import { Jugador } from './../classes/jugador';
 import { Juego } from '../classes/juego'
@@ -323,11 +323,16 @@ function seleccionarMano (ws: WebSocket, message: SeleccionarManoRequest) {
 function atacarCarta (ws: WebSocket, message: AtacarCartaRequest) {
   if (!accionAutorizada(ws, message as any)) return
   const { idZonaBatalla, idZonaBatallaEnemiga } = message.payload
+  const resp = juego.atacarCarta(idZonaBatalla, idZonaBatallaEnemiga)
   const respAtacarCarta: AtacarCartaResponse = {
     event: WebsocketEventTitle.ATACAR_CARTA,
     payload: {
-      ...juego.atacarCarta(idZonaBatalla, idZonaBatallaEnemiga)
+      ...resp
     }
+  }
+  if(resp.sinBarreras ){
+    respAtacarCarta.payload.nombreJugadorDerrotado = juego.jugadorAnterior?.nombre;
+    respAtacarCarta.payload.nombreJugadorVictorioso = juego.jugadorActual?.nombre;
   }
   sendMessage(ws, respAtacarCarta)
   respAtacarCarta.event = WebsocketEventTitle.ATACAN_TU_CARTA
@@ -343,14 +348,22 @@ function atacarCarta (ws: WebSocket, message: AtacarCartaRequest) {
 function atacarBarrera (ws: WebSocket, message: AtacarBarreraRequest) {
   if (!accionAutorizada(ws , message as any)) return
   const { idZonaBatalla } = message.payload
-  const rptaAtacarBarrera = {
+  const resp = juego.atacarBarrera(idZonaBatalla)
+  const rptaAtacarBarrera: AtacarBarreraResponse = {
     event: WebsocketEventTitle.ATACAR_BARRERA,
-    payload: juego.atacarBarrera(idZonaBatalla)
+    payload:{
+      ...resp
+    } 
+  }
+  if(resp.sinBarreras ){
+    rptaAtacarBarrera.payload.nombreJugadorDerrotado = juego.jugadorAnterior?.nombre;
+    rptaAtacarBarrera.payload.nombreJugadorVictorioso = juego.jugadorActual?.nombre;
   }
   sendMessage(ws, rptaAtacarBarrera)
   rptaAtacarBarrera.event = WebsocketEventTitle.ATACAN_TU_BARRERA
   sendMessageToOthers(ws, rptaAtacarBarrera)
-  if (rptaAtacarBarrera.payload.sinBarreras as boolean) {
+  if (resp.sinBarreras) {
+    juego.finalizarJuego()
     cerrarSockets()
   }
 }

@@ -34,8 +34,7 @@ export enum ResultadoAtacarBarrera {
   POSIBLE = "Posible",
   NO_HAY_CARTA_EN_TU_UBICACION_EN_ZONA_BATALLA = "No hay carta en tu ubicación de zona de batalla",
   CARTA_ATACANTE_NO_ESTA_EN_POSICION_ATAQUE = "Carta atacante no está en posición de ataque",
-  CARTA_ATACANTE_NO_TIENE_ATAQUES_DISPONIBLES = "Carta atacante no tiene ataque disponible",
-  BARRERA_DESTRUIDA = "Barrera destruida",
+  CARTA_ATACANTE_NO_TIENE_ATAQUES_DISPONIBLES = "Carta atacante no tiene ataque disponible"
 }
 
 export enum ResultadoAtacarCarta {

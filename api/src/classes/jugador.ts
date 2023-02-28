@@ -207,33 +207,17 @@ export class Jugador {
     jugadorAtacado: Jugador,
     idCartaAtacante: number
   ) {
-    const resultado = this.posibilidadAtacarBarrera(
-      jugadorAtacado,
-      idCartaAtacante
-    );
-    if (resultado !== ResultadoAtacarBarrera.POSIBLE) {
-      return {
-        resultado,
-      };
-    }
-
     const idBarreraEliminada = jugadorAtacado.barrera.length - 1;
     let sinBarreras = false;
-    let nombreJugadorDerrotado;
-    let nombreJugadorVictorioso;
     jugadorAtacado.barrera.pop();
     this.ataqueRealizado(idCartaAtacante);
     if (jugadorAtacado.sinBarreras()) {
       sinBarreras = true;
-      nombreJugadorDerrotado = jugadorAtacado.nombre;
-      nombreJugadorVictorioso = this.nombre;
     }
     return {
-      resultado: ResultadoAtacarBarrera.BARRERA_DESTRUIDA,
+      estadoBarrera: EstadoCarta.DESTRUIDA,
       idBarreraEliminada,
-      sinBarreras,
-      nombreJugadorDerrotado,
-      nombreJugadorVictorioso,
+      sinBarreras
     };
   }
 
@@ -372,8 +356,6 @@ export class Jugador {
     let estadoCartaAtacada = EstadoCarta.ACTIVA;
     let estadoBarrera = EstadoCarta.ACTIVA;
     let sinBarreras = false;
-    let nombreJugadorDerrotado = "";
-    let nombreJugadorVictorioso = "";
     const cartaAtacante = this.zonaBatalla[idCartaAtacante].carta as Carta;
     const cartaAtacada = jugadorAtacado.zonaBatalla[idCartaAtacada]
       .carta as Carta;
@@ -415,8 +397,6 @@ export class Jugador {
         estadoBarrera = EstadoCarta.DESTRUIDA;
         if (jugadorAtacado.sinBarreras()) {
           sinBarreras = true;
-          nombreJugadorDerrotado = jugadorAtacado.nombre;
-          nombreJugadorVictorioso = this.nombre;
         }
       } else if (veredicto === VeredictoAtaque.PIERDE_ATACANTE) {
         // pierde atacante
@@ -470,9 +450,7 @@ export class Jugador {
       estadoBarrera,
       sinBarreras,
       bonifCartaAtacante,
-      bonifCartaAtacada,
-      nombreJugadorDerrotado,
-      nombreJugadorVictorioso
+      bonifCartaAtacada
     };
   }
 

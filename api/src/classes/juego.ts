@@ -1,4 +1,5 @@
 import {
+  ResultadoAtacarBarrera,
   ResultadoAtacarCarta,
 } from "../constants/jugador";
 import {
@@ -191,16 +192,21 @@ export class Juego {
   }
 
   atacarBarrera(idCartaAtacante: number) {
-    const res = (this.jugadorActual as Jugador).atacarBarrera(
-      this.jugadorAnterior as Jugador,
+    const  estadoAtaque = (this.jugadorActual as Jugador).posibilidadAtacarBarrera(
+      (this.jugadorAnterior as Jugador),
       idCartaAtacante
     );
-    if (typeof res.sinBarreras !== "undefined") {
-      if (res.sinBarreras) {
-        this.finalizarJuego();
-      }
+    let respAtacarBarrera
+    if(estadoAtaque === ResultadoAtacarBarrera.POSIBLE){
+      respAtacarBarrera = (this.jugadorActual as Jugador).atacarBarrera(
+        this.jugadorAnterior as Jugador,
+        idCartaAtacante
+      );
     }
-    return res;
+    return {
+      estadoAtaque,
+      ...respAtacarBarrera
+    }
   }
 
   atacarCarta(idCartaAtacante: number, idCartaAtacada: number) {

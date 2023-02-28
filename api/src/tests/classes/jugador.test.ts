@@ -305,12 +305,6 @@ describe("Jugador", () => {
       jugadorEnemigo = new Jugador("Enemigo");
     });
 
-    test('inválido, no es posible atacar barreras',()=>{
-      expect(jugador.atacarBarrera(jugadorEnemigo,0).resultado).not.toBe(
-        ResultadoAtacarBarrera.POSIBLE
-      );
-    })
-
     test("válido, barrera destruida", () => {
       jugador.mano.push(carta);
       jugador.colocarCarta(0, 0, PosBatalla.ATAQUE);
@@ -318,8 +312,8 @@ describe("Jugador", () => {
       jugador.nTurnos = 3;
       jugadorEnemigo.barrera.push(carta);
       jugadorEnemigo.barrera.push(carta);
-      expect(jugador.atacarBarrera(jugadorEnemigo, 0).resultado).toBe(
-        ResultadoAtacarBarrera.BARRERA_DESTRUIDA
+      expect(jugador.atacarBarrera(jugadorEnemigo, 0).estadoBarrera).toBe(
+        EstadoCarta.DESTRUIDA
       );
       expect(jugadorEnemigo.barrera.length).toBe(1);
     });
@@ -331,11 +325,9 @@ describe("Jugador", () => {
       jugador.nTurnos = 3;
       jugadorEnemigo.barrera.push(carta);
       const resp = jugador.atacarBarrera(jugadorEnemigo, 0);
-      expect(resp.resultado).toBe(ResultadoAtacarBarrera.BARRERA_DESTRUIDA);
+      expect(resp.estadoBarrera).toBe(EstadoCarta.DESTRUIDA);
       expect(jugadorEnemigo.barrera.length).toBe(0);
       expect(resp.sinBarreras).toBe(true);
-      expect(resp.nombreJugadorDerrotado).toBeDefined();
-      expect(resp.nombreJugadorVictorioso).toBeDefined();
     });
   });
 

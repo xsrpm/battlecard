@@ -1,5 +1,5 @@
 
-import { ResultadoColocarCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion } from './../../constants/jugador';
+import { ResultadoColocarCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, EstadoCarta } from './../../constants/jugador';
 import { ResultadoIniciarJuego, ResultadoSalirDeSala, ResultadoUnirASala } from './../../constants/juego';
 import { PosBatalla } from './../../constants/celdabatalla';
 import { Juego } from '../../classes/juego'
@@ -160,7 +160,7 @@ describe('Juego objeto', () => {
       juego.colocarCarta(0, 0, PosBatalla.ATAQUE)
       juego.cambioDeJugadorActual()
       juego.cambioDeJugadorActual()
-      expect(juego.atacarBarrera(0).resultado).toBe(ResultadoAtacarBarrera.BARRERA_DESTRUIDA)
+      expect(juego.atacarBarrera(0).estadoBarrera).toBe(EstadoCarta.DESTRUIDA)
     })
   })
 

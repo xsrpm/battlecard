@@ -113,7 +113,8 @@ export interface AtacarCartaResponse extends WebsocketEvent {
 
 export interface AtacarBarreraResponse extends WebsocketEvent {
   payload: {
-	resultado: string;
+    estadoAtaque:string;
+	estadoBarrera?: string;
 	idBarreraEliminada?: number;
 	sinBarreras?: boolean;
 	nombreJugadorDerrotado?: string;

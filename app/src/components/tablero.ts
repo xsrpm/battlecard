@@ -193,7 +193,7 @@ export function atacarCartaResponse (message: AtacarCartaResponse) {
     nombreJugadorDerrotado,
     nombreJugadorVictorioso
   } = message.payload
-  if (estadoAtaque === 'Ataque realizado') {
+  if (estadoAtaque === 'Posible') {
     (resultadoAtaque.querySelector("span[slot='valor-atacante']") as HTMLSpanElement).textContent = (cartaAtacante as Carta).valor.toString();
     (resultadoAtaque.querySelector(
       "span[slot='elemento-atacante']"
@@ -355,7 +355,7 @@ export function atacanTuCartaResponse (message: AtacarCartaResponse) {
     nombreJugadorDerrotado,
     nombreJugadorVictorioso
   } = message.payload
-  if (estadoAtaque === 'Ataque realizado') {
+  if (estadoAtaque === 'Posible') {
     (resultadoAtaque.querySelector("span[slot='valor-atacante']") as HTMLSpanElement).textContent =
         (cartaAtacante as Carta).valor.toString();
     (resultadoAtaque.querySelector(
@@ -405,15 +405,15 @@ export function atacanTuCartaResponse (message: AtacarCartaResponse) {
 
 export function atacarBarreraResponse (message: AtacarBarreraResponse) {
   if (encuentraError(message)) return
-  const { resultado, idBarreraEliminada, nombreJugadorDerrotado, nombreJugadorVictorioso, sinBarreras } = message.payload
-  if (resultado === 'Barrera destruida' && idBarreraEliminada != null && sinBarreras != null && nombreJugadorDerrotado != null && nombreJugadorVictorioso != null) {
-    barreraEnemiga.children[idBarreraEliminada].classList.remove('barrera')
-    setSinBarrerasFlag(sinBarreras)
+  const { estadoBarrera, idBarreraEliminada, nombreJugadorDerrotado, nombreJugadorVictorioso, sinBarreras } = message.payload
+  if (estadoBarrera === 'DESTRUIDA') {
+    barreraEnemiga.children[idBarreraEliminada as number].classList.remove('barrera')
+    setSinBarrerasFlag(sinBarreras as boolean)
     habilitacionBotonera()
     if (sinBarrerasFlag) {
-      setNombreJugadorDerrotado(nombreJugadorDerrotado)
-      setNombreJugadorVictorioso(nombreJugadorVictorioso)
-      info.children[0].innerHTML = `${nombreJugadorDerrotado} se ha queda sin barreras`
+      setNombreJugadorDerrotado(nombreJugadorDerrotado as string)
+      setNombreJugadorVictorioso(nombreJugadorVictorioso as string)
+      info.children[0].innerHTML = `${nombreJugadorDerrotado as string} se ha queda sin barreras`
       btnFinDeJuego.classList.remove('ocultar')
       btnTerminarTurno.classList.add('ocultar')
       setJuegoFinalizado(true)
@@ -429,14 +429,14 @@ export function atacarBarreraResponse (message: AtacarBarreraResponse) {
 
 export function atacanTuBarreraResponse (message: AtacarBarreraResponse) {
   if (encuentraError(message)) return
-  const { resultado, idBarreraEliminada, sinBarreras, nombreJugadorDerrotado, nombreJugadorVictorioso } = message.payload
-  if (resultado === 'Barrera destruida' && idBarreraEliminada != null && sinBarreras != null && nombreJugadorDerrotado != null && nombreJugadorVictorioso != null) {
-    barreraYo.children[idBarreraEliminada].classList.remove('barrera')
-    setSinBarrerasFlag(sinBarreras)
+  const { estadoBarrera, idBarreraEliminada, sinBarreras, nombreJugadorDerrotado, nombreJugadorVictorioso } = message.payload
+  if (estadoBarrera === 'DESTRUIDA') {
+    barreraYo.children[idBarreraEliminada as number].classList.remove('barrera')
+    setSinBarrerasFlag(sinBarreras as boolean)
     if (sinBarrerasFlag) {
-      setNombreJugadorDerrotado(nombreJugadorDerrotado)
-      setNombreJugadorVictorioso(nombreJugadorVictorioso)
-      info.children[0].innerHTML = `${nombreJugadorDerrotado} se ha queda sin barreras`
+      setNombreJugadorDerrotado(nombreJugadorDerrotado as string)
+      setNombreJugadorVictorioso(nombreJugadorVictorioso as string)
+      info.children[0].innerHTML = `${nombreJugadorDerrotado as string} se ha queda sin barreras`
       btnFinDeJuego.classList.remove('ocultar')
       btnTerminarTurno.classList.add('ocultar')
       setJuegoFinalizado(true)
