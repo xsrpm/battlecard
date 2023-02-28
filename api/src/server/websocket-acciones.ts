@@ -19,13 +19,14 @@ import { Pantalla } from '../constants/juego'
 import { ResultadoCogerCarta } from '../constants/jugador';
 import { IniciarJuegoRequest } from '../schemas/iniciar-juego.schema';
 import { cerrarSockets, sendMessage, sendMessageToOthers, server, WebSocketServer } from './websocket-server';
+import { info, error } from '../utils/logger';
 
 WebSocketServer.on('connection', (ws: WebSocket) => {
   ws.on('message', (data: any) => {
     procesarAccion(ws, data)
   })
   ws.on('error', function (event: any) {
-    console.log(event)
+    error(event)
   })
   ws.on('close', (code: number) => {
     procesarDesconexion(ws,code)
@@ -34,8 +35,8 @@ WebSocketServer.on('connection', (ws: WebSocket) => {
 
 function procesarAccion (ws: WebSocket, message: string) {
   const objMessage = JSON.parse(message)
-  console.log('received:')
-  console.log(objMessage)
+  info('received:')
+  info(objMessage)
   switch (objMessage.event) {
     case WebsocketEventTitle.UNIR_A_SALA:
       unirASala(ws, objMessage)
@@ -70,7 +71,7 @@ function procesarAccion (ws: WebSocket, message: string) {
 const procesarDesconexion = (ws: WebSocket, code: number) =>{
   for( const jg of jugadoresConectados){
     if((jg?.websocket as any) === ws){
-      console.info(`close ws code:${code}, player: ${jg.jugador.nombre}`)
+      info(`close ws code:${code}, player: ${jg.jugador.nombre}`)
       finalizarPorDesconexion(ws, jg.jugador)
     }
   }

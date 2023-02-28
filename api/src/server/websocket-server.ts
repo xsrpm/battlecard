@@ -1,5 +1,6 @@
 import http from 'http';
 import WebSocket from 'ws'
+import { info } from '../utils/logger';
 import app from './app';
 
 export const server = http.createServer(app);
@@ -26,6 +27,6 @@ export function sendMessageToOthers (wsorigen: WebSocket, message: any) {
   
    export function sendMessage (ws: WebSocket, message: any) {
     ws.send(JSON.stringify(message))
-    console.log('sended:')
-    console.log(message)
+    info('sended:')
+    info(message)
   }
