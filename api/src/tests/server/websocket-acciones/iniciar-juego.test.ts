@@ -27,7 +27,6 @@ describe("Websocket Server", () => {
           .ws("/ws")
           .sendJson(unirseASala2)
           .expectJson((response: UnirASalaResponse) => {
-            expect(response.payload.jugadorId).toBeDefined();
             jugadorId = response.payload.jugadorId as string
           })
           .sendJson(iniciarJuego(jugadorId))

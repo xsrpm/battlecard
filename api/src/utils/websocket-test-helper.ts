@@ -1,3 +1,4 @@
+import { ResultadoAtacarCarta, ResultadoAtacarBarrera, ResultadoCambiarPosicion } from './../constants/jugador';
 import { ResultadoColocarCarta } from '../constants/jugador';
 import { WebsocketEventTitle } from '../constants/websocket-event-title';
 
@@ -38,3 +39,21 @@ export const iniciarJuego = (jugadorId:string) =>({
       puedeColocarCarta: ResultadoColocarCarta.POSIBLE
     }
   }
+
+  export const seleccionarCeldaEnZonaBatalla = (jugadorId:string, idZonaBatalla: number)=>({
+      event: WebsocketEventTitle.SELECCIONAR_ZONA_BATALLA,
+      payload: {
+        jugadorId,
+        idZonaBatalla
+      }
+  })
+
+  export const seleccionarCeldaEnZonaBatallaResponse = {
+    event: WebsocketEventTitle.SELECCIONAR_ZONA_BATALLA,
+    payload: {
+        existeCarta: false,
+        puedeAtacarCarta: ResultadoAtacarCarta.ATAQUES_SOLO_SE_REALIZAN_EN_SEGUNDO_TURNO,
+        puedeAtacarBarrera: ResultadoAtacarBarrera.SIN_CARTAS_EN_ZONA_BATALLA,
+        puedeCambiarPosicion: ResultadoCambiarPosicion.SIN_CARTAS_EN_ZONA_BATALLA
+    }
+}

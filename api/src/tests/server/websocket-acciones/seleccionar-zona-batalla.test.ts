@@ -1,4 +1,4 @@
-import { seleccionarMano, seleccionarManoResponse, iniciarJuego, unirseASala1, unirseASala2 } from './../../../utils/websocket-test-helper';
+import {  iniciarJuego, unirseASala1, unirseASala2, seleccionarCeldaEnZonaBatalla, seleccionarCeldaEnZonaBatallaResponse } from '../../../utils/websocket-test-helper';
 import { UnirASalaResponse } from "../../../response";
 import request from "superwstest";
 import server from "../../../server/websocket-acciones";
@@ -34,8 +34,8 @@ describe("Websocket Server", () => {
         
           await request(server, { defaultExpectOptions: { timeout: 5000 } })
           .ws("/ws")
-          .sendJson(seleccionarMano(jugadorId1, 0))
-          .expectJson(seleccionarManoResponse)
+          .sendJson(seleccionarCeldaEnZonaBatalla(jugadorId1, 0))
+          .expectJson(seleccionarCeldaEnZonaBatallaResponse)
       });
     });
   });

@@ -26,7 +26,6 @@ describe("Websocket Server", () => {
             expect(response.payload.jugadores[0]).toBe(nombreJugador1);
             expect(response.payload.iniciar).toBe(false);
             expect(response.payload.jugadorId).toBeDefined();
-            // console.log({response})
           });
         
         await request(server, { defaultExpectOptions: { timeout: 5000 } })
