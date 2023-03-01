@@ -67,3 +67,10 @@ export const colocarCarta = (jugadorId:string, posicion: string, idZonaBatalla: 
       idMano
     }
   })
+
+  export const terminarTurno = (jugadorId: string)=>({
+    event: WebsocketEventTitle.TERMINAR_TURNO,
+    payload: {
+      jugadorId
+    }
+  })
