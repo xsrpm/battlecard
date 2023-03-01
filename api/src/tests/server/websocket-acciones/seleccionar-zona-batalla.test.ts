@@ -1,4 +1,5 @@
-import {  iniciarJuego, unirseASala1, unirseASala2, seleccionarCeldaEnZonaBatalla, seleccionarCeldaEnZonaBatallaResponse } from '../../../utils/websocket-test-helper';
+import { PosBatalla } from './../../../constants/celdabatalla';
+import {  iniciarJuego, unirseASala1, unirseASala2, seleccionarCeldaEnZonaBatalla, seleccionarCeldaEnZonaBatallaResponse, colocarCarta } from '../../../utils/websocket-test-helper';
 import { UnirASalaResponse } from "../../../response";
 import request from "superwstest";
 import server from "../../../server/websocket-acciones";
@@ -32,6 +33,10 @@ describe("Websocket Server", () => {
           })
           .sendJson(iniciarJuego(jugadorId2))
         
+          await request(server, { defaultExpectOptions: { timeout: 5000 } })
+          .ws("/ws")
+          .sendJson(colocarCarta(jugadorId1, PosBatalla.ATAQUE,0,0))
+      
           await request(server, { defaultExpectOptions: { timeout: 5000 } })
           .ws("/ws")
           .sendJson(seleccionarCeldaEnZonaBatalla(jugadorId1, 0))

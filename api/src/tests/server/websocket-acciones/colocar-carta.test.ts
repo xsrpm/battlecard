@@ -1,3 +1,4 @@
+import { PosBatalla } from './../../../constants/celdabatalla';
 import {
   ColocarCartaResponse,
   IniciarJuegoResponse,
@@ -52,14 +53,14 @@ describe("Websocket Server", () => {
 
         await request(server, { defaultExpectOptions: { timeout: 5000 } })
           .ws("/ws")
-          .sendJson(colocarCarta(jugadorId1))
+          .sendJson(colocarCarta(jugadorId1,PosBatalla.ATAQUE,0,0))
           .expectJson((response: ColocarCartaResponse) => {
             expect(response.event).toBe(WebsocketEventTitle.COLOCAR_CARTA);
             expect(response.payload.resultado).toBe(
               ResultadoColocarCarta.CARTA_COLOCADA
             );
             expect(response.payload.mano).toEqual(manoJug1);
-          });
+          })
       });
     });
   });
