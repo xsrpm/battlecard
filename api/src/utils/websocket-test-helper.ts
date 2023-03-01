@@ -1,6 +1,7 @@
 import { ResultadoAtacarCarta, ResultadoAtacarBarrera, ResultadoCambiarPosicion } from './../constants/jugador';
 import { ResultadoColocarCarta } from '../constants/jugador';
 import { WebsocketEventTitle } from '../constants/websocket-event-title';
+import { PosBatalla } from '../constants/celdabatalla';
 
 export const nombreJugador1 = "César";
 export const unirseASala1 = {
@@ -57,3 +58,13 @@ export const iniciarJuego = (jugadorId:string) =>({
         puedeCambiarPosicion: ResultadoCambiarPosicion.SIN_CARTAS_EN_ZONA_BATALLA
     }
 }
+
+export const colocarCarta = (jugadorId:string)=>({
+    event: WebsocketEventTitle.COLOCAR_CARTA,
+    payload: {
+      jugadorId,
+      posicion: PosBatalla.ATAQUE,
+      idZonaBatalla: 0,
+      idMano: 0
+    }
+  })
