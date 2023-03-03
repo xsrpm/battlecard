@@ -1,3 +1,5 @@
+import { PosBatalla } from './../constants/celdabatalla'
+import { EstadoCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, ResultadoCogerCarta, ResultadoColocarCarta } from './../constants/jugador'
 import { ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse } from '../../../api/src/response'
 import { Carta } from '../../../api/src/types'
 import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './botonera'
@@ -109,19 +111,19 @@ export function seleccionarZonaBatallaResponse (message: SeleccionarZonaBatallaR
     quitarSeleccionEnCartas()
     cartaZBSeleccionada.classList.add('seleccionado')
     if (
-      puedeAtacarCarta === 'Posible' ||
-        puedeAtacarBarrera === 'Posible' ||
-        puedeCambiarPosicion === 'Posible'
+      puedeAtacarCarta === ResultadoAtacarCarta.POSIBLE ||
+        puedeAtacarBarrera === ResultadoAtacarBarrera.POSIBLE ||
+        puedeCambiarPosicion === ResultadoCambiarPosicion.POSIBLE
     ) {
       mensajeBotones.innerText = 'Seleccione acción'
     } else mensajeBotones.innerText = 'No acciones disponibles'
-    if (puedeAtacarCarta === 'Posible') {
+    if (puedeAtacarCarta === ResultadoAtacarCarta.POSIBLE) {
       btnAtacarCarta.classList.remove('ocultar')
     }
-    if (puedeAtacarBarrera === 'Posible') {
+    if (puedeAtacarBarrera === ResultadoAtacarBarrera.POSIBLE) {
       btnAtacarBarrera.classList.remove('ocultar')
     }
-    if (puedeCambiarPosicion === 'Posible') {
+    if (puedeCambiarPosicion === ResultadoCambiarPosicion.POSIBLE) {
       btnCambiarPosicion.classList.remove('ocultar')
     }
   }
@@ -141,7 +143,7 @@ export function seleccionarManoResponse (message: SeleccionarManoResponse) {
     habilitacionBotonera()
     quitarSeleccionEnCartas()
     cartaManoSeleccionada.classList.add('seleccionado')
-    if (puedeColocarCarta === 'Posible') {
+    if (puedeColocarCarta === ResultadoColocarCarta.POSIBLE) {
       btnColocarEnAtaque.classList.remove('ocultar')
       btnColocarEnDefensa.classList.remove('ocultar')
       mensajeBotones.innerText = 'Colocar carta en posición...'
@@ -154,7 +156,7 @@ export function seleccionarManoResponse (message: SeleccionarManoResponse) {
 export function mostrarCartaCogida (message: TerminarTurnoResponse) {
   if (encuentraError(message)) return
   const { carta, resultado, nombreJugadorDerrotado, nombreJugadorVictorioso } = message.payload
-  if (resultado === 'EXITO') {
+  if (resultado === ResultadoCogerCarta.EXITO) {
     if (typeof carta !== 'undefined') {
       manoYo.children[4].children[0].innerHTML = carta.valor.toString()
       manoYo.children[4].children[1].innerHTML = String.fromCharCode(
@@ -164,7 +166,7 @@ export function mostrarCartaCogida (message: TerminarTurnoResponse) {
     } else {
       manoEnemigo.children[4].classList.add('oculto')
     }
-  } else if (resultado === 'DECK VACIO') {
+  } else if (resultado === ResultadoCogerCarta.DECK_VACIO) {
     setNombreJugadorDerrotado(nombreJugadorDerrotado as string)
     setNombreJugadorVictorioso(nombreJugadorVictorioso as string)
     info.children[0].innerHTML = `${nombreJugadorDerrotado as string} se ha quedado sin cartas para tomar del deck`
@@ -193,7 +195,7 @@ export function atacarCartaResponse (message: AtacarCartaResponse) {
     nombreJugadorDerrotado,
     nombreJugadorVictorioso
   } = message.payload
-  if (estadoAtaque === 'Posible') {
+  if (estadoAtaque === ResultadoAtacarCarta.POSIBLE) {
     (resultadoAtaque.querySelector("span[slot='valor-atacante']") as HTMLSpanElement).textContent = (cartaAtacante as Carta).valor.toString();
     (resultadoAtaque.querySelector(
       "span[slot='elemento-atacante']"
@@ -208,7 +210,7 @@ export function atacarCartaResponse (message: AtacarCartaResponse) {
         `+${(bonifCartaAtacante as number).toString()}`;
     (resultadoAtaque.querySelector("span[slot='bonus-atacado']") as HTMLSpanElement).textContent =
         `+${(bonifCartaAtacada as number).toString()}`
-    if (estadoBarrera === 'DESTRUIDA') {
+    if (estadoBarrera === EstadoCarta.DESTRUIDA) {
       (resultadoAtaque.querySelector(
         "span[slot='detalle-resultado']"
       ) as HTMLSpanElement).textContent = 'Barrera destruida'
@@ -227,12 +229,12 @@ export function atacarCartaResponse (message: AtacarCartaResponse) {
         "span[slot='detalle-resultado']"
       ) as HTMLSpanElement).textContent = ''
     }
-    if (estadoCartaAtacante === 'DESTRUIDA') {
+    if (estadoCartaAtacante === EstadoCarta.DESTRUIDA) {
       zonaBatallaYo.children[idCartaZBSeleccionada].children[0].innerHTML = ''
       zonaBatallaYo.children[idCartaZBSeleccionada].children[1].innerHTML = ''
       zonaBatallaYo.children[idCartaZBSeleccionada].classList.remove('ataque')
     }
-    if (estadoCartaAtacada === 'DESTRUIDA') {
+    if (estadoCartaAtacada === EstadoCarta.DESTRUIDA) {
       zonaBatallaEnemiga.children[
         idCartaZBEnemigaSeleccionada
       ].children[0].innerHTML = ''
@@ -288,7 +290,7 @@ manoYo.addEventListener('click', function (e) {
 export function colocarCartaResponse (message: ColocarCartaResponse) {
   if (encuentraError(message)) return
   const { resultado, mano } = message.payload
-  if (resultado === 'Carta colocada') {
+  if (resultado === ResultadoColocarCarta.CARTA_COLOCADA) {
     habilitacionBotonera()
     quitarSeleccionEnCartas()
     const manoNumeroCarta =
@@ -321,7 +323,7 @@ export function colocaCartaOtroJugadorResponse (message: ColocarCartaOtroJugador
   if (encuentraError(message)) return
 
   const { posicion, idZonaBatalla, idMano, resultado, carta } = message.payload
-  if (resultado === 'Carta colocada') {
+  if (resultado === ResultadoColocarCarta.CARTA_COLOCADA) {
     habilitacionBotonera()
     manoEnemigo.children[idMano].classList.remove('oculto')
     if (posicion === Estado.POS_BATALLA_ATAQUE) {
@@ -355,7 +357,7 @@ export function atacanTuCartaResponse (message: AtacarCartaResponse) {
     nombreJugadorDerrotado,
     nombreJugadorVictorioso
   } = message.payload
-  if (estadoAtaque === 'Posible') {
+  if (estadoAtaque === ResultadoAtacarCarta.POSIBLE) {
     (resultadoAtaque.querySelector("span[slot='valor-atacante']") as HTMLSpanElement).textContent =
         (cartaAtacante as Carta).valor.toString();
     (resultadoAtaque.querySelector(
@@ -370,7 +372,7 @@ export function atacanTuCartaResponse (message: AtacarCartaResponse) {
     (resultadoAtaque.querySelector("span[slot='bonus-atacante']") as HTMLSpanElement).textContent =
         `+${(bonifCartaAtacante as number).toString()}`;
     (resultadoAtaque.querySelector("span[slot='bonus-atacado']") as HTMLDivElement).textContent = `+${(bonifCartaAtacada as number).toString()}`
-    if (estadoBarrera === 'DESTRUIDA') {
+    if (estadoBarrera === EstadoCarta.DESTRUIDA) {
       (resultadoAtaque.querySelector("span[slot='detalle-resultado']") as HTMLDivElement).textContent = 'Barrera destruida'
       barreraYo.children[idBarreraEliminada as number].classList.remove('barrera')
       setSinBarrerasFlag(sinBarreras as boolean)
@@ -385,12 +387,12 @@ export function atacanTuCartaResponse (message: AtacarCartaResponse) {
     } else {
       (resultadoAtaque.querySelector("span[slot='detalle-resultado']") as HTMLDivElement).textContent = ''
     }
-    if (estadoCartaAtacante === 'DESTRUIDA') {
+    if (estadoCartaAtacante === EstadoCarta.DESTRUIDA) {
       zonaBatallaEnemiga.children[idCartaAtacante as number].children[0].innerHTML = ''
       zonaBatallaEnemiga.children[idCartaAtacante as number].children[1].innerHTML = ''
       zonaBatallaEnemiga.children[idCartaAtacante as number].classList.remove('ataque')
     }
-    if (estadoCartaAtacada === 'DESTRUIDA') {
+    if (estadoCartaAtacada === EstadoCarta.DESTRUIDA) {
       zonaBatallaYo.children[idCartaAtacada as number].children[0].innerHTML = ''
       zonaBatallaYo.children[idCartaAtacada as number].children[1].innerHTML = ''
       zonaBatallaYo.children[idCartaAtacada as number].classList.remove(
@@ -406,7 +408,7 @@ export function atacanTuCartaResponse (message: AtacarCartaResponse) {
 export function atacarBarreraResponse (message: AtacarBarreraResponse) {
   if (encuentraError(message)) return
   const { estadoBarrera, idBarreraEliminada, nombreJugadorDerrotado, nombreJugadorVictorioso, sinBarreras } = message.payload
-  if (estadoBarrera === 'DESTRUIDA') {
+  if (estadoBarrera === EstadoCarta.DESTRUIDA) {
     barreraEnemiga.children[idBarreraEliminada as number].classList.remove('barrera')
     setSinBarrerasFlag(sinBarreras as boolean)
     habilitacionBotonera()
@@ -430,7 +432,7 @@ export function atacarBarreraResponse (message: AtacarBarreraResponse) {
 export function atacanTuBarreraResponse (message: AtacarBarreraResponse) {
   if (encuentraError(message)) return
   const { estadoBarrera, idBarreraEliminada, sinBarreras, nombreJugadorDerrotado, nombreJugadorVictorioso } = message.payload
-  if (estadoBarrera === 'DESTRUIDA') {
+  if (estadoBarrera === EstadoCarta.DESTRUIDA) {
     barreraYo.children[idBarreraEliminada as number].classList.remove('barrera')
     setSinBarrerasFlag(sinBarreras as boolean)
     if (sinBarrerasFlag) {
@@ -471,8 +473,8 @@ export function cambiarPosicionResponse (message: CambiarPosicionResponse) {
   if (stepAccion !== STEP_ACTION.CAMBIAR_POSICION) {
     return
   }
-  if (respuesta === 'Posicion cambiada') {
-    if (posBatalla === 'Posición de batalla: Ataque') {
+  if (respuesta === ResultadoCambiarPosicion.POSICION_CAMBIADA) {
+    if (posBatalla === PosBatalla.ATAQUE) {
       zonaBatallaYo.children[idCartaZBSeleccionada].className = 'slot ataque'
     } else {
       zonaBatallaYo.children[idCartaZBSeleccionada].className = 'slot defensa'
@@ -483,12 +485,12 @@ export function cambiarPosicionResponse (message: CambiarPosicionResponse) {
 export function cambiaPosicionEnemigoResponse (message: CambiarPosicionResponse) {
   if (encuentraError(message)) return
   const { respuesta, posBatalla, idZonaBatalla, carta } = message.payload
-  if (respuesta === 'Posicion cambiada') {
+  if (respuesta === ResultadoCambiarPosicion.POSICION_CAMBIADA) {
     zonaBatallaEnemiga.children[idZonaBatalla as number].children[0].innerHTML =
         (carta as Carta).valor.toString()
     zonaBatallaEnemiga.children[idZonaBatalla as number].children[1].innerHTML =
         String.fromCharCode((carta as Carta).elemento as any)
-    if (posBatalla === 'Posición de batalla: Ataque') {
+    if (posBatalla === PosBatalla.ATAQUE) {
       zonaBatallaEnemiga.children[idZonaBatalla as number].className = 'slot ataque'
     } else {
       zonaBatallaEnemiga.children[idZonaBatalla as number].className = 'slot defensa'
