@@ -24,13 +24,5 @@
   "homepage": "https://github.com/xsrpm/battlecard#readme",
   "devDependencies": {
     "ts-standard": "12.0.2"
-  },
-  "eslintConfig": {
-    "extends": "./node_modules/ts-standard/eslintrc.json",
-    "parserOptions": {
-      "project": [
-        "./tsconfig.json"
-      ]
-    }
   }
 }
