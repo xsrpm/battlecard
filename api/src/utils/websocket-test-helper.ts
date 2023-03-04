@@ -1,48 +1,48 @@
 import {
   ResultadoAtacarCarta,
   ResultadoAtacarBarrera,
-  ResultadoCambiarPosicion,
-} from "./../constants/jugador";
-import { ResultadoColocarCarta } from "../constants/jugador";
-import { WebsocketEventTitle } from "../constants/websocket-event-title";
+  ResultadoCambiarPosicion
+} from './../constants/jugador'
+import { ResultadoColocarCarta } from '../constants/jugador'
+import { WebsocketEventTitle } from '../constants/websocket-event-title'
 
-export const nombreJugador1 = "César";
+export const nombreJugador1 = 'César'
 export const unirseASala1 = {
   event: WebsocketEventTitle.UNIR_A_SALA,
   payload: {
-    nombreJugador: nombreJugador1,
-  },
-};
+    nombreJugador: nombreJugador1
+  }
+}
 
-export const nombreJugador2 = "Krister";
+export const nombreJugador2 = 'Krister'
 export const unirseASala2 = {
   event: WebsocketEventTitle.UNIR_A_SALA,
   payload: {
-    nombreJugador: nombreJugador2,
-  },
-};
+    nombreJugador: nombreJugador2
+  }
+}
 export const iniciarJuego = (jugadorId: string) => ({
   event: WebsocketEventTitle.INICIAR_JUEGO,
   payload: {
-    jugadorId,
-  },
-});
+    jugadorId
+  }
+})
 
 export const seleccionarMano = (jugadorId: string, idMano: number) => ({
   event: WebsocketEventTitle.SELECCIONAR_MANO,
   payload: {
     jugadorId,
-    idMano,
-  },
-});
+    idMano
+  }
+})
 
 export const seleccionarManoResponse = {
   event: WebsocketEventTitle.SELECCIONAR_MANO,
   payload: {
     existeCarta: true,
-    puedeColocarCarta: ResultadoColocarCarta.POSIBLE,
-  },
-};
+    puedeColocarCarta: ResultadoColocarCarta.POSIBLE
+  }
+}
 
 export const seleccionarCeldaEnZonaBatalla = (
   jugadorId: string,
@@ -51,9 +51,9 @@ export const seleccionarCeldaEnZonaBatalla = (
   event: WebsocketEventTitle.SELECCIONAR_ZONA_BATALLA,
   payload: {
     jugadorId,
-    idZonaBatalla,
-  },
-});
+    idZonaBatalla
+  }
+})
 
 export const seleccionarCeldaEnZonaBatallaResponse = {
   event: WebsocketEventTitle.SELECCIONAR_ZONA_BATALLA,
@@ -64,9 +64,9 @@ export const seleccionarCeldaEnZonaBatallaResponse = {
     puedeAtacarBarrera:
       ResultadoAtacarBarrera.ATAQUES_SOLO_SE_REALIZAN_EN_SEGUNDO_TURNO,
     puedeCambiarPosicion:
-      ResultadoCambiarPosicion.SIN_CAMBIOS_DE_POSICION_DISPONIBLES,
-  },
-};
+      ResultadoCambiarPosicion.SIN_CAMBIOS_DE_POSICION_DISPONIBLES
+  }
+}
 
 export const colocarCarta = (
   jugadorId: string,
@@ -79,21 +79,21 @@ export const colocarCarta = (
     jugadorId,
     posicion,
     idZonaBatalla,
-    idMano,
-  },
-});
+    idMano
+  }
+})
 
 export const terminarTurno = (jugadorId: string) => ({
   event: WebsocketEventTitle.TERMINAR_TURNO,
   payload: {
-    jugadorId,
-  },
-});
+    jugadorId
+  }
+})
 
 export const cambiarPosicion = (jugadorId: string, idZonaBatalla: number) => ({
   event: WebsocketEventTitle.CAMBIAR_POSICION,
   payload: {
     jugadorId,
-    idZonaBatalla,
-  },
-});
+    idZonaBatalla
+  }
+})

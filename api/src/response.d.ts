@@ -1,148 +1,148 @@
 import { Carta } from './types'
 
 export interface WebsocketEvent {
-    event: string
-    payload?: object
-    error?: string
+  event: string
+  payload?: object
+  error?: string
 }
 
-export interface WebsocketEventAuthenticated extends WebsocketEvent{
-    payload: {
-        jugadorId: string
-    }
+export interface WebsocketEventAuthenticated extends WebsocketEvent {
+  payload: {
+    jugadorId: string
+  }
 }
 
 export interface UnirASalaResponse extends WebsocketEvent {
-    payload: {
-        resultado: string
-        jugadores: string[]
-        iniciar: boolean,
-        jugadorId?: string
-    }
+  payload: {
+    resultado: string
+    jugadores: string[]
+    iniciar: boolean
+    jugadorId?: string
+  }
 }
 
 export interface IniciarJuegoResponse extends WebsocketEvent {
   payload: {
-    respuesta: string;
+    respuesta: string
     jugador?: {
-      nombre: string;
-      nBarrera: number;
-      nDeck: number;
-      mano: Carta[];
-      enTurno: boolean;
+      nombre: string
+      nBarrera: number
+      nDeck: number
+      mano: Carta[]
+      enTurno: boolean
     }
     jugadorEnemigo?: {
-      nombre: string;
-      nBarrera: number;
-      nDeck: number;
-      nMano: number;
-      enTurno: boolean;
+      nombre: string
+      nBarrera: number
+      nDeck: number
+      nMano: number
+      enTurno: boolean
     }
   }
 }
 
 export interface TerminarTurnoResponse extends WebsocketEvent {
-    payload: {
-        jugador: {
-            enTurno: boolean
-            nDeck: number
-        }
-        jugadorEnemigo: {
-            enTurno: boolean
-            nDeck: number
-        }
-        nombreJugadorDerrotado?: string
-        nombreJugadorVictorioso?: string
-        resultado?: string
-        carta?: Carta
+  payload: {
+    jugador: {
+      enTurno: boolean
+      nDeck: number
     }
+    jugadorEnemigo: {
+      enTurno: boolean
+      nDeck: number
+    }
+    nombreJugadorDerrotado?: string
+    nombreJugadorVictorioso?: string
+    resultado?: string
+    carta?: Carta
+  }
 }
 
 export interface ColocarCartaResponse extends WebsocketEvent {
-    payload: {
-        mano: Carta[]
-        resultado: string
-    }
+  payload: {
+    mano: Carta[]
+    resultado: string
+  }
 }
 
 export interface ColocarCartaOtroJugadorResponse extends WebsocketEvent {
-    payload: {
-        posicion: string
-        idZonaBatalla: number
-        idMano: number
-        resultado: string
-        carta: Carta
-    }
+  payload: {
+    posicion: string
+    idZonaBatalla: number
+    idMano: number
+    resultado: string
+    carta: Carta
+  }
 }
 
 export interface SeleccionarZonaBatallaResponse extends WebsocketEvent {
-    payload: {
-        existeCarta: boolean
-        puedeAtacarCarta: string
-        puedeAtacarBarrera: string
-        puedeCambiarPosicion: string
-    }
+  payload: {
+    existeCarta: boolean
+    puedeAtacarCarta: string
+    puedeAtacarBarrera: string
+    puedeCambiarPosicion: string
+  }
 }
 
 export interface SeleccionarManoResponse extends WebsocketEvent {
-    payload: {
-        existeCarta: boolean
-        puedeColocarCarta: string
-    }
+  payload: {
+    existeCarta: boolean
+    puedeColocarCarta: string
+  }
 }
 
 export interface AtacarCartaResponse extends WebsocketEvent {
-    payload: {
-        cartaAtacante?: Carta
-        cartaAtacada?: Carta
-        veredicto?: string
-        idBarreraEliminada?: number
-        estadoCartaAtacante?: string
-        estadoCartaAtacada?: string
-        estadoBarrera?: string
-        sinBarreras?: boolean
-        bonifCartaAtacante?: number
-        bonifCartaAtacada?: number
-        nombreJugadorDerrotado?: string
-        nombreJugadorVictorioso?: string
-        estadoAtaque: string
-        idCartaAtacante?: number
-        idCartaAtacada?: number
-    }
+  payload: {
+    cartaAtacante?: Carta
+    cartaAtacada?: Carta
+    veredicto?: string
+    idBarreraEliminada?: number
+    estadoCartaAtacante?: string
+    estadoCartaAtacada?: string
+    estadoBarrera?: string
+    sinBarreras?: boolean
+    bonifCartaAtacante?: number
+    bonifCartaAtacada?: number
+    nombreJugadorDerrotado?: string
+    nombreJugadorVictorioso?: string
+    estadoAtaque: string
+    idCartaAtacante?: number
+    idCartaAtacada?: number
+  }
 }
 
 export interface AtacarBarreraResponse extends WebsocketEvent {
   payload: {
-    estadoAtaque:string;
-	estadoBarrera?: string;
-	idBarreraEliminada?: number;
-	sinBarreras?: boolean;
-	nombreJugadorDerrotado?: string;
-	nombreJugadorVictorioso?: string;
+    estadoAtaque: string
+    estadoBarrera?: string
+    idBarreraEliminada?: number
+    sinBarreras?: boolean
+    nombreJugadorDerrotado?: string
+    nombreJugadorVictorioso?: string
   }
 }
 
 export interface CambiarPosicionResponse extends WebsocketEvent {
-    payload: {
-        idZonaBatalla?: number,
-        respuesta: string;
-        posBatalla: string;
-        carta: Carta | null;
-    }
+  payload: {
+    idZonaBatalla?: number
+    respuesta: string
+    posBatalla: string
+    carta: Carta | null
+  }
 }
 
-export interface EnemigoDesconectadoResponse extends WebsocketEvent{
-    payload:{
-        nombreJugadorDerrotado: string;
-        nombreJugadorVictorioso: string;
-        resultado: string
-    }
+export interface EnemigoDesconectadoResponse extends WebsocketEvent {
+  payload: {
+    nombreJugadorDerrotado: string
+    nombreJugadorVictorioso: string
+    resultado: string
+  }
 }
 
 export interface JugadorDesconectadoResponse extends WebsocketEvent {
-    payload: {
-        resultado: string
-        jugadores: Array<string>,
-        iniciar: boolean
-    }
+  payload: {
+    resultado: string
+    jugadores: string[]
+    iniciar: boolean
+  }
 }

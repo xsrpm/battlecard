@@ -1,10 +1,10 @@
 import WebSocket from 'ws'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 
-import { ResultadoUnirASala, ResultadoIniciarJuego } from '../constants/juego';
-import { AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated, JugadorDesconectadoResponse, AtacarBarreraResponse } from '../response';
+import { ResultadoUnirASala, ResultadoIniciarJuego, Pantalla } from '../constants/juego'
+import { AtacarCartaResponse, CambiarPosicionResponse, ColocarCartaOtroJugadorResponse, ColocarCartaResponse, EnemigoDesconectadoResponse, IniciarJuegoResponse, SeleccionarManoResponse, SeleccionarZonaBatallaResponse, TerminarTurnoResponse, WebsocketEvent, UnirASalaResponse, WebsocketEventAuthenticated, JugadorDesconectadoResponse, AtacarBarreraResponse } from '../response'
 import { SeleccionarZonaBatallaRequest } from '../schemas/seleccionar-zona-batalla.schema'
-import { Jugador } from './../classes/jugador';
+import { Jugador } from './../classes/jugador'
 import { Juego } from '../classes/juego'
 import { UnirASalaRequest } from '../schemas/unir-a-sala.schema'
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
@@ -15,11 +15,11 @@ import { AtacarCartaRequest } from '../schemas/atacar-carta.schema'
 import { AtacarBarreraRequest } from '../schemas/atacar-barrera.schema'
 import { CambiarPosicionRequest } from '../schemas/cambiar-posicion.schema'
 import { PosBatalla } from '../constants/celdabatalla'
-import { Pantalla } from '../constants/juego'
-import { ResultadoCogerCarta } from '../constants/jugador';
-import { IniciarJuegoRequest } from '../schemas/iniciar-juego.schema';
-import { cerrarSockets, sendMessage, sendMessageToOthers, server, WebSocketServer } from './websocket-server';
-import { info, error } from '../utils/logger';
+
+import { ResultadoCogerCarta } from '../constants/jugador'
+import { IniciarJuegoRequest } from '../schemas/iniciar-juego.schema'
+import { cerrarSockets, sendMessage, sendMessageToOthers, server, WebSocketServer } from './websocket-server'
+import { info, error } from '../utils/logger'
 
 WebSocketServer.on('connection', (ws: WebSocket) => {
   ws.on('message', (data: any) => {
@@ -29,7 +29,7 @@ WebSocketServer.on('connection', (ws: WebSocket) => {
     error(event)
   })
   ws.on('close', (code: number) => {
-    procesarDesconexion(ws,code)
+    procesarDesconexion(ws, code)
   })
 })
 
@@ -68,9 +68,9 @@ function procesarAccion (ws: WebSocket, message: string) {
   }
 }
 
-const procesarDesconexion = (ws: WebSocket, code: number) =>{
-  for( const jg of jugadoresConectados){
-    if((jg?.websocket as any) === ws){
+const procesarDesconexion = (ws: WebSocket, code: number) => {
+  for (const jg of jugadoresConectados) {
+    if ((jg?.websocket as any) === ws) {
       info(`close ws code:${code}, player: ${jg.jugador.nombre}`)
       finalizarPorDesconexion(ws, jg.jugador)
     }
@@ -90,13 +90,12 @@ function finalizarPorDesconexion (ws: WebSocket, jugadorDesconectado: Jugador) {
     sendMessageToOthers(ws, message)
     juego.finalizarJuego()
     cerrarSockets()
-  }
-  else if(juego.pantalla === Pantalla.EN_SALA_DE_ESPERA){
-    const {jugadores, iniciar } = juego.salirDeSala(jugadorDesconectado)
+  } else if (juego.pantalla === Pantalla.EN_SALA_DE_ESPERA) {
+    const { jugadores, iniciar } = juego.salirDeSala(jugadorDesconectado)
     const message: JugadorDesconectadoResponse = {
-      event : WebsocketEventTitle.JUGADOR_DESCONECTADO,
+      event: WebsocketEventTitle.JUGADOR_DESCONECTADO,
       payload: {
-        resultado: `${jugadorDesconectado.nombre} salió de la sala` , jugadores, iniciar
+        resultado: `${jugadorDesconectado.nombre} salió de la sala`, jugadores, iniciar
       }
     }
     sendMessageToOthers(ws, message)
@@ -106,17 +105,17 @@ function finalizarPorDesconexion (ws: WebSocket, jugadorDesconectado: Jugador) {
 
 const juego = new Juego()
 
-interface JugadorConectado{
-  uuid : string,
-  jugador: Jugador,
+interface JugadorConectado {
+  uuid: string
+  jugador: Jugador
   websocket: WebSocket
 }
 
 const jugadoresConectados: JugadorConectado[] = []
 
 function unirASala (ws: WebSocket, reqEvent: UnirASalaRequest) {
-  const {nombreJugador} = reqEvent.payload
-  const { jugador, resultado, jugadores, iniciar} = juego.unirASala(nombreJugador)
+  const { nombreJugador } = reqEvent.payload
+  const { jugador, resultado, jugadores, iniciar } = juego.unirASala(nombreJugador)
   const jugadorConectado: JugadorConectado = {
     jugador: (jugador as Jugador),
     uuid: uuidv4(),
@@ -126,11 +125,11 @@ function unirASala (ws: WebSocket, reqEvent: UnirASalaRequest) {
   if (resultado === ResultadoUnirASala.EXITO) {
     const respEvent: UnirASalaResponse = {
       event: WebsocketEventTitle.UNIR_A_SALA,
-      payload : {
+      payload: {
         resultado,
         jugadores: jugadores as string[],
         iniciar: iniciar as boolean,
-        jugadorId : jugadorConectado?.uuid
+        jugadorId: jugadorConectado?.uuid
       }
     }
     sendMessage(ws, respEvent)
@@ -147,7 +146,7 @@ function unirASala (ws: WebSocket, reqEvent: UnirASalaRequest) {
 }
 
 function iniciarJuego (ws: WebSocket, reqEvent: IniciarJuegoRequest) {
-  const {jugadorId} = reqEvent.payload
+  const { jugadorId } = reqEvent.payload
   const respIniciarJuego = juego.iniciarJuego()
   const respEvent: IniciarJuegoResponse = {
     event: WebsocketEventTitle.INICIAR_JUEGO,
@@ -162,7 +161,7 @@ function iniciarJuego (ws: WebSocket, reqEvent: IniciarJuegoRequest) {
   }
   const jugadorActual = (juego.jugadorActual as Jugador)
   const jugadorAnterior = (juego.jugadorAnterior as Jugador)
-  const jugadorConectadoActual = jugadoresConectados.find((jugadorConectado) =>{
+  const jugadorConectadoActual = jugadoresConectados.find((jugadorConectado) => {
     return jugadorConectado.jugador === juego.jugadorActual
   })
   if (jugadorId === jugadorConectadoActual?.uuid) {
@@ -180,12 +179,12 @@ function iniciarJuego (ws: WebSocket, reqEvent: IniciarJuegoRequest) {
       nMano: jugadorAnterior.mano.length,
       enTurno: jugadorAnterior.enTurno
     }
-     sendMessage(ws, respEvent)
+    sendMessage(ws, respEvent)
     respEvent.payload.jugador = {
       nombre: jugadorAnterior.nombre,
       nBarrera: jugadorAnterior.barrera.length,
       nDeck: jugadorAnterior.deck.length,
-      mano:jugadorAnterior.mano,
+      mano: jugadorAnterior.mano,
       enTurno: jugadorAnterior.enTurno
     }
     respEvent.payload.jugadorEnemigo = {
@@ -270,20 +269,20 @@ function seleccionarZonaBatalla (ws: WebSocket, reqEvent: SeleccionarZonaBatalla
 }
 
 function terminarTurno (ws: WebSocket, message: WebsocketEvent) {
-  if (!accionAutorizada(ws , message as any)) return
+  if (!accionAutorizada(ws, message as any)) return
   const res = juego.terminarTurno()
-  let respTerminarTurno: TerminarTurnoResponse = {
+  const respTerminarTurno: TerminarTurnoResponse = {
     event: WebsocketEventTitle.TERMINAR_TURNO,
     payload: {
       jugador: res.jugador,
       jugadorEnemigo: res.jugadorEnemigo,
-      resultado: res.resultado,
+      resultado: res.resultado
     }
   }
-  if(res.resultado === ResultadoCogerCarta.DECK_VACIO){
+  if (res.resultado === ResultadoCogerCarta.DECK_VACIO) {
     respTerminarTurno.payload.nombreJugadorDerrotado = juego.jugadorActual?.nombre
     respTerminarTurno.payload.nombreJugadorVictorioso = juego.jugadorAnterior?.nombre
- }
+  }
   sendMessage(ws, respTerminarTurno)
   respTerminarTurno.payload.jugador = res.jugadorEnemigo
   respTerminarTurno.payload.carta = res.carta
@@ -291,17 +290,17 @@ function terminarTurno (ws: WebSocket, message: WebsocketEvent) {
   respTerminarTurno.payload.resultado = res.resultado
   sendMessageToOthers(ws, respTerminarTurno)
   if (res.resultado === ResultadoCogerCarta.DECK_VACIO) {
-    juego.finalizarJuego();
+    juego.finalizarJuego()
     cerrarSockets()
   }
 }
 
 function accionAutorizada (ws: WebSocket, message: WebsocketEventAuthenticated) {
-  const {jugadorId} = message.payload
-  const jugadorConectadoActual = jugadoresConectados.find((jugadorConectado) =>{
+  const { jugadorId } = message.payload
+  const jugadorConectadoActual = jugadoresConectados.find((jugadorConectado) => {
     return jugadorConectado.jugador === juego.jugadorActual
   })
-  if(jugadorId === jugadorConectadoActual?.uuid){
+  if (jugadorId === jugadorConectadoActual?.uuid) {
     return true
   }
   message.error = 'Usuario no está autorizado a realizar acción'
@@ -310,7 +309,7 @@ function accionAutorizada (ws: WebSocket, message: WebsocketEventAuthenticated) 
 }
 
 function seleccionarMano (ws: WebSocket, message: SeleccionarManoRequest) {
-  if (!accionAutorizada(ws as WebSocket, message as any)) return
+  if (!accionAutorizada(ws, message as any)) return
   const { idMano } = message.payload
   const respSeleccionarMano: SeleccionarManoResponse = {
     event: WebsocketEventTitle.SELECCIONAR_MANO,
@@ -331,9 +330,9 @@ function atacarCarta (ws: WebSocket, message: AtacarCartaRequest) {
       ...resp
     }
   }
-  if(resp.sinBarreras ){
-    respAtacarCarta.payload.nombreJugadorDerrotado = juego.jugadorAnterior?.nombre;
-    respAtacarCarta.payload.nombreJugadorVictorioso = juego.jugadorActual?.nombre;
+  if (resp?.sinBarreras as boolean) {
+    respAtacarCarta.payload.nombreJugadorDerrotado = juego.jugadorAnterior?.nombre
+    respAtacarCarta.payload.nombreJugadorVictorioso = juego.jugadorActual?.nombre
   }
   sendMessage(ws, respAtacarCarta)
   respAtacarCarta.event = WebsocketEventTitle.ATACAN_TU_CARTA
@@ -347,23 +346,23 @@ function atacarCarta (ws: WebSocket, message: AtacarCartaRequest) {
 }
 
 function atacarBarrera (ws: WebSocket, message: AtacarBarreraRequest) {
-  if (!accionAutorizada(ws , message as any)) return
+  if (!accionAutorizada(ws, message as any)) return
   const { idZonaBatalla } = message.payload
   const resp = juego.atacarBarrera(idZonaBatalla)
   const rptaAtacarBarrera: AtacarBarreraResponse = {
     event: WebsocketEventTitle.ATACAR_BARRERA,
-    payload:{
+    payload: {
       ...resp
-    } 
+    }
   }
-  if(resp.sinBarreras ){
-    rptaAtacarBarrera.payload.nombreJugadorDerrotado = juego.jugadorAnterior?.nombre;
-    rptaAtacarBarrera.payload.nombreJugadorVictorioso = juego.jugadorActual?.nombre;
+  if (resp?.sinBarreras as boolean) {
+    rptaAtacarBarrera.payload.nombreJugadorDerrotado = juego.jugadorAnterior?.nombre
+    rptaAtacarBarrera.payload.nombreJugadorVictorioso = juego.jugadorActual?.nombre
   }
   sendMessage(ws, rptaAtacarBarrera)
   rptaAtacarBarrera.event = WebsocketEventTitle.ATACAN_TU_BARRERA
   sendMessageToOthers(ws, rptaAtacarBarrera)
-  if (resp.sinBarreras) {
+  if (resp?.sinBarreras as boolean) {
     juego.finalizarJuego()
     cerrarSockets()
   }

@@ -1,10 +1,10 @@
 
-import { ResultadoColocarCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, EstadoCarta } from './../../constants/jugador';
-import { ResultadoIniciarJuego, ResultadoSalirDeSala, ResultadoUnirASala } from './../../constants/juego';
-import { PosBatalla } from './../../constants/celdabatalla';
+import { ResultadoColocarCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, EstadoCarta } from './../../constants/jugador'
+import { ResultadoIniciarJuego, ResultadoSalirDeSala, ResultadoUnirASala } from './../../constants/juego'
+import { PosBatalla } from './../../constants/celdabatalla'
 import { Juego } from '../../classes/juego'
-import { Pantalla, Sala } from '../../constants/juego';
-import { Jugador } from '../../classes/jugador';
+import { Pantalla, Sala } from '../../constants/juego'
+import { Jugador } from '../../classes/jugador'
 
 describe('Juego objeto', () => {
   let juego: Juego
@@ -65,26 +65,25 @@ describe('Juego objeto', () => {
     })
   })
 
-  describe('salir de sala',()=>{
-    test('válido, sala abierta', ()=>{
+  describe('salir de sala', () => {
+    test('válido, sala abierta', () => {
       const resp1 = juego.unirASala('Cesar')
       const resp2 = juego.unirASala('Marco')
-      const {resultado, jugadores, iniciar} = juego.salirDeSala(resp1.jugador as Jugador)
+      const { resultado, jugadores, iniciar } = juego.salirDeSala(resp1.jugador as Jugador)
       expect(resultado).toBe(ResultadoSalirDeSala.SALIO_DE_SALA)
       expect(jugadores).toEqual([resp2.jugador?.nombre])
       expect(iniciar).toBe(false)
     })
 
-    test('fallida cuando jugador no está en sala',()=>{
+    test('fallida cuando jugador no está en sala', () => {
       const resp1 = juego.unirASala('Cesar')
       const resp2 = juego.unirASala('Marco')
       const jugador = new Jugador('Krister')
-      const {resultado, jugadores, iniciar} = juego.salirDeSala(jugador)
+      const { resultado, jugadores, iniciar } = juego.salirDeSala(jugador)
       expect(resultado).toBe(ResultadoSalirDeSala.NO_ESTA_EN_SALA)
       expect(jugadores).toEqual([resp1.jugador?.nombre, resp2.jugador?.nombre])
       expect(iniciar).toBe(true)
     })
-
   })
 
   describe('iniciar juego', () => {
@@ -105,11 +104,10 @@ describe('Juego objeto', () => {
       const res = juego.iniciarJuego()
       expect(res).toBe(ResultadoIniciarJuego.NO_SE_TIENEN_2_JUGADORES_PARA_EMPEZAR)
     })
-
   })
 
-  describe('finalizar juego',()=>{
-    test('válido',()=>{
+  describe('finalizar juego', () => {
+    test('válido', () => {
       juego.finalizarJuego()
       expect(juego.jugadores).toEqual([])
       expect(juego.jugadorActual).toEqual(null)
@@ -177,7 +175,7 @@ describe('Juego objeto', () => {
       expect(resp.estadoAtaque).toBe(ResultadoAtacarCarta.POSIBLE)
     })
 
-    test('inválido, el ataque no pudo ser realizado', ()=>{
+    test('inválido, el ataque no pudo ser realizado', () => {
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
       juego.iniciarJuego()
@@ -198,22 +196,22 @@ describe('Juego objeto', () => {
     })
   })
 
-  describe('terminar turno',()=>{
-    test('válido, cambia jugador en turno',()=>{
+  describe('terminar turno', () => {
+    test('válido, cambia jugador en turno', () => {
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
-      juego.iniciarJuego();
+      juego.iniciarJuego()
       const resp3 = juego.terminarTurno()
       expect(resp3.jugador.enTurno).toBe(false)
       expect(resp3.jugadorEnemigo.enTurno).toBe(true)
     })
   })
-  
-  describe('lista opciones de seleccionar zona de batalla',()=>{
-    test('válido',()=>{
+
+  describe('lista opciones de seleccionar zona de batalla', () => {
+    test('válido', () => {
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
-      juego.iniciarJuego();
+      juego.iniciarJuego()
       const resp = juego.opcionesSeleccionarZonaBatalla(0)
       expect(resp.existeCarta).toBe(false)
       expect(resp.puedeAtacarBarrera).toBe(ResultadoAtacarBarrera.SIN_CARTAS_EN_ZONA_BATALLA)
@@ -222,25 +220,23 @@ describe('Juego objeto', () => {
     })
   })
 
-  describe('lista opciones de seleccionar mano',()=>{
-    test('válido', ()=>{
+  describe('lista opciones de seleccionar mano', () => {
+    test('válido', () => {
       juego.unirASala('Cesar')
       juego.unirASala('Marco')
-      juego.iniciarJuego();
-      const resp = juego.opcionesSeleccionarMano (0)
+      juego.iniciarJuego()
+      const resp = juego.opcionesSeleccionarMano(0)
       expect(resp.existeCarta).toBe(true)
       expect(resp.puedeColocarCarta).toBe(ResultadoColocarCarta.POSIBLE)
     })
   })
 
-  describe('devuelve la referencia a su jugador enemigo / contrincante',()=>{
-    test('válido',()=>{
+  describe('devuelve la referencia a su jugador enemigo / contrincante', () => {
+    test('válido', () => {
       const jug1 = juego.unirASala('Cesar')
       const jug2 = juego.unirASala('Marco')
-      juego.iniciarJuego();
-      expect(juego.jugadorEnemigo((jug1?.jugador as Jugador) )).toEqual(jug2.jugador)
+      juego.iniciarJuego()
+      expect(juego.jugadorEnemigo((jug1?.jugador as Jugador))).toEqual(jug2.jugador)
     })
   })
 })
-
-

@@ -1,7 +1,7 @@
-import { DispAtaque, PosBatalla, DispCambio } from '../constants/celdabatalla';
+import { DispAtaque, PosBatalla, DispCambio } from '../constants/celdabatalla'
 import { Carta } from './carta'
 
-export class CeldaBatalla{
+export class CeldaBatalla {
   posBatalla: PosBatalla
   dispAtaque: DispAtaque
   dispCambio: DispCambio

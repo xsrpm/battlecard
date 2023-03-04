@@ -1,47 +1,47 @@
-import request from "superwstest";
+import request from 'superwstest'
 import {
   iniciarJuego,
   unirseASala1,
   unirseASala2,
   terminarTurno,
   colocarCarta,
-  cambiarPosicion,
-} from "../../../utils/websocket-test-helper";
-import { UnirASalaResponse } from "../../../response";
-import server from "../../../server/websocket-acciones";
-import { PosBatalla } from "../../../constants/celdabatalla";
-import { WebsocketEventTitle } from "../../../constants/websocket-event-title";
+  cambiarPosicion
+} from '../../../utils/websocket-test-helper'
+import { UnirASalaResponse } from '../../../response'
+import server from '../../../server/websocket-acciones'
+import { PosBatalla } from '../../../constants/celdabatalla'
+import { WebsocketEventTitle } from '../../../constants/websocket-event-title'
 
-describe("Websocket Server", () => {
+describe('Websocket Server', () => {
   beforeEach((done) => {
-    server.listen(0, "localhost", done);
-  });
+    server.listen(0, 'localhost', done)
+  })
 
   afterEach((done) => {
-    server.close(done);
-  });
+    server.close(done)
+  })
 
-  describe("estando el servidor en sala de espera", () => {
-    describe("cambiar posición", () => {
-      test("válido", async () => {
-        let jugadorId1 = "",
-          jugadorId2 = "",
-          idZonaBatalla = 0,
-          idMano = 0;
+  describe('estando el servidor en sala de espera', () => {
+    describe('cambiar posición', () => {
+      test('válido', async () => {
+        let jugadorId1 = ''
+        let jugadorId2 = ''
+        const idZonaBatalla = 0
+        const idMano = 0
         await request(server)
-          .ws("/ws")
+          .ws('/ws')
           .sendJson(unirseASala1)
           .expectJson((response: UnirASalaResponse) => {
-            jugadorId1 = response.payload.jugadorId as string;
+            jugadorId1 = response.payload.jugadorId as string
           })
-          .exec(() => {
-            request(server)
-              .ws("/ws")
+          .exec(async () => {
+            await request(server)
+              .ws('/ws')
               .sendJson(unirseASala2)
               .expectJson((response: UnirASalaResponse) => {
-                jugadorId2 = response.payload.jugadorId as string;
+                jugadorId2 = response.payload.jugadorId as string
               })
-              .sendJson(iniciarJuego(jugadorId2));
+              .sendJson(iniciarJuego(jugadorId2))
           })
           .expectJson()
           .expectJson()
@@ -51,8 +51,8 @@ describe("Websocket Server", () => {
           .expectJson()
           .sendJson(terminarTurno(jugadorId1))
           .expectJson()
-          .exec(() => {
-            request(server).ws("/ws").sendJson(terminarTurno(jugadorId2));
+          .exec(async () => {
+            await request(server).ws('/ws').sendJson(terminarTurno(jugadorId2))
           })
           .sendJson(cambiarPosicion(jugadorId1, idZonaBatalla))
           .expectJson({
@@ -60,9 +60,9 @@ describe("Websocket Server", () => {
             payload: {
               jugadorId: jugadorId1,
               idZonaBatalla
-            },
-          });
-      });
-    });
-  });
-});
+            }
+          })
+      })
+    })
+  })
+})

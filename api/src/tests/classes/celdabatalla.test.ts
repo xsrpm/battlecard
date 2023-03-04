@@ -1,4 +1,4 @@
-import { PosBatalla, DispAtaque, DispCambio } from './../../constants/celdabatalla';
+import { PosBatalla, DispAtaque, DispCambio } from './../../constants/celdabatalla'
 import { Carta } from '../../classes/carta'
 import { CeldaBatalla } from '../../classes/celdabatalla'
 import { Elemento } from '../../constants/carta'

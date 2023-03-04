@@ -1,4 +1,4 @@
-export interface Carta{
-	valor: number
-	elemento: string
+export interface Carta {
+  valor: number
+  elemento: string
 }
