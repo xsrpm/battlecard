@@ -1,5 +1,6 @@
+
 import { cambiarPantalla } from '../modules/utils'
-import { nombreJugadorVictorioso, nombreJugadorDerrotado, stepAccion, setStepAccion, posicionBatalla, setPosicionBatalla } from '../modules/estadoGlobal'
+import { nombreJugadorVictorioso, nombreJugadorDerrotado, stepAccion, setStepAccion, posicionBatalla, setPosicionBatalla, jugadorId, idCartaZBSeleccionada } from '../modules/estadoGlobal'
 import { colocarCarta, jugDown } from './tablero'
 import { PosBatalla } from '../constants/celdabatalla'
 import { atacarBarreraDesdeZonaBatallaSeleccionada, cambiarPosicionEnZonaBatallaSeleccionada, terminarTurno } from '../modules/socket-messages'
@@ -22,7 +23,7 @@ btnFinDeJuego.addEventListener('click', function () {
 })
 
 btnTerminarTurno.addEventListener('click', () => {
-  terminarTurno()
+  terminarTurno(jugadorId)
 })
 
 btnCambiarPosicion.addEventListener('click', () => {
@@ -30,12 +31,12 @@ btnCambiarPosicion.addEventListener('click', () => {
     console.log(STEP_ACTION.CAMBIAR_POSICION)
     setStepAccion(STEP_ACTION.CAMBIAR_POSICION)
     habilitacionBotonera()
-    cambiarPosicionEnZonaBatallaSeleccionada()
+    cambiarPosicionEnZonaBatallaSeleccionada(jugadorId, idCartaZBSeleccionada)
   }
 })
 
 btnAtacarBarrera.addEventListener('click', () => {
-  atacarBarreraDesdeZonaBatallaSeleccionada()
+  atacarBarreraDesdeZonaBatallaSeleccionada(jugadorId, idCartaZBSeleccionada)
 })
 
 btnAtacarCarta.addEventListener('click', () => {

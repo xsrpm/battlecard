@@ -3,7 +3,7 @@ import { EstadoCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCam
 import { ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse } from '../../../api/src/response'
 import { Carta } from '../../../api/src/types'
 import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './botonera'
-import { idCartaZBSeleccionada, juegoFinalizado, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from '../modules/estadoGlobal'
+import { idCartaZBSeleccionada, juegoFinalizado, jugadorId, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from '../modules/estadoGlobal'
 import { info } from './info'
 import { resultadoAtaque } from './resultado-ataque2'
 import { encuentraError } from '../modules/socket'
@@ -39,7 +39,7 @@ export const barreraYo = document.getElementById('barreraYo') as HTMLDivElement
 export function colocarCarta () {
   habilitacionBotonera()
   mensajeBotones.innerText = 'Seleccione ubicación en zona de batalla...'
-  for (const celda of zonaBatallaYo.children) {
+  for (const celda of zonaBatallaYo.children as any) {
     if (
       !(celda as HTMLDivElement).classList.contains('ataque') &&
         !(celda as HTMLDivElement).classList.contains('defensa')
@@ -82,7 +82,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
     ) {
       console.log('stepAccion: ' + stepAccion)
       console.log(target)
-      colocarCartaEnZonaBatallaDesdeMano(idCartaManoSeleccionada)
+      colocarCartaEnZonaBatallaDesdeMano(jugadorId, posicionBatalla, idCartaZBSeleccionada, idCartaManoSeleccionada)
     }
   } else {
     if (
@@ -93,7 +93,7 @@ zonaBatallaYo.addEventListener('click', function (e) {
       setStepAccion(STEP_ACTION.SELECCIONAR_ZONA_BATALLA)
       console.log('stepAccion: ' + stepAccion)
       console.log(target)
-      seleccionarCeldaEnZonaBatalla()
+      seleccionarCeldaEnZonaBatalla(jugadorId, idCartaZBSeleccionada)
     }
   }
 })
@@ -283,7 +283,7 @@ manoYo.addEventListener('click', function (e) {
     setStepAccion(STEP_ACTION.SELECCIONAR_MANO)
     console.log('stepAccion: ' + stepAccion)
     console.log(target)
-    seleccionarMano(idCartaManoSeleccionada)
+    seleccionarMano(jugadorId, idCartaManoSeleccionada)
   }
 })
 
@@ -462,7 +462,7 @@ zonaBatallaEnemiga.addEventListener('click', function (e) {
       console.log('stepAccion: ' + stepAccion)
       console.log('target: ', target)
       idCartaZBEnemigaSeleccionada = Number(target.dataset.id)
-      atacarCarta(idCartaZBEnemigaSeleccionada)
+      atacarCarta(jugadorId, idCartaZBSeleccionada, idCartaZBEnemigaSeleccionada)
     }
   }
 })

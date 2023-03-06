@@ -1,5 +1,5 @@
 import { UnirASalaResponse, JugadorDesconectadoResponse } from '../../../api/src/response'
-import { setJugadorId } from '../modules/estadoGlobal'
+import { setJugadorId, jugadorId } from '../modules/estadoGlobal'
 import { encuentraError } from '../modules/socket'
 import { iniciarJuego } from '../modules/socket-messages'
 import { cambiarPantalla } from '../modules/utils'
@@ -24,7 +24,7 @@ export function unirASalaResponse (message: UnirASalaResponse) {
 }
 
 btnIniciarJuego?.addEventListener('click', () => {
-  iniciarJuego()
+  iniciarJuego(jugadorId)
 })
 
 export function jugadorDesconectadoResponse(message: JugadorDesconectadoResponse) {

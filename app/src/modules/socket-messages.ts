@@ -1,8 +1,7 @@
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
 import { sendMessage } from '../modules/socket'
-import { idCartaZBSeleccionada, jugadorId, posicionBatalla } from './estadoGlobal'
 
-export function terminarTurno() {
+export function terminarTurno(jugadorId: string) {
   sendMessage({
     event: WebsocketEventTitle.TERMINAR_TURNO,
     payload: {
@@ -11,7 +10,7 @@ export function terminarTurno() {
   })
 }
 
-export function cambiarPosicionEnZonaBatallaSeleccionada() {
+export function cambiarPosicionEnZonaBatallaSeleccionada(jugadorId: string, idCartaZBSeleccionada: number) {
   sendMessage({
     event: WebsocketEventTitle.CAMBIAR_POSICION,
     payload: {
@@ -21,7 +20,7 @@ export function cambiarPosicionEnZonaBatallaSeleccionada() {
   })
 }
 
-export function atacarBarreraDesdeZonaBatallaSeleccionada() {
+export function atacarBarreraDesdeZonaBatallaSeleccionada(jugadorId: string, idCartaZBSeleccionada: number) {
   sendMessage({
     event: WebsocketEventTitle.ATACAR_BARRERA,
     payload: {
@@ -31,7 +30,7 @@ export function atacarBarreraDesdeZonaBatallaSeleccionada() {
   })
 }
 
-export function colocarCartaEnZonaBatallaDesdeMano(idCartaManoSeleccionada: number) {
+export function colocarCartaEnZonaBatallaDesdeMano(jugadorId: string, posicionBatalla: string, idCartaZBSeleccionada: number, idCartaManoSeleccionada: number) {
   sendMessage({
     event: WebsocketEventTitle.COLOCAR_CARTA,
     payload: {
@@ -43,7 +42,7 @@ export function colocarCartaEnZonaBatallaDesdeMano(idCartaManoSeleccionada: numb
   })
 }
 
-export function seleccionarCeldaEnZonaBatalla() {
+export function seleccionarCeldaEnZonaBatalla(jugadorId: string, idCartaZBSeleccionada: number) {
   sendMessage({
     event: WebsocketEventTitle.SELECCIONAR_ZONA_BATALLA,
     payload: {
@@ -53,7 +52,7 @@ export function seleccionarCeldaEnZonaBatalla() {
   })
 }
 
-export function seleccionarMano(idCartaManoSeleccionada: number) {
+export function seleccionarMano(jugadorId: string, idCartaManoSeleccionada: number) {
   sendMessage({
     event: WebsocketEventTitle.SELECCIONAR_MANO,
     payload: {
@@ -63,7 +62,7 @@ export function seleccionarMano(idCartaManoSeleccionada: number) {
   })
 }
 
-export function atacarCarta(idCartaZBEnemigaSeleccionada: number) {
+export function atacarCarta(jugadorId: string, idCartaZBSeleccionada: number, idCartaZBEnemigaSeleccionada: number) {
   sendMessage({
     event: WebsocketEventTitle.ATACAR_CARTA,
     payload: {
@@ -81,7 +80,7 @@ export function unirASala(nombreJugador: string) {
   })
 }
 
-export function iniciarJuego() {
+export function iniciarJuego(jugadorId: string) {
   sendMessage({
     event: WebsocketEventTitle.INICIAR_JUEGO,
     payload: {
