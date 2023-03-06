@@ -147,6 +147,7 @@ function unirASala (ws: WebSocket, reqEvent: UnirASalaRequest) {
 
 function iniciarJuego (ws: WebSocket, reqEvent: IniciarJuegoRequest) {
   const { jugadorId } = reqEvent.payload
+  console.log('🚀 ~ file: websocket-acciones.ts:150 ~ iniciarJuego ~ jugadorId:', jugadorId)
   const respIniciarJuego = juego.iniciarJuego()
   const respEvent: IniciarJuegoResponse = {
     event: WebsocketEventTitle.INICIAR_JUEGO,
@@ -164,7 +165,9 @@ function iniciarJuego (ws: WebSocket, reqEvent: IniciarJuegoRequest) {
   const jugadorConectadoActual = jugadoresConectados.find((jugadorConectado) => {
     return jugadorConectado.jugador === juego.jugadorActual
   })
-  if (jugadorId === jugadorConectadoActual?.uuid) {
+  // console.log('🚀 ~ file: websocket-acciones.ts:168 ~ jugadorConectadoActual ~ jugadorConectadoActual:', jugadorConectadoActual)
+  if (jugadorId === jugadorConectadoActual?.uuid) { // jugador 1 inicia el juego
+    console.log('jugador 1 inicia el juego')
     respEvent.payload.jugador = {
       nombre: jugadorActual.nombre,
       nBarrera: jugadorActual.barrera.length,
@@ -196,6 +199,7 @@ function iniciarJuego (ws: WebSocket, reqEvent: IniciarJuegoRequest) {
     }
     sendMessageToOthers(ws, respEvent)
   } else {
+    console.log('jugador 2 inicia el juego')
     respEvent.payload.jugador = {
       nombre: jugadorAnterior.nombre,
       nBarrera: jugadorAnterior.barrera.length,
