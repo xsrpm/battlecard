@@ -3,12 +3,13 @@ import { EstadoCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCam
 import { ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse } from '../../../api/src/response'
 import { Carta } from '../../../api/src/types'
 import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './botonera'
-import { idCartaZBSeleccionada, juegoFinalizado, jugadorId, posicionBatalla, setIdCartaZBSeleccionada, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from '../modules/estadoGlobal'
+import { juegoFinalizado, jugadorId, posicionBatalla, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from '../modules/estadoGlobal'
 import { info } from './info'
 import { resultadoAtaque } from './resultado-ataque2'
 import { encuentraError } from '../modules/socket'
 import { atacarCarta, colocarCartaEnZonaBatallaDesdeMano, seleccionarCeldaEnZonaBatalla, seleccionarMano } from '../modules/socket-messages'
 import { STEP_ACTION } from '../constants/stepAction'
+import { idCartaZBSeleccionada, setIdCartaZBSeleccionada } from '../pages/juego'
 
 let idCartaManoSeleccionada: number
 let cartaZBSeleccionada: HTMLElement

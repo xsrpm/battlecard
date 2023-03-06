@@ -4,7 +4,6 @@ import { PosBatalla } from './../constants/celdabatalla'
 
 export let nombreJugadorVictorioso = ''
 export let nombreJugadorDerrotado = ''
-export let idCartaZBSeleccionada: number
 export let stepAccion = STEP_ACTION.STAND_BY
 export let posicionBatalla: PosBatalla
 export let juegoFinalizado: boolean
@@ -33,10 +32,6 @@ export const setNombreJugadorVictorioso = (nombre: string) => {
 
 export const setNombreJugadorDerrotado = (nombre: string) => {
   nombreJugadorDerrotado = nombre
-}
-
-export const setIdCartaZBSeleccionada = (id: number) => {
-  idCartaZBSeleccionada = id
 }
 
 export const setStepAccion = (step: string) => {

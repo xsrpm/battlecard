@@ -1,10 +1,11 @@
 
 import { cambiarPantalla } from '../modules/utils'
-import { nombreJugadorVictorioso, nombreJugadorDerrotado, stepAccion, setStepAccion, posicionBatalla, setPosicionBatalla, jugadorId, idCartaZBSeleccionada } from '../modules/estadoGlobal'
+import { nombreJugadorVictorioso, nombreJugadorDerrotado, stepAccion, setStepAccion, posicionBatalla, setPosicionBatalla, jugadorId } from '../modules/estadoGlobal'
 import { colocarCarta, jugDown } from './tablero'
 import { PosBatalla } from '../constants/celdabatalla'
 import { atacarBarreraDesdeZonaBatallaSeleccionada, cambiarPosicionEnZonaBatallaSeleccionada, terminarTurno } from '../modules/socket-messages'
 import { STEP_ACTION } from '../constants/stepAction'
+import { idCartaZBSeleccionada } from '../pages/juego'
 
 export const btnFinDeJuego = document.getElementById('btnFinDeJuego') as HTMLButtonElement
 export const finDeJuego = document.getElementById('finDeJuego') as HTMLDivElement

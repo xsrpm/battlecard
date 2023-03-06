@@ -10,6 +10,11 @@ import { encuentraError } from '../modules/socket'
 
 const juego = document.getElementById('juego') as HTMLDivElement
 
+export let idCartaZBSeleccionada: number
+export const setIdCartaZBSeleccionada = (id: number) => {
+  idCartaZBSeleccionada = id
+}
+
 function inicializarJuego (message: IniciarJuegoResponse) {
   if (encuentraError(message)) return
   const jugador = message.payload.jugador
