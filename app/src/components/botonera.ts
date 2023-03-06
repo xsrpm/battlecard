@@ -1,14 +1,13 @@
 
-import { cambiarPantalla } from '../modules/utils'
-import { nombreJugadorVictorioso, nombreJugadorDerrotado, stepAccion, setStepAccion, posicionBatalla, setPosicionBatalla, jugadorId } from '../modules/estadoGlobal'
+import { stepAccion, setStepAccion, posicionBatalla, setPosicionBatalla, jugadorId } from '../modules/estadoGlobal'
 import { colocarCarta, jugDown } from './tablero'
 import { PosBatalla } from '../constants/celdabatalla'
 import { atacarBarreraDesdeZonaBatallaSeleccionada, cambiarPosicionEnZonaBatallaSeleccionada, terminarTurno } from '../modules/socket-messages'
 import { STEP_ACTION } from '../constants/stepAction'
+import { terminarJuego } from '../pages/fin-de-juego'
 import { idCartaZBSeleccionada } from '../pages/juego'
 
 export const btnFinDeJuego = document.getElementById('btnFinDeJuego') as HTMLButtonElement
-export const finDeJuego = document.getElementById('finDeJuego') as HTMLDivElement
 export const btnTerminarTurno = document.getElementById('btnTerminarTurno') as HTMLButtonElement
 export const btnCambiarPosicion = document.getElementById('btnCambiarPosicion') as HTMLButtonElement
 export const btnAtacarBarrera = document.getElementById('btnAtacarBarrera') as HTMLButtonElement
@@ -18,9 +17,7 @@ export const btnColocarEnDefensa = document.getElementById('btnColocarEnDefensa'
 export const btnColocarEnAtaque = document.getElementById('btnColocarEnAtaque') as HTMLButtonElement
 
 btnFinDeJuego.addEventListener('click', function () {
-  finDeJuego.children[0].children[1].innerHTML = nombreJugadorVictorioso
-  finDeJuego.children[1].children[1].innerHTML = nombreJugadorDerrotado
-  cambiarPantalla(finDeJuego)
+  terminarJuego()
 })
 
 btnTerminarTurno.addEventListener('click', () => {
