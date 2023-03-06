@@ -1,13 +1,12 @@
 import { WebsocketEventTitle } from './../constants/websocket-event-title'
 import { UnirASalaResponse, IniciarJuegoResponse, ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse, EnemigoDesconectadoResponse, JugadorDesconectadoResponse } from '../../../api/src/response'
-import { message, setMessage } from './estadoGlobal'
 import { enemigoDesconectadoResponse, iniciarJuegoResponse, terminarTurno as terminarTurnoResponse } from '../pages/juego'
 import { jugadorDesconectadoResponse, unirASalaResponse } from '../pages/sala'
 import { atacanTuBarreraResponse, atacanTuCartaResponse, atacarBarreraResponse, atacarCartaResponse, cambiaPosicionEnemigoResponse, cambiarPosicionResponse, colocaCartaOtroJugadorResponse, colocarCartaResponse, seleccionarManoResponse, seleccionarZonaBatallaResponse } from '../components/tablero'
 
 export const handleMessageSocket = (e: any) => {
   console.log('received:')
-  setMessage(JSON.parse(e.data))
+  const message = JSON.parse(e.data)
   console.log(message)
   switch (message.event) {
     case WebsocketEventTitle.UNIR_A_SALA:

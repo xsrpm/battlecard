@@ -1,4 +1,4 @@
-import { WebsocketEvent } from '../../../api/src/response'
+
 import { STEP_ACTION } from '../constants/stepAction'
 import { PosBatalla } from './../constants/celdabatalla'
 
@@ -7,7 +7,6 @@ export let nombreJugadorDerrotado = ''
 export let idCartaZBSeleccionada: number
 export let stepAccion = STEP_ACTION.STAND_BY
 export let posicionBatalla: PosBatalla
-export let message: WebsocketEvent
 export let juegoFinalizado: boolean
 export let sinBarrerasFlag: boolean
 export let jugadorId: string
@@ -22,10 +21,6 @@ export const setSinBarrerasFlag = (value: boolean) => {
 
 export const setJuegoFinalizado = (juegoF: boolean) => {
   juegoFinalizado = juegoF
-}
-
-export const setMessage = (msg: WebsocketEvent) => {
-  message = msg
 }
 
 export const setPosicionBatalla = (posicion: PosBatalla) => {
