@@ -10,18 +10,6 @@ import { encuentraError } from '../modules/socket'
 import { atacarCarta, colocarCartaEnZonaBatallaDesdeMano, seleccionarCeldaEnZonaBatalla, seleccionarMano } from '../modules/socket-messages'
 import { STEP_ACTION } from '../constants/stepAction'
 
-export const Estado = {
-  NO_HAY_CARTA: 'No hay carta',
-  POS_BATALLA_ATAQUE: 'Posición de batalla: Ataque',
-  POS_BATALLA_DEF_ARRIBA: 'Posición de batalla: Defensa cara arriba',
-  POS_BATALLA_DEF_ABAJO: 'Posición de batalla: Defensa cara abajo',
-  YA_ESTA_EN_POSICION_SOLICITADA: 'Ya se está en la posición solicitada',
-  ATAQUE_NO_DISPONIBLE: 'Atacar carta no disponible',
-  ATAQUE_DISPONIBLE: 'Atacar carta disponible',
-  CAMBIO_POS_NO_DISPONIBLE: 'Cambio de posición no disponible',
-  CAMBIO_POS_DISPONIBLE: 'Cambio de posición disponible'
-}
-
 let idCartaManoSeleccionada: number
 let cartaZBSeleccionada: HTMLElement
 let cartaManoSeleccionada: HTMLElement
@@ -309,7 +297,7 @@ export function colocarCartaResponse (message: ColocarCartaResponse) {
         manoNumeroCarta
     zonaBatallaYo.children[idCartaZBSeleccionada].children[1].innerHTML =
         manoElementoCarta
-    if (posicionBatalla === Estado.POS_BATALLA_ATAQUE) {
+    if (posicionBatalla === PosBatalla.ATAQUE) {
       zonaBatallaYo.children[idCartaZBSeleccionada].classList.add('ataque')
     } else {
       zonaBatallaYo.children[idCartaZBSeleccionada].classList.add('defensa')
@@ -326,7 +314,7 @@ export function colocaCartaOtroJugadorResponse (message: ColocarCartaOtroJugador
   if (resultado === ResultadoColocarCarta.CARTA_COLOCADA) {
     habilitacionBotonera()
     manoEnemigo.children[idMano].classList.remove('oculto')
-    if (posicion === Estado.POS_BATALLA_ATAQUE) {
+    if (posicion === PosBatalla.ATAQUE) {
       zonaBatallaEnemiga.children[idZonaBatalla].classList.add('ataque')
       zonaBatallaEnemiga.children[idZonaBatalla].children[0].innerHTML = carta.valor.toString()
       zonaBatallaEnemiga.children[idZonaBatalla].children[1].innerHTML = String.fromCharCode(carta.elemento as any)
