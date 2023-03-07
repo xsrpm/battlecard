@@ -3,6 +3,8 @@ import { UnirASalaResponse, IniciarJuegoResponse, ColocarCartaResponse, ColocarC
 import { enemigoDesconectadoResponse, iniciarJuegoResponse, terminarTurno as terminarTurnoResponse } from '../pages/juego'
 import { jugadorDesconectadoResponse, unirASalaResponse } from '../pages/sala'
 import { atacanTuBarreraResponse, atacanTuCartaResponse, atacarBarreraResponse, atacarCartaResponse, cambiaPosicionEnemigoResponse, cambiarPosicionResponse, colocaCartaOtroJugadorResponse, colocarCartaResponse, seleccionarManoResponse, seleccionarZonaBatallaResponse } from '../components/tablero'
+import { unirASala } from './socket-messages'
+import { initSocket } from './socket'
 
 export const handleMessageSocket = (e: any) => {
   console.log('received:')
@@ -55,4 +57,19 @@ export const handleMessageSocket = (e: any) => {
       jugadorDesconectadoResponse(message as JugadorDesconectadoResponse)
       break
   }
+}
+
+export function unirASalaSocket(nombreJugador: string, onErrorCallback: () => void) {
+  const handleOpenSocket = () => {
+    unirASala(nombreJugador)
+  }
+
+  const handleCloseSocket = (e: any) => {
+    console.log('close ws' + (e as string))
+  }
+  const handleErrorSocket = (e: any) => {
+    onErrorCallback()
+    console.log('Error: ' + (e as string))
+  }
+  initSocket(handleOpenSocket, handleMessageSocket, handleCloseSocket, handleErrorSocket)
 }
