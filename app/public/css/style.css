@@ -318,3 +318,8 @@ jugador-panel{
   width: 100vw;
   height: 5vh;
 }
+
+#root{
+  position:absolute;
+  /*z-index: 10;*/
+}
