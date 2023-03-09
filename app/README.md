@@ -132,3 +132,20 @@ El presente proyecto está dockerizado.
 - https://playwright.dev/docs/intro
 - https://playwright.dev/docs/running-tests
 - https://playwright.dev/docs/getting-started-vscode
+
+
+# crear un proyecto con typescript con vite
+
+- npm create vite@latest
+- responder las pregutas para un proyecto con typescript
+
+# eslint en proyecto typescript
+
+- npx eslint --init
+- responser las preguntas para un proyecto de typescript
+- agregar en el .eslintrc.cjs la referencia al tsconfig.json
+- agregar algunas reglas al eslintrc.cjs que queramos omitir del linter
+
+# agregar extension de eslint a vscode
+
+- configurar que los archivos de javascript/typescript se guarden on save parar la extension de eslint

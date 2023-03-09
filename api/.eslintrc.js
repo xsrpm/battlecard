@@ -1,5 +1,5 @@
 module.exports = {
-  extends: './../node_modules/ts-standard/eslintrc.json',
+  extends: './node_modules/ts-standard/eslintrc.json',
   env: {
     jest: true,
     browser: true,
