@@ -129,4 +129,6 @@ El presente proyecto está dockerizado.
 
 [Yu-Gi-Oh!_Trading_Card_Game - Wikipedia](https://en.wikipedia.org/wiki/Yu-Gi-Oh!_Trading_Card_Game)
 
-
+- https://playwright.dev/docs/intro
+- https://playwright.dev/docs/running-tests
+- https://playwright.dev/docs/getting-started-vscode
