@@ -1,10 +1,23 @@
 
+import { useState } from 'react'
 import './App.css'
+import Welcome from './pages/Welcome'
 
 function App (): JSX.Element {
+  const [actualPage, setActualPage] = useState('welcome')
+
+  const changeActualPage = (pageName) => {
+    setActualPage(pageName)
+  }
+
   return (
     <div className="App">
-     <h1>hola react</h1>
+      {
+        actualPage === 'welcome' && <Welcome/>
+      }
+      {
+        actualPage === 'welcome' && <Welcome />
+      }
     </div>
   )
 }
