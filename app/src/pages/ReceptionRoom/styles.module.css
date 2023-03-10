@@ -1,0 +1,20 @@
+.receptionRoom {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: lightblue;
+}
+
+.receptionRoom h1 {
+  color: white;
+}
+
+.receptionRoom form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

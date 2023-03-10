@@ -9,7 +9,7 @@ btnUnirASala.addEventListener('click', () => {
   unirASalaSocket(inNombreJugador.value, unirASalaOnError)
 })
 
-function unirASalaOnError() {
+function unirASalaOnError (): void {
   if (recepcion.classList.contains('mostrarPantalla')) {
     btnUnirASala.innerText = 'Unirse a la Sala'
     btnUnirASala.setAttribute('disabled', 'false')

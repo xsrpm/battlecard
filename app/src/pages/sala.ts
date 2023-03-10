@@ -1,4 +1,4 @@
-import { UnirASalaResponse, JugadorDesconectadoResponse } from '../../../api/src/response'
+import { type UnirASalaResponse, type JugadorDesconectadoResponse } from '../../../api/src/response'
 import { setJugadorId, jugadorId } from '../modules/estadoGlobal'
 import { encuentraError } from '../modules/socket'
 import { iniciarJuego } from '../modules/socket-messages'
@@ -8,7 +8,7 @@ const btnIniciarJuego = document.getElementById('btnIniciarJuego') as HTMLButton
 const sala = document.getElementById('sala') as HTMLDivElement
 const h2 = sala.getElementsByTagName('h2')
 
-export function unirASalaResponse (message: UnirASalaResponse) {
+export function unirASalaResponse (message: UnirASalaResponse): void {
   if (encuentraError(message)) return
   const { jugadores, iniciar, jugadorId } = message.payload
   h2[0].innerText = '(Sin Jugador)'
@@ -27,7 +27,7 @@ btnIniciarJuego?.addEventListener('click', () => {
   iniciarJuego(jugadorId)
 })
 
-export function jugadorDesconectadoResponse(message: JugadorDesconectadoResponse) {
+export function jugadorDesconectadoResponse (message: JugadorDesconectadoResponse): void {
   if (encuentraError(message)) return
   const { resultado, jugadores, iniciar } = message.payload
 

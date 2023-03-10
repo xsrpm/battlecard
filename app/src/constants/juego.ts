@@ -1,0 +1,5 @@
+export enum Page {
+  WELCOME = 'WELCOME',
+  RECEPTION_ROOM = 'RECEPTION ROOM',
+  WAITING_ROOM = 'WAITING ROOM'
+}

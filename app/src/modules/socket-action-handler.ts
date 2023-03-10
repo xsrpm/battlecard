@@ -1,12 +1,12 @@
 import { WebsocketEventTitle } from './../constants/websocket-event-title'
-import { UnirASalaResponse, IniciarJuegoResponse, ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse, EnemigoDesconectadoResponse, JugadorDesconectadoResponse } from '../../../api/src/response'
+import { type UnirASalaResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse, type SeleccionarZonaBatallaResponse, type SeleccionarManoResponse, type AtacarCartaResponse, type AtacarBarreraResponse, type CambiarPosicionResponse, type TerminarTurnoResponse, type EnemigoDesconectadoResponse, type JugadorDesconectadoResponse } from '../../../api/src/response'
 import { enemigoDesconectadoResponse, iniciarJuegoResponse, terminarTurno as terminarTurnoResponse } from '../pages/juego'
 import { jugadorDesconectadoResponse, unirASalaResponse } from '../pages/sala'
 import { atacanTuBarreraResponse, atacanTuCartaResponse, atacarBarreraResponse, atacarCartaResponse, cambiaPosicionEnemigoResponse, cambiarPosicionResponse, colocaCartaOtroJugadorResponse, colocarCartaResponse, seleccionarManoResponse, seleccionarZonaBatallaResponse } from '../components/tablero'
 import { unirASala } from './socket-messages'
 import { initSocket } from './socket'
 
-export const handleMessageSocket = (e: any) => {
+export const handleMessageSocket = (e: any): void => {
   console.log('received:')
   const message = JSON.parse(e.data)
   console.log(message)
@@ -59,15 +59,15 @@ export const handleMessageSocket = (e: any) => {
   }
 }
 
-export function unirASalaSocket(nombreJugador: string, onErrorCallback: () => void) {
-  const handleOpenSocket = () => {
+export function unirASalaSocket (nombreJugador: string, onErrorCallback: () => void): void {
+  const handleOpenSocket = (): void => {
     unirASala(nombreJugador)
   }
 
-  const handleCloseSocket = (e: any) => {
+  const handleCloseSocket = (e: any): void => {
     console.log('close ws' + (e as string))
   }
-  const handleErrorSocket = (e: any) => {
+  const handleErrorSocket = (e: any): void => {
     onErrorCallback()
     console.log('Error: ' + (e as string))
   }

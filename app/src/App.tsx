@@ -1,23 +1,18 @@
 
-import { useState } from 'react'
 import './App.css'
+import { Page } from './constants/juego'
+import { useAppStore } from './hooks/useAppStore'
 import Welcome from './pages/Welcome'
+import ReceptionRoom from './pages/ReceptionRoom'
+import WaitingRoom from './pages/WaitingRoom'
 
 function App (): JSX.Element {
-  const [actualPage, setActualPage] = useState('welcome')
-
-  const changeActualPage = (pageName) => {
-    setActualPage(pageName)
-  }
-
+  const actualPage = useAppStore((state) => state.actualPage)
   return (
     <div className="App">
-      {
-        actualPage === 'welcome' && <Welcome/>
-      }
-      {
-        actualPage === 'welcome' && <Welcome />
-      }
+      { actualPage === Page.WELCOME && <Welcome/>}
+      { actualPage === Page.RECEPTION_ROOM && <ReceptionRoom />}
+      { actualPage === Page.WAITING_ROOM && <WaitingRoom />}
     </div>
   )
 }
