@@ -1,9 +1,12 @@
-import { useRef } from 'react'
-import useSocketHandler from '../../modules/socket-action-handlerr'
+import useSocketHandler from '../../hooks/useWebSocketActionHandler'
 import classes from './styles.module.css'
+import { useReceptionRoomStore } from '../../hooks/useReceptionRoomStore'
+
 export default function ReceptionRoom (): JSX.Element {
+  const submitDisabled = useReceptionRoomStore(state => state.submitDisabled)
+  const setSubmitDisabled = useReceptionRoomStore(state => state.setSubmitDisabled)
   const { unirASalaSocket } = useSocketHandler()
-  const submitRef = useRef<HTMLInputElement>(null)
+
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault()
     const inNombreJugador = (event.target as any)[0].value
@@ -11,9 +14,11 @@ export default function ReceptionRoom (): JSX.Element {
     if (inNombreJugador === '') return
     unirASalaSocket(inNombreJugador, unirASalaOnError)
   }
+
   function unirASalaOnError (): void {
-    (submitRef.current as HTMLInputElement).value = 'Unirse a la Sala';
-    (submitRef.current as HTMLInputElement).setAttribute('disabled', 'false')
+    // (submitRef.current as HTMLInputElement).value = 'Unirse a la Sala';
+    // (submitRef.current as HTMLInputElement).setAttribute('disabled', 'false')
+    setSubmitDisabled(true)
   }
 
   return (
@@ -21,7 +26,7 @@ export default function ReceptionRoom (): JSX.Element {
       <h1>Ingrese su nombre/nick</h1>
       <form onSubmit={handleSubmit}>
         <input id="inputNombreJugador" />
-        <input type="submit" value="Unirse a la Sala" ref={submitRef}/>
+        <input type="submit" value="Unirse a la Sala" disabled={ submitDisabled}/>
       </form>
     </article>
   )

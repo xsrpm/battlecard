@@ -1,10 +1,10 @@
-import { WebsocketEventTitle } from './../constants/websocket-event-title'
+import { WebsocketEventTitle } from '../constants/websocket-event-title'
 import { type UnirASalaResponse } from '../../../api/src/response'
-import { unirASala } from './socket-messages'
-import { encuentraError, initSocket } from './socket'
-import { useAppStore } from '../hooks/useAppStore'
+import { unirASala } from '../modules/socket-messages'
+import { encuentraError, initSocket } from '../modules/socket'
+import { useAppStore } from './useAppStore'
 import { Page } from '../constants/juego'
-import { useWaitingRoomStore } from '../hooks/useWaitingRoomStore'
+import { useWaitingRoomStore } from './useWaitingRoomStore'
 
 function useSocketHandler () {
   const changeActualPage = useAppStore(state => state.changeActualPage)
@@ -45,16 +45,10 @@ function useSocketHandler () {
     if (playerId !== undefined) setPlayerId(jugadorId as string)
     setPlayers(jugadores)
     setStart(iniciar)
-    // h2[0].innerText = '(Sin Jugador)'
-    // h2[1].innerText = '(Sin Jugador)'
-    // for (let i = 0; i < jugadores.length; i++) {
-    //  h2[i].innerText = jugadores[i]
-    // }
-    // iniciar ? (btnIniciarJuego.disabled = false) : (btnIniciarJuego.disabled = true)
     changeActualPage(Page.WAITING_ROOM)
   }
 
-  return { unirASalaResponse, unirASalaSocket }
+  return { unirASalaSocket }
 }
 
 export default useSocketHandler

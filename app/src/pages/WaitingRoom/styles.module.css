@@ -1,9 +1,37 @@
 .waitingRoom {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: lightyellow;
+  background-color: lightgreen;
+}
+
+.waitingRoom h1 {
+  position: absolute;
+  top: 10vh;
+  background-color: greenyellow;
+  opacity: 0.5;
+}
+
+.waitingRoom div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50vw;
+  height: 100vh;
+}
+
+.waitingRoom :nth-child(2) {
+  background-color: red;
+}
+.waitingRoom :nth-child(3) {
+  background-color: pink;
+}
+
+.waitingRoom form {
+  position: absolute;
+  bottom: 10vh;
 }

@@ -1,5 +1,5 @@
-import { EnemigoDesconectadoResponse, IniciarJuegoResponse, TerminarTurnoResponse } from '../../../api/src/response'
-import { Carta } from '../../../api/src/types'
+import { type EnemigoDesconectadoResponse, type IniciarJuegoResponse, type TerminarTurnoResponse } from '../../../api/src/response'
+import { type Carta } from '../../../api/src/types'
 import { btnFinDeJuego, btnTerminarTurno, habilitacionBotonera } from '../components/botonera.js'
 import { setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag } from '../modules/estadoGlobal'
 import { info } from '../components/info'
