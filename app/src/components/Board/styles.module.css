@@ -1,0 +1,16 @@
+.board {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 75%;
+}
+
+.board > div:first-child {
+  height: 10%;
+}
+
+.board > div:last-child {
+  height: 10%;
+}

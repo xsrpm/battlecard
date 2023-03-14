@@ -28,7 +28,7 @@ function inicializarJuego (message: IniciarJuegoResponse) {
     jugador.mano.forEach((c: Carta, i: number) => {
       manoYo.children[i].classList.add('mano')
       manoYo.children[i].children[0].innerHTML = c.valor.toString()
-      manoYo.children[i].children[1].innerHTML = String.fromCharCode(c.elemento as any)
+      manoYo.children[i].children[1].innerHTML = String.fromCharCode(Number(c.elemento))
     })
 
     Array.from(zonaBatallaYo.children).forEach((el) => {

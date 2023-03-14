@@ -1,7 +1,7 @@
 import { PosBatalla } from './../constants/celdabatalla'
 import { EstadoCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, ResultadoCogerCarta, ResultadoColocarCarta } from './../constants/jugador'
-import { ColocarCartaResponse, ColocarCartaOtroJugadorResponse, SeleccionarZonaBatallaResponse, SeleccionarManoResponse, AtacarCartaResponse, AtacarBarreraResponse, CambiarPosicionResponse, TerminarTurnoResponse } from '../../../api/src/response'
-import { Carta } from '../../../api/src/types'
+import { type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse, type SeleccionarZonaBatallaResponse, type SeleccionarManoResponse, type AtacarCartaResponse, type AtacarBarreraResponse, type CambiarPosicionResponse, type TerminarTurnoResponse } from '../../../api/src/response'
+import { type Carta } from '../../../api/src/types'
 import { btnAtacarBarrera, btnAtacarCarta, btnCambiarPosicion, btnColocarEnAtaque, btnColocarEnDefensa, btnFinDeJuego, btnTerminarTurno, habilitacionBotonera, mensajeBotones } from './botonera'
 import { juegoFinalizado, jugadorId, posicionBatalla, setJuegoFinalizado, setNombreJugadorDerrotado, setNombreJugadorVictorioso, setSinBarrerasFlag, setStepAccion, sinBarrerasFlag, stepAccion } from '../modules/estadoGlobal'
 import { info } from './info'
@@ -119,9 +119,8 @@ export function seleccionarZonaBatallaResponse (message: SeleccionarZonaBatallaR
 }
 
 export function quitarSeleccionEnCartas () {
-  Array.from(manoYo.children).forEach((e) => e.classList.remove('seleccionado'))
-  Array.from(zonaBatallaYo.children).forEach((e) =>
-    e.classList.remove('seleccionado')
+  Array.from(manoYo.children).forEach((e) => { e.classList.remove('seleccionado') })
+  Array.from(zonaBatallaYo.children).forEach((e) => { e.classList.remove('seleccionado') }
   )
 }
 

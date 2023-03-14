@@ -1,0 +1,106 @@
+.rotar180 {
+  transform: rotate(-180deg);
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 33.33%;
+}
+
+.slot {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 8vw;
+  height: 100%;
+  border-style: dotted;
+  border-color: black;
+  border-width: 0.2em;
+}
+
+.rotar180 .slot {
+  transform: rotate(-180deg);
+}
+
+.slot.seleccionado {
+  border-style: double;
+  border-color: rgba(20, 202, 90, 0.863);
+  border-width: 0.4em;
+}
+
+.barrera {
+  border-style: solid;
+  border-color: black;
+  background-color: rgb(80, 61, 53);
+}
+
+.ataque {
+  border-style: double;
+  border-color: black;
+  background-color: red;
+}
+
+.ataque.seleccionado {
+  border-style: double;
+  border-color: blue;
+  border-width: 0.4em;
+}
+
+.defensa {
+  border-style: double;
+  border-color: black;
+  background-color: green;
+}
+
+.defensa.seleccionado {
+  border-style: double;
+  border-color: blue;
+  border-width: 0.4em;
+}
+
+.mano {
+  border-style: solid;
+  border-color: rgb(71, 93, 192);
+  background-color: white;
+}
+
+.oculto {
+  border-style: double;
+  border-color: white;
+  background-color: black;
+}
+
+.mano.seleccionado {
+  border-style: double;
+  border-color: rgba(230, 161, 14, 0.863);
+  border-width: 0.4em;
+}
+
+.zonaBatallaYo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.barreraYo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.manoYo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.sombrear {
+  border: 5px solid rgb(238, 223, 8);
+}

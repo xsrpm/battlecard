@@ -1,0 +1,21 @@
+.playerDashboard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  word-wrap: break-word;
+  text-align: center;
+  opacity: 0.5;
+  height: 100%;
+  width: 25vw;
+  background-color: rgb(236, 236, 192);
+}
+
+.playerDashboard p {
+  color: red;
+  font-weight: bolder;
+}
+
+.jugEnTurno {
+  opacity: 1;
+  border-style: double;
+}
