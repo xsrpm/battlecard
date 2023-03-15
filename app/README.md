@@ -6,8 +6,8 @@ Juego de cartas basado en Yu-Gi-Oh! Trading Card Game usando cartas inglesas.
 
 ![Pantalla Bienvenida](images/pant5.png)
 
-
 # Contenido del artículo
+
 - <a href="#juego">El juego.</a>
 - <a href="#screen-capture">Capturas del juego.</a>
 - <a href="#development">Desarrollo.</a>
@@ -16,9 +16,11 @@ Juego de cartas basado en Yu-Gi-Oh! Trading Card Game usando cartas inglesas.
 <h1 id="juego">El juego</h1>
 
 ## Requerimientos
+
 Se requiere de 2 jugadores ingresando a la url para iniciar el juego. En distintos dispositivos ó pestañas de navegador.
 
 ## Interfaz de juego
+
 La interfaz está compuesto de 3 lados: la sección de jugadores, zona de juego y zona de botones
 
 ### Sección de jugadores
@@ -32,7 +34,7 @@ Cada lado de un jugador está dividido en 3 partes: zona de batalla , cartas de 
 
 La zona de batalla (3 espacios) será el lugar donde el jugador colocará cartas para atacar o defender.
 
-Las barreras (5 espacios) representan nuestro numero maximo de  ataques directos/indirectos que podemos recibir en el juego.
+Las barreras (5 espacios) representan nuestro numero maximo de ataques directos/indirectos que podemos recibir en el juego.
 
 Las cartas en mano (5 espacios) son las cartas que podemos colocar en la zona de batalla.
 
@@ -40,8 +42,8 @@ Las cartas en mano (5 espacios) son las cartas que podemos colocar en la zona de
 
 En esta sección se mostrarán botones para atacar, defender, colocar, terminar turno, etc; según la necesidad.
 
-
 ## Inicio del Juego
+
 - Cada jugador tendrá una baraja inglesa de 52 cartas.
 - Las barajas son ordenadas aleatoriamente.
 - A partir de la baraja de cada jugador se extraerán 5 cartas y se colocarán boca abajo como cartas de barrera (en color marron).
@@ -49,16 +51,19 @@ En esta sección se mostrarán botones para atacar, defender, colocar, terminar 
 - El jugador que entró a la sala en primer lugar tendrá el primer turno.
 
 ## Turno de juego
+
 Antes de realizar alguna acción si el jugador tiene un espacio vacio en su mano recibirá una carta de su baraja siempre y cuando queden cartas en la baraja.
 
-Durante cada turno el jugador puede colocar cartas en zona de batalla (para defender o atacar), atacar cartas de su contrincante, cambiar la posición de batalla de una de sus cartas (ataque o defensa). 
+Durante cada turno el jugador puede colocar cartas en zona de batalla (para defender o atacar), atacar cartas de su contrincante, cambiar la posición de batalla de una de sus cartas (ataque o defensa).
 
 ### Colocar carta en tu zona de batalla
+
 - Seleccionar una carta de tu mano.
 - Click en el botón "de ataque" ó "de defensa" de la zona de botones, segun se coloque la carta en ataque o defensa.
 - Seleccionar una posición vacia en tu zona de batalla.
 
 ### Atacar carta en zona de batalla enemiga
+
 - Seleccionar una carta en tu zona de batalla.
 - Click en el botón "Atacar carta" de la zona de botones.
 - Seleccionar una carta en la zona de batalla enemiga.
@@ -77,40 +82,53 @@ El grafico siguiente resume todas las posibilidades de bonificación de ataque a
 ![Bonificación de ataque](images/bonificacion-ataque.png)
 
 ### Cambiar posición de una carta en tu zona de batalla
+
 - Seleccionar una carta en tu zona de batalla.
 - Click en el botón "Cambiar posición" de la zona de botones.
 - La carta cambiará a posición de ataque o defensa segun la posición previa.
 - **Cuando el jugador contrario coloca una carta en posicion de defensa tu veras la carta oculta (de color negra y no sabrás el valor ni palo de la carta). Cuando esta carta es ataca o el dueño cambia su posición a ataque podras ver la información de la carta**
 
 ### Terminar Turno
+
 Finaliza el turno actual y le pasa la posta al contrincante
 
 ## Fin del juego
 
 El juego termina bajo cualquiera de las siguientes condiciones:
+
 - Un jugador se queda sin cartas de barrera (derrota para el jugador)
 - A un jugador no le queda en su baraja mas cartas que colocar en su mano al iniciar su turno (derrota para el jugador).
 
 <h1 id="screen-capture">Capturas del juego</h1>
 
 ## Bienvenida
+
 ![Pantalla Bienvenida](images/pant1.png)
+
 ## Ingreso a Sala
+
 ![Ingreso a Sala](images/pant2.png)
+
 ## Sala de espera
+
 ![Pantalla Bienvenida](images/pant3.png)
+
 ## Juego
+
 ![Pantalla Bienvenida](images/pant4.png)
 ![Pantalla Bienvenida](images/pant5.png)
 ![Pantalla Bienvenida](images/pant6.png)
 ![Pantalla Bienvenida](images/pant7.png)
 ![Pantalla Bienvenida](images/pant8.png)
+
 ## Fin del Juego
+
 ![Pantalla Bienvenida](images/pant9.png)
 
 <h1 id="development">Desarrollo</h1>
 
 Este proyecto hace uso de Node.js para mejor manejo del proyecto.
+
 - Sección separada para manejo de variable de entorno.
 - Bundelizado de proyecto.
 - Posterior migración a Typescript (recomendado para proyectos de este tamaño).
@@ -127,12 +145,11 @@ El presente proyecto está dockerizado.
 
 <h1 id="reference">Referencia</h1>
 
-[Yu-Gi-Oh!_Trading_Card_Game - Wikipedia](https://en.wikipedia.org/wiki/Yu-Gi-Oh!_Trading_Card_Game)
+[Yu-Gi-Oh!\_Trading_Card_Game - Wikipedia](https://en.wikipedia.org/wiki/Yu-Gi-Oh!_Trading_Card_Game)
 
 - https://playwright.dev/docs/intro
 - https://playwright.dev/docs/running-tests
 - https://playwright.dev/docs/getting-started-vscode
-
 
 # crear un proyecto con typescript con vite
 
@@ -149,3 +166,8 @@ El presente proyecto está dockerizado.
 # agregar extension de eslint a vscode
 
 - configurar que los archivos de javascript/typescript se guarden on save parar la extension de eslint
+
+- https://react-hooks-testing-library.com/
+- https://github.com/testing-library/react-hooks-testing-library
+- https://www.npmjs.com/package/@testing-library/react
+- https://testing-library.com/docs/react-testing-library/intro

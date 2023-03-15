@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "ms-playwright.playwright",
-    "dsznajder.es7-react-js-snippets"
+    "dsznajder.es7-react-js-snippets",
+    "firsttris.vscode-jest-runner"
   ]
 }
