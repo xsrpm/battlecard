@@ -1,4 +1,3 @@
-
 import { type IniciarJuegoResponse } from '../../../api/src/response'
 import { Elemento } from '../constants/carta'
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
@@ -47,47 +46,72 @@ describe('useGameRoomStore', () => {
       barrera: [true, true, true, true, true],
       mano: [
         {
-          hidden: false,
-          selected: false,
           carta: { valor: 1, elemento: Elemento.COCO }
         },
         {
-          hidden: false,
-          selected: false,
           carta: { valor: 2, elemento: Elemento.COCO }
         },
         {
-          hidden: false,
-          selected: false,
           carta: { valor: 3, elemento: Elemento.COCO }
         },
         {
-          hidden: false,
-          selected: false,
           carta: { valor: 4, elemento: Elemento.COCO }
         },
         {
-          hidden: false,
-          selected: false,
           carta: { valor: 5, elemento: Elemento.COCO }
         }
       ],
       zonaBatalla: [
         {
-          posicionBatalla: PosBatalla.NO_HAY_CARTA,
-          selected: false
+          posicionBatalla: PosBatalla.NO_HAY_CARTA
         },
         {
-          posicionBatalla: PosBatalla.NO_HAY_CARTA,
-          selected: false
+          posicionBatalla: PosBatalla.NO_HAY_CARTA
         },
         {
-          posicionBatalla: PosBatalla.NO_HAY_CARTA,
-          selected: false
+          posicionBatalla: PosBatalla.NO_HAY_CARTA
         }
       ]
     }
-
+    const jugadorEnemigoExpected: PlayerState = {
+      enTurno: false,
+      nCardsInDeck: 20,
+      nombre: 'Juan',
+      barrera: [true, true, true, true, true],
+      mano: [
+        {
+          hidden: true
+        },
+        {
+          hidden: true
+        },
+        {
+          hidden: true
+        },
+        {
+          hidden: true
+        },
+        {
+          hidden: true
+        }
+      ],
+      zonaBatalla: [
+        {
+          posicionBatalla: PosBatalla.NO_HAY_CARTA
+        },
+        {
+          posicionBatalla: PosBatalla.NO_HAY_CARTA
+        },
+        {
+          posicionBatalla: PosBatalla.NO_HAY_CARTA
+        }
+      ]
+    }
+    const botoneraExpected = {
+      buttons: { terminarTurno: true }
+    }
     expect(result.current.jugador).toEqual(jugadorExpected)
+    expect(result.current.jugadorEnemigo).toEqual(jugadorEnemigoExpected)
+    expect(result.current.botonera).toEqual(botoneraExpected)
   })
 })

@@ -5,9 +5,12 @@ import { encuentraError, initSocket } from '../modules/socket'
 import { useAppStore } from './useAppStore'
 import { Page } from '../constants/juego'
 import { useWaitingRoomStore } from './useWaitingRoomStore'
+import { useGameRoomStore } from './useGameRoomStore'
 
 function useSocketHandler () {
+  console.log('useSocketHandler')
   const changeActualPage = useAppStore(state => state.changeActualPage)
+  const iniciarJuego = useGameRoomStore(state => state.iniciarJuego)
   const playerId = useAppStore(state => state.playerId)
   const setPlayerId = useAppStore(state => state.setPlayerId)
   const setPlayers = useWaitingRoomStore(state => state.setPlayers)
@@ -45,25 +48,32 @@ function useSocketHandler () {
   function unirASalaResponse (message: UnirASalaResponse): void {
     if (encuentraError(message)) return
     const { jugadores, iniciar, jugadorId } = message.payload
-    if (playerId !== undefined) setPlayerId(jugadorId as string)
+    console.log('🚀 ~ file: useWebSocketActionHandler.ts:51 ~ unirASalaResponse ~ jugadorId:', jugadorId)
+    console.log('🚀 ~ file: useWebSocketActionHandler.ts:51 ~ unirASalaResponse ~ playerId:', playerId)
     setPlayers(jugadores)
     setStart(iniciar)
+    if (typeof playerId === 'undefined') {
+      setPlayerId(jugadorId as string)
+    }
     changeActualPage(Page.WAITING_ROOM)
+    console.log('🚀 ~ file: useWebSocketActionHandler.ts:51 ~ unirASalaResponse ~ jugadorId:', jugadorId)
+    console.log('🚀 ~ file: useWebSocketActionHandler.ts:51 ~ unirASalaResponse ~ playerId:', playerId)
   }
 
   function iniciarJuegoResponse (message: IniciarJuegoResponse) {
     if (encuentraError(message)) return
-    inicializarJuego(message)
+    iniciarJuego(message)
+    // inicializarJuego(message)
     // mostrarJugadorEnTurno(message as TerminarTurnoResponse)
     // habilitacionBotonera()
     changeActualPage(Page.GAME_ROOM)
   }
-
+  /*
   function inicializarJuego (message: IniciarJuegoResponse) {
     if (encuentraError(message)) return
     const jugador = message.payload.jugador
     const jugadorEnemigo = message.payload.jugadorEnemigo
-    /*
+
     if (jugador != null && jugadorEnemigo != null) {
       for (let i = 0; i < jugador.nBarrera; i++) {
         barreraYo.children[i].classList.add('barrera')
@@ -101,9 +111,9 @@ function useSocketHandler () {
       setSinBarrerasFlag(false)
       setJuegoFinalizado(false)
     }
-    */
-  }
 
+  }
+ */
   return { unirASalaSocket, iniciarJuegoResponse }
 }
 

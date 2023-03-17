@@ -1,28 +1,29 @@
 import classes from './styles.module.css'
 
-export default function KeyPad () {
+interface Props {
+  buttons: {
+    colocarEnAtaque?: boolean
+    colocarEnDefensa?: boolean
+    atacarCarta?: boolean
+    atacarBarrera?: boolean
+    cambiarPosicion?: boolean
+    terminarTurno?: boolean
+    finDeTurno?: boolean
+  }
+  message?: string
+}
+
+export default function KeyPad ({ buttons, message }: Props) {
   return (
     <article className={classes.keyPad}>
-      <p id="mensajeBotones"></p>
-      <button id="btnColocarEnAtaque" className="btnColocarEnAtaque  ocultar">
-        de ataque
-      </button>
-      <button id="btnColocarEnDefensa" className="btnColocarEnDefensa ocultar">
-        de defensa
-      </button>
-      <button id="btnAtacarCarta" className="ocultar">
-        Atacar carta
-      </button>
-      <button id="btnAtacarBarrera" className="btnAtacarBarrera ocultar">
-        Atacar barrera
-      </button>
-      <button id="btnCambiarPosicion" className="ocultar">
-        Cambiar posición
-      </button>
-      <button id="btnTerminarTurno">Terminar turno</button>
-      <button id="btnFinDeJuego" className="ocultar">
-        Fin de Juego
-      </button>
+      <p id="mensajeBotones">{message}</p>
+      {buttons.colocarEnAtaque as boolean && <button id="btnColocarEnAtaque" className="btnColocarEnAtaque">de ataque</button>}
+      {buttons.colocarEnDefensa as boolean && <button id="btnColocarEnDefensa" className="btnColocarEnDefensa">de defensa</button>}
+      {buttons.atacarCarta as boolean && <button id="btnAtacarCarta">Atacar carta</button>}
+      {buttons.atacarBarrera as boolean && <button id="btnAtacarBarrera" className="btnAtacarBarrera">Atacar barrera</button>}
+      {buttons.cambiarPosicion as boolean && <button id="btnCambiarPosicion">Cambiar posición</button>}
+      {buttons.terminarTurno as boolean && <button id="btnTerminarTurno">Terminar turno</button>}
+      {buttons.finDeTurno as boolean && <button id="btnFinDeJuego">Fin de Juego</button>}
     </article>
   )
 }

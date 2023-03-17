@@ -321,5 +321,5 @@ jugador-panel{
 
 #root{
   position:absolute;
-  /*z-index: 10;*/
+  z-index: 10
 }

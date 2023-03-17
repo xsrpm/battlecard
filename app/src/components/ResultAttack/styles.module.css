@@ -1,0 +1,67 @@
+.resultadoAtaque{
+    position: absolute;
+    display: grid;
+    visibility: hidden;
+    grid-template-columns:1fr 1fr 1fr;
+    grid-template-rows: 0.5fr 1fr 0.5fr;
+    grid-template-areas: 
+                        "atacante vs atacado"
+                        "cartaAtacante resultado cartaAtacada"
+                        "bonusAtacante detalleResultado bonusAtacado";
+    background-color: tomato;
+    text-align: center;
+    justify-items: center;
+    align-items: center;
+    
+}
+.resultadoAtaque.mostrar{
+    visibility:visible;
+}
+.atacante{
+    display: grid;
+    grid-area: atacante;
+}
+.cartaAtacante{
+    display: grid;
+    grid-area: cartaAtacante;
+}
+.bonusAtacante{
+    display: grid;
+    grid-area: bonusAtacante;
+}
+.vs{
+    display: grid;
+    grid-area: vs;
+}
+.resultado{
+    display: grid;
+    grid-area: resultado;
+}
+.detalleResultado{
+    display: grid;
+    grid-area: detalleResultado;
+}
+.atacado{
+    display: grid;
+    grid-area: atacado;
+}
+.cartaAtacada{
+    display: grid;
+    grid-area: cartaAtacada;
+}
+.bonusAtacado{
+    display: grid;
+    grid-area: bonusAtacado;
+}
+.carta{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 4.5vw;
+    height: 13vh;
+    border-style: solid;
+    border-color:rgb(71, 93, 192);
+    border-width: 0.2em;
+    background-color:white;
+}

@@ -11,21 +11,6 @@ interface Props {
   barrera: boolean[]
   mano: CartaEnMano[]
 }
-/*
-  <div className={classes.slot} data-id="2">
-    <span></span>
-    <span></span>
-  </div>
-*/
-/*
-  <div className={classes.slot} data-id="0"></div>
-*/
-/*
-  <div className={`${classes.slot} ${classes.oculto}`} data-id="0">
-    <span></span>
-    <span></span>
-  </div>
-*/
 
 export default function PlayerBoard ({ reverseBoard = false, zonaBatalla, barrera, mano }: Props) {
   const additionalPosBatallaClasses = (posicionBatalla: PosBatalla) => {
@@ -41,15 +26,18 @@ export default function PlayerBoard ({ reverseBoard = false, zonaBatalla, barrer
     else if (typeof carta === 'undefined') return ''
     else return classes.mano
   }
+  const convertUnicode = (unicode: string) => {
+    return unicode.replace(/0x([0-9]{4})/g, (a, b) => String.fromCharCode(parseInt(b, 16)))
+  }
   return (
     <article className={`${reverseBoard ? classes.rotar180 : ''}`}>
         <div className={classes.row} id="zonaBatalla">
           {
             zonaBatalla.map((celdaBatalla, id) => {
               return (
-                <div key={id} className={`${classes.slot} ${additionalPosBatallaClasses(celdaBatalla?.posicionBatalla as PosBatalla)} ${celdaBatalla.selected ? classes.sombrear : ''}`} data-id={id}>
+                <div key={id} className={`${classes.slot} ${additionalPosBatallaClasses(celdaBatalla?.posicionBatalla as PosBatalla)} ${celdaBatalla.selected as boolean ? classes.sombrear : ''}`} data-id={id}>
                   <span>{celdaBatalla?.carta?.valor}</span>
-                  <span>{celdaBatalla?.carta?.elemento}</span>
+                  <span>{convertUnicode(celdaBatalla?.carta?.elemento ?? '')}</span>
                 </div>
               )
             })
@@ -68,9 +56,9 @@ export default function PlayerBoard ({ reverseBoard = false, zonaBatalla, barrer
           {
             mano.map((cartaEnMano, id) => {
               return (
-                <div key={id} className={`${classes.slot} ${additionalCartaEnManoClasses(cartaEnMano.carta as Carta, cartaEnMano.hidden)} ${cartaEnMano.selected ? classes.sombrear : ''}`} data-id={id}>
+                <div key={id} className={`${classes.slot} ${additionalCartaEnManoClasses(cartaEnMano.carta as Carta, cartaEnMano.hidden as boolean)} ${cartaEnMano.selected as boolean ? classes.sombrear : ''}`} data-id={id}>
                   <span>{cartaEnMano.carta?.valor}</span>
-                  <span>{cartaEnMano.carta?.elemento}</span>
+                  <span>{convertUnicode(cartaEnMano?.carta?.elemento ?? '')}</span>
               </div>
               )
             })

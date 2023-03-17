@@ -1,109 +1,83 @@
 import { create } from 'zustand'
 import { type IniciarJuegoResponse } from '../../../api/src/response'
 import { PosBatalla } from '../constants/celdabatalla'
+import { type KeyPadState } from '../types/KeyPadState'
 import { type PlayerState } from '../types/PlayerState'
 
 interface GameRoomStore {
   jugador: PlayerState
   jugadorEnemigo: PlayerState
+  botonera: KeyPadState
   iniciarJuego: (response: IniciarJuegoResponse) => void
 }
 
 export const useGameRoomStore = create<GameRoomStore>((set, get) => ({
   jugador: {
-    zonaBatalla: [
-      {
-        posicionBatalla: PosBatalla.NO_HAY_CARTA,
-        selected: false
-      },
-      {
-        posicionBatalla: PosBatalla.NO_HAY_CARTA,
-        selected: false
-      },
-      {
-        posicionBatalla: PosBatalla.NO_HAY_CARTA,
-        selected: false
-      }
-    ],
+    zonaBatalla: [{}, {}, {}],
     barrera: [true, true, true, true, true],
-    mano: [{
-      hidden: false,
-      selected: false
-    },
-    {
-      hidden: false,
-      selected: false
-    },
-    {
-      hidden: false,
-      selected: false
-    },
-    {
-      hidden: false,
-      selected: false
-    },
-    {
-      hidden: false,
-      selected: false
-    }
-    ],
+    mano: [{}, {}, {}, {}, {}],
     enTurno: true,
     nCardsInDeck: 20,
     nombre: ''
   },
   jugadorEnemigo: {
-    zonaBatalla: [
-      {
-        posicionBatalla: PosBatalla.NO_HAY_CARTA,
-        selected: false
-      },
-      {
-        posicionBatalla: PosBatalla.NO_HAY_CARTA,
-        selected: false
-      },
-      {
-        posicionBatalla: PosBatalla.NO_HAY_CARTA,
-        selected: false
-      }
-    ],
+    zonaBatalla: [{}, {}, {}],
     barrera: [true, true, true, true, true],
-    mano: [{
-      hidden: false,
-      selected: false
-    },
-    {
-      hidden: false,
-      selected: false
-    },
-    {
-      hidden: false,
-      selected: false
-    },
-    {
-      hidden: false,
-      selected: false
-    },
-    {
-      hidden: false,
-      selected: false
-    }
-    ],
+    mano: [{}, {}, {}, {}, {}],
     enTurno: false,
     nCardsInDeck: 20,
     nombre: ''
   },
+  botonera: {
+    buttons: {
+      colocarEnAtaque: false,
+      colocarEnDefensa: false,
+      atacarCarta: false,
+      atacarBarrera: false,
+      cambiarPosicion: false,
+      terminarTurno: false,
+      finDeTurno: false
+    },
+    message: ''
+  },
   iniciarJuego: (response: IniciarJuegoResponse) => {
-    const manoJugador = get().jugador.mano.map((v, id) => {
-      return { ...get().jugador.mano[id], carta: response.payload.jugador?.mano[id] }
+    const manoJugador = get().jugador.mano.map((_, id) => {
+      return { carta: response.payload.jugador?.mano[id] }
     })
-    set((state) => ({
+    const manoJugadorEnemigo = get().jugadorEnemigo.mano.map(() => {
+      return { hidden: true }
+    })
+    const zonaBatallaJugador = get().jugador.zonaBatalla.map(() => {
+      return { posicionBatalla: PosBatalla.NO_HAY_CARTA }
+    })
+    const botoneraEstado = (enTurno: boolean) => {
+      if (enTurno) {
+        return {
+          buttons: { terminarTurno: true }
+        }
+      }
+      return {
+        buttons: {}
+      }
+    }
+    set(() => ({
       jugador: {
-        ...state.jugador,
+        zonaBatalla: zonaBatallaJugador,
         mano: manoJugador,
         enTurno: response.payload.jugador?.enTurno as boolean,
         nombre: response.payload.jugador?.nombre as string,
-        nCardsInDeck: response.payload.jugador?.nDeck as number
-      }
+        nCardsInDeck: response.payload.jugador?.nDeck as number,
+        barrera: Array(response.payload.jugador?.nBarrera).fill(true)
+      },
+      jugadorEnemigo: {
+        zonaBatalla: zonaBatallaJugador,
+        mano: manoJugadorEnemigo,
+        enTurno: response.payload.jugadorEnemigo?.enTurno as boolean,
+        nombre: response.payload.jugadorEnemigo?.nombre as string,
+        nCardsInDeck: response.payload.jugadorEnemigo?.nDeck as number,
+        barrera: Array(response.payload.jugadorEnemigo?.nBarrera).fill(true)
+      },
+      botonera: botoneraEstado(response.payload.jugador?.enTurno as boolean)
     }))
   }
 }))
