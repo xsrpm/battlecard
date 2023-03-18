@@ -63,3 +63,5 @@ Response2
 
     {"event":"Unir a sala","payload":{"resultado":"Exito","jugadores":["cesar","krister"],"iniciar":true}}
 
+- https://github.com/colinhacks/zod
+- https://zod.dev/
