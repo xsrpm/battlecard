@@ -3,7 +3,6 @@ import {
   ResultadoAtacarBarrera,
   ResultadoCambiarPosicion
 } from './../constants/jugador'
-import { ResultadoColocarCarta } from '../constants/jugador'
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
 
 export const unirASala = (nombreJugador: string) => ({
@@ -27,14 +26,6 @@ export const seleccionarMano = (jugadorId: string, idMano: number) => ({
     idMano
   }
 })
-
-export const seleccionarManoResponse = {
-  event: WebsocketEventTitle.SELECCIONAR_MANO,
-  payload: {
-    existeCarta: true,
-    puedeColocarCarta: ResultadoColocarCarta.POSIBLE
-  }
-}
 
 export const seleccionarCeldaEnZonaBatalla = (
   jugadorId: string,

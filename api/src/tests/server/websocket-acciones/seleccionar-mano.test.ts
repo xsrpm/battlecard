@@ -1,7 +1,9 @@
-import { seleccionarMano, seleccionarManoResponse, iniciarJuego, unirseASala1, unirseASala2 } from './../../../utils/websocket-test-helper'
-import { UnirASalaResponse } from '../../../response'
 import request from 'superwstest'
+import { seleccionarMano, iniciarJuego, unirASala } from './../../../utils/websocket-test-helper'
+import { UnirASalaResponse } from '../../../response'
 import server from '../../../server/websocket-acciones'
+import { WebsocketEventTitle } from '../../../constants/websocket-event-title'
+import { ResultadoColocarCarta } from '../../../constants/jugador'
 
 describe('Websocket Server', () => {
   beforeEach((done) => {
@@ -12,30 +14,52 @@ describe('Websocket Server', () => {
     server.close(done)
   })
 
-  describe('estando el servidor en sala de espera', () => {
-    describe('iniciar el juego', () => {
+  describe('seleccionar mano', () => {
+    describe('primer jugador seleccionar mano', () => {
       test('válido', async () => {
-        let jugadorId1 = ''
-        await request(server, { defaultExpectOptions: { timeout: 5000 } })
+        const nombreJugador1 = 'César'
+        const nombreJugador2 = 'Krister'
+        let jugador1Id = ''
+        const player1join = request(server)
           .ws('/ws')
-          .sendJson(unirseASala1)
-          .expectJson((response: UnirASalaResponse) => {
-            jugadorId1 = response.payload.jugadorId as string
+          .sendJson(unirASala(nombreJugador1))
+          .expectJson((response: UnirASalaResponse) => { // response: jugador 1 se une a sala
+            jugador1Id = response.payload.jugadorId as string
+          })
+          .expectJson() // response: jugador 2 se une a sala
+
+        const player2join = request(server)
+          .ws('/ws')
+          .expectJson() // response: jugador 1 se une a sala
+          .sendJson(unirASala(nombreJugador2))
+          .expectJson()// response: jugador 2 se une a sala
+
+        await Promise.all([
+          player1join,
+          player2join
+        ])
+
+        const player1actions = request(server)
+          .ws('/ws')
+          .sendJson(iniciarJuego(jugador1Id))
+          .expectJson() // response: jugador 1 inició el juego
+          .sendJson(seleccionarMano(jugador1Id, 0))
+          .expectJson({
+            event: WebsocketEventTitle.SELECCIONAR_MANO,
+            payload: {
+              existeCarta: true,
+              puedeColocarCarta: ResultadoColocarCarta.POSIBLE
+            }
           })
 
-        let jugadorId2 = ''
-        await request(server, { defaultExpectOptions: { timeout: 5000 } })
+        const player2actions = request(server)
           .ws('/ws')
-          .sendJson(unirseASala2)
-          .expectJson((response: UnirASalaResponse) => {
-            jugadorId2 = response.payload.jugadorId as string
-          })
-          .sendJson(iniciarJuego(jugadorId2))
+          .expectJson() // response: jugador 1 inició el juego
 
-        await request(server, { defaultExpectOptions: { timeout: 5000 } })
-          .ws('/ws')
-          .sendJson(seleccionarMano(jugadorId1, 0))
-          .expectJson(seleccionarManoResponse)
+        await Promise.all([
+          player1actions,
+          player2actions
+        ])
       })
     })
   })

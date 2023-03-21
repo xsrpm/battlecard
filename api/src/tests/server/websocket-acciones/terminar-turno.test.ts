@@ -6,15 +6,12 @@ import {
 } from './../../../response.d'
 import {
   iniciarJuego,
-  unirseASala1,
-  unirseASala2,
   terminarTurno,
-  colocarCarta
+  unirASala
 } from '../../../utils/websocket-test-helper'
 import { UnirASalaResponse } from '../../../response'
 import server from '../../../server/websocket-acciones'
 import { WebsocketEventTitle } from '../../../constants/websocket-event-title'
-import { PosBatalla } from '../../../constants/celdabatalla'
 
 describe('Websocket Server', () => {
   beforeEach((done) => {
@@ -25,43 +22,55 @@ describe('Websocket Server', () => {
     server.close(done)
   })
 
-  describe('estando el servidor en sala de espera', () => {
-    describe('terminar turno', () => {
+  describe('terminar turno', () => {
+    describe('jugador 1 termina su turno e inicia turno de jugador 2', () => {
       test('válido', async () => {
+        const nombreJugador1 = 'César'
+        const nombreJugador2 = 'Krister'
         let jugadorId1 = ''
-        await request(server, { defaultExpectOptions: { timeout: 5000 } })
+
+        const player1join = request(server)
           .ws('/ws')
-          .sendJson(unirseASala1)
-          .expectJson((response: UnirASalaResponse) => {
+          .sendJson(unirASala(nombreJugador1))
+          .expectJson((response: UnirASalaResponse) => { // response: jugador 1 se une a sala
             jugadorId1 = response.payload.jugadorId as string
           })
-        let jugadorId2 = ''
-        await request(server, { defaultExpectOptions: { timeout: 5000 } })
+          .expectJson() // response: jugador 2 se une a sala
+
+        const player2join = request(server)
           .ws('/ws')
-          .sendJson(unirseASala2)
-          .expectJson((response: UnirASalaResponse) => {
-            jugadorId2 = response.payload.jugadorId as string
-          })
+          .expectJson() // response: jugador 1 se une a sala
+          .sendJson(unirASala(nombreJugador2))
+          .expectJson()// response: jugador 2 se une a sala
+
+        await Promise.all([
+          player1join,
+          player2join
+        ])
 
         let nDeckJugador1: number
         let nDeckJugador2: number
-        await request(server, { defaultExpectOptions: { timeout: 5000 } })
+        const player1startGame = request(server)
           .ws('/ws')
           .sendJson(iniciarJuego(jugadorId1))
           .expectJson((response: IniciarJuegoResponse) => {
             nDeckJugador1 = response.payload.jugador?.nDeck as number
             nDeckJugador2 = response.payload.jugadorEnemigo?.nDeck as number
-          })
+          })// response: jugador 1 inició el juego
 
-        await request(server, { defaultExpectOptions: { timeout: 5000 } })
+        const player2startGame = request(server)
           .ws('/ws')
-          .sendJson(colocarCarta(jugadorId1, PosBatalla.ATAQUE, 0, 0))
+          .expectJson() // response: jugador 1 inició el juego
 
-        await request(server, { defaultExpectOptions: { timeout: 5000 } })
+        await Promise.all([
+          player1startGame,
+          player2startGame
+        ])
+
+        const player1endTurn = request(server)
           .ws('/ws')
           .sendJson(terminarTurno(jugadorId1))
           .expectJson((response: TerminarTurnoResponse) => {
-            console.log(response)
             expect(response.event).toBe(WebsocketEventTitle.TERMINAR_TURNO)
             expect(response.payload.resultado).toBe(
               ResultadoCogerCarta.MANO_LLENA
@@ -70,22 +79,24 @@ describe('Websocket Server', () => {
             expect(response.payload.jugador.nDeck).toBe(nDeckJugador2)
             expect(response.payload.jugadorEnemigo.enTurno).toBe(true)
             expect(response.payload.jugadorEnemigo.nDeck).toBe(nDeckJugador1)
+            expect(response.payload.resultado).toBe(ResultadoCogerCarta.MANO_LLENA)
           })
 
-        await request(server, { defaultExpectOptions: { timeout: 5000 } })
+        const player2endTurn = request(server)
           .ws('/ws')
-          .sendJson(terminarTurno(jugadorId2))
           .expectJson((response: TerminarTurnoResponse) => {
-            console.log(response)
             expect(response.event).toBe(WebsocketEventTitle.TERMINAR_TURNO)
-            expect(response.payload.resultado).toBe(
-              ResultadoCogerCarta.EXITO
-            )
-            expect(response.payload.jugador.enTurno).toBe(false)
+            expect(response.payload.jugador.enTurno).toBe(true)
             expect(response.payload.jugador.nDeck).toBe(nDeckJugador2)
-            expect(response.payload.jugadorEnemigo.enTurno).toBe(true)
-            expect(response.payload.jugadorEnemigo.nDeck).toBe(nDeckJugador1 - 1)
+            expect(response.payload.jugadorEnemigo.enTurno).toBe(false)
+            expect(response.payload.jugadorEnemigo.nDeck).toBe(nDeckJugador1)
+            expect(response.payload.resultado).toBe(ResultadoCogerCarta.MANO_LLENA)
           })
+
+        await Promise.all([
+          player1endTurn,
+          player2endTurn
+        ])
       })
     })
   })
