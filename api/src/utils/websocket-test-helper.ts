@@ -63,3 +63,11 @@ export const cambiarPosicion = (jugadorId: string, idZonaBatalla: number) => ({
     idZonaBatalla
   }
 })
+
+export const atacarBarrera = (jugadorId: string, idZonaBatalla: number) => ({
+  event: WebsocketEventTitle.ATACAR_BARRERA,
+  payload: {
+    jugadorId,
+    idZonaBatalla
+  }
+})
