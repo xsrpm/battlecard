@@ -3,7 +3,7 @@ import { z } from 'zod'
 export const iniciarJuegoSchema = z.object({
   event: z.string(),
   payload: z.object({
-    jugadorId: z.string()
+    jugadorId: z.string().uuid()
   })
 })
 

@@ -167,7 +167,6 @@ function iniciarJuego (ws: WebSocket, reqEvent: IniciarJuegoRequest) {
   try {
     iniciarJuegoSchema.parse(reqEvent)
     const { jugadorId } = reqEvent.payload
-    console.log('🚀 ~ file: websocket-acciones.ts:150 ~ iniciarJuego ~ jugadorId:', jugadorId)
     const respIniciarJuego = juego.iniciarJuego()
     const respEvent: IniciarJuegoResponse = {
       event: WebsocketEventTitle.INICIAR_JUEGO,
@@ -185,7 +184,6 @@ function iniciarJuego (ws: WebSocket, reqEvent: IniciarJuegoRequest) {
     const jugadorConectadoActual = jugadoresConectados.find((jugadorConectado) => {
       return jugadorConectado.jugador === juego.jugadorActual
     })
-    // console.log('🚀 ~ file: websocket-acciones.ts:168 ~ jugadorConectadoActual ~ jugadorConectadoActual:', jugadorConectadoActual)
     if (jugadorId === jugadorConectadoActual?.uuid) { // jugador 1 inicia el juego
       console.log('jugador 1 inicia el juego')
       respEvent.payload.jugador = {

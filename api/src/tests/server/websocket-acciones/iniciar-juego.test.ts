@@ -32,7 +32,7 @@ describe('Websocket Server', () => {
           .sendJson(iniciarJuego(jugador1Id))
           .expectJson((response: IniciarJuegoResponse) => { // response: jugador 1 inició el juego
             console.log('🚀 ~ file: iniciar-juego.test.ts:34 ~ .expectJson ~ response:', response)
-            console.log('// response: jugador 1 inició el juego')
+            // console.log('// response: jugador 1 inició el juego')
             expect(response.event).toBe(WebsocketEventTitle.INICIAR_JUEGO)
             expect(response.payload.respuesta).toBe(ResultadoIniciarJuego.JUEGO_INICIADO)
             expect(response.payload.jugador?.nombre).toBe(nombreJugador1)
