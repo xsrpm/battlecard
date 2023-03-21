@@ -467,7 +467,7 @@ function cambiarPosicion (ws: WebSocket, message: CambiarPosicionRequest) {
       event: WebsocketEventTitle.CAMBIAR_POSICION,
       payload: juego.cambiarPosicionBatalla(idZonaBatalla)
     }
-    sendMessageToOthers(ws, respCambiarPosicion)
+    sendMessage(ws, respCambiarPosicion)
     respCambiarPosicion.event = WebsocketEventTitle.CAMBIA_POSICION_ENEMIGO
     respCambiarPosicion.payload.idZonaBatalla = idZonaBatalla
     sendMessageToOthers(ws, respCambiarPosicion)
