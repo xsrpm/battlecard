@@ -185,7 +185,7 @@ function iniciarJuego (ws: WebSocket, reqEvent: IniciarJuegoRequest) {
       return jugadorConectado.jugador === juego.jugadorActual
     })
     if (jugadorId === jugadorConectadoActual?.uuid) { // jugador 1 inicia el juego
-      console.log('jugador 1 inicia el juego')
+      // console.log('jugador 1 inicia el juego')
       respEvent.payload.jugador = {
         nombre: jugadorActual.nombre,
         nBarrera: jugadorActual.barrera.length,
@@ -217,7 +217,7 @@ function iniciarJuego (ws: WebSocket, reqEvent: IniciarJuegoRequest) {
       }
       sendMessageToOthers(ws, respEvent)
     } else {
-      console.log('jugador 2 inicia el juego')
+      // console.log('jugador 2 inicia el juego')
       respEvent.payload.jugador = {
         nombre: jugadorAnterior.nombre,
         nBarrera: jugadorAnterior.barrera.length,

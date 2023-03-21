@@ -15,24 +15,35 @@ describe('Websocket Server', () => {
     server.close(done)
   })
 
-  describe('estando el servidor en sala de espera', () => {
+  describe('iniciar juego', () => {
     describe('primer jugador inicia el juego', () => {
       test('válido', async () => {
         const nombreJugador1 = 'César'
         const nombreJugador2 = 'Krister'
         let jugador1Id = ''
-        const player1actions = request(server)
+        const player1join = request(server)
           .ws('/ws')
           .sendJson(unirASala(nombreJugador1))
           .expectJson((response: UnirASalaResponse) => { // response: jugador 1 se une a sala
             jugador1Id = response.payload.jugadorId as string
-            console.log('🚀 ~ file: iniciar-juego.test.ts:29 ~ .expectJson ~ jugador1Id:', jugador1Id)
           })
           .expectJson() // response: jugador 2 se une a sala
+
+        const player2join = request(server)
+          .ws('/ws')
+          .expectJson() // response: jugador 1 se une a sala
+          .sendJson(unirASala(nombreJugador2))
+          .expectJson()// response: jugador 2 se une a sala
+
+        await Promise.all([
+          player1join,
+          player2join
+        ])
+
+        const player1actions = request(server)
+          .ws('/ws')
           .sendJson(iniciarJuego(jugador1Id))
           .expectJson((response: IniciarJuegoResponse) => { // response: jugador 1 inició el juego
-            console.log('🚀 ~ file: iniciar-juego.test.ts:34 ~ .expectJson ~ response:', response)
-            // console.log('// response: jugador 1 inició el juego')
             expect(response.event).toBe(WebsocketEventTitle.INICIAR_JUEGO)
             expect(response.payload.respuesta).toBe(ResultadoIniciarJuego.JUEGO_INICIADO)
             expect(response.payload.jugador?.nombre).toBe(nombreJugador1)
@@ -49,9 +60,6 @@ describe('Websocket Server', () => {
 
         const player2actions = request(server)
           .ws('/ws')
-          .expectJson() // response: jugador 1 se une a sala
-          .sendJson(unirASala(nombreJugador2))
-          .expectJson()// response: jugador 2 se une a sala
           .expectJson((response: IniciarJuegoResponse) => { // response: jugador 1 inició el juego
             expect(response.event).toBe(WebsocketEventTitle.INICIAR_JUEGO)
             expect(response.payload.respuesta).toBe(ResultadoIniciarJuego.JUEGO_INICIADO)
@@ -78,11 +86,28 @@ describe('Websocket Server', () => {
         const nombreJugador1 = 'César'
         const nombreJugador2 = 'Krister'
         let jugador2Id = ''
-        const player1actions = request(server)
+
+        const player1join = request(server)
           .ws('/ws')
           .sendJson(unirASala(nombreJugador1))
           .expectJson() // response: jugador 1 se une a sala
           .expectJson() // response: jugador 2 se une a sala
+
+        const player2join = request(server)
+          .ws('/ws')
+          .expectJson() // response: jugador 1 se une a sala
+          .sendJson(unirASala(nombreJugador2))
+          .expectJson((response: UnirASalaResponse) => { // response: jugador 2 se une a sala
+            jugador2Id = response.payload.jugadorId as string
+          })
+
+        await Promise.all([
+          player1join,
+          player2join
+        ])
+
+        const player1actions = request(server)
+          .ws('/ws')
           .expectJson((response: IniciarJuegoResponse) => { // response: Jugador 2 inició el juego
             expect(response.event).toBe(WebsocketEventTitle.INICIAR_JUEGO)
             expect(response.payload.respuesta).toBe(ResultadoIniciarJuego.JUEGO_INICIADO)
@@ -100,11 +125,6 @@ describe('Websocket Server', () => {
 
         const player2actions = request(server)
           .ws('/ws')
-          .expectJson() // response: jugador 1 se une a sala
-          .sendJson(unirASala(nombreJugador2))
-          .expectJson((response: UnirASalaResponse) => { // response: jugador 2 se une a sala
-            jugador2Id = response.payload.jugadorId as string
-          })
           .sendJson(iniciarJuego(jugador2Id))
           .expectJson((response: IniciarJuegoResponse) => { // response: jugador 2 inició el juego
             expect(response.event).toBe(WebsocketEventTitle.INICIAR_JUEGO)
