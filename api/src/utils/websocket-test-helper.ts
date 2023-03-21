@@ -1,8 +1,4 @@
-import {
-  ResultadoAtacarCarta,
-  ResultadoAtacarBarrera,
-  ResultadoCambiarPosicion
-} from './../constants/jugador'
+
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
 
 export const unirASala = (nombreJugador: string) => ({
@@ -37,19 +33,6 @@ export const seleccionarCeldaEnZonaBatalla = (
     idZonaBatalla
   }
 })
-
-export const seleccionarCeldaEnZonaBatallaResponse = {
-  event: WebsocketEventTitle.SELECCIONAR_ZONA_BATALLA,
-  payload: {
-    existeCarta: true,
-    puedeAtacarCarta:
-      ResultadoAtacarCarta.ATAQUES_SOLO_SE_REALIZAN_EN_SEGUNDO_TURNO,
-    puedeAtacarBarrera:
-      ResultadoAtacarBarrera.ATAQUES_SOLO_SE_REALIZAN_EN_SEGUNDO_TURNO,
-    puedeCambiarPosicion:
-      ResultadoCambiarPosicion.SIN_CAMBIOS_DE_POSICION_DISPONIBLES
-  }
-}
 
 export const colocarCarta = (
   jugadorId: string,
