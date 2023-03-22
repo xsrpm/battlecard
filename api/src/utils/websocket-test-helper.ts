@@ -71,3 +71,12 @@ export const atacarBarrera = (jugadorId: string, idZonaBatalla: number) => ({
     idZonaBatalla
   }
 })
+
+export const atacarUnaCarta = (jugadorId: string, idZonaBatalla: number, idZonaBatallaEnemiga: number) => ({
+  event: WebsocketEventTitle.ATACAR_CARTA,
+  payload: {
+    jugadorId,
+    idZonaBatalla,
+    idZonaBatallaEnemiga
+  }
+})

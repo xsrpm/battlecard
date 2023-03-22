@@ -15,8 +15,8 @@ describe('Websocket Server', () => {
     server.close(done)
   })
 
-  describe('seleccionar celda en zona de batalla', () => {
-    describe('jugador 1 selecciona una de sus celdas en su zona de batalla ', () => {
+  describe('atacar barrera', () => {
+    describe('jugador 1 ataca una barrera enemiga', () => {
       test('válido', async () => {
         const nombreJugador1 = 'César'
         const nombreJugador2 = 'Krister'
