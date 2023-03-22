@@ -48,16 +48,12 @@ function useSocketHandler () {
   function unirASalaResponse (message: UnirASalaResponse): void {
     if (encuentraError(message)) return
     const { jugadores, iniciar, jugadorId } = message.payload
-    console.log('🚀 ~ file: useWebSocketActionHandler.ts:51 ~ unirASalaResponse ~ jugadorId:', jugadorId)
-    console.log('🚀 ~ file: useWebSocketActionHandler.ts:51 ~ unirASalaResponse ~ playerId:', playerId)
     setPlayers(jugadores)
     setStart(iniciar)
-    if (typeof playerId === 'undefined') {
-      setPlayerId(jugadorId as string)
+    if (typeof jugadorId !== 'undefined') {
+      setPlayerId(jugadorId)
+      changeActualPage(Page.WAITING_ROOM)
     }
-    changeActualPage(Page.WAITING_ROOM)
-    console.log('🚀 ~ file: useWebSocketActionHandler.ts:51 ~ unirASalaResponse ~ jugadorId:', jugadorId)
-    console.log('🚀 ~ file: useWebSocketActionHandler.ts:51 ~ unirASalaResponse ~ playerId:', playerId)
   }
 
   function iniciarJuegoResponse (message: IniciarJuegoResponse) {
