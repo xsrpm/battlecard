@@ -1,0 +1,3 @@
+interface GameInfoState {
+  mostrar: boolean
+}

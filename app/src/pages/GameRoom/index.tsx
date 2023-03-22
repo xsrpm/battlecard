@@ -9,7 +9,7 @@ import { useGameRoomStore } from '../../hooks/useGameRoomStore'
 import classes from './styles.module.css'
 
 export default function GameRoom (): JSX.Element {
-  const { jugador, jugadorEnemigo, botonera } = useGameRoomStore()
+  const { jugador, jugadorEnemigo, botonera, gameInfo, resultadoAtaque } = useGameRoomStore()
   return (
     <article className={classes.juego}>
       <Board>
@@ -37,8 +37,8 @@ export default function GameRoom (): JSX.Element {
         </>
       </Board>
       <KeyPad buttons={botonera.buttons} message={botonera.message}/>
-      <ResultAttack />
-      <GameInfo />
+      { resultadoAtaque.mostrar && <ResultAttack />}
+      { gameInfo.mostrar && <GameInfo />}
     </article>
   )
 }

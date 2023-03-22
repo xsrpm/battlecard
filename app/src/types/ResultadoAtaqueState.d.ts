@@ -1,0 +1,4 @@
+
+interface ResultadoAtaqueState {
+  mostrar: boolean
+}

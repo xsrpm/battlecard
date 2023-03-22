@@ -113,5 +113,7 @@ describe('useGameRoomStore', () => {
     expect(result.current.jugador).toEqual(jugadorExpected)
     expect(result.current.jugadorEnemigo).toEqual(jugadorEnemigoExpected)
     expect(result.current.botonera).toEqual(botoneraExpected)
+    expect(result.current.gameInfo).toEqual({ mostrar: false })
+    expect(result.current.resultadoAtaque).toEqual({ mostrar: false })
   })
 })

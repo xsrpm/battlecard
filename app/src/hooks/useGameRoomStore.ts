@@ -1,3 +1,4 @@
+import { resultadoAtaque } from './../components/resultado-ataque2'
 import { create } from 'zustand'
 import { type IniciarJuegoResponse } from '../../../api/src/response'
 import { PosBatalla } from '../constants/celdabatalla'
@@ -8,6 +9,8 @@ interface GameRoomStore {
   jugador: PlayerState
   jugadorEnemigo: PlayerState
   botonera: KeyPadState
+  gameInfo: GameInfoState
+  resultadoAtaque: ResultadoAtaqueState
   iniciarJuego: (response: IniciarJuegoResponse) => void
 }
 
@@ -39,6 +42,12 @@ export const useGameRoomStore = create<GameRoomStore>((set, get) => ({
       finDeTurno: false
     },
     message: ''
+  },
+  gameInfo: {
+    mostrar: false
+  },
+  resultadoAtaque: {
+    mostrar: false
   },
   iniciarJuego: (response: IniciarJuegoResponse) => {
     const manoJugador = get().jugador.mano.map((_, id) => {
@@ -77,7 +86,9 @@ export const useGameRoomStore = create<GameRoomStore>((set, get) => ({
         nCardsInDeck: response.payload.jugadorEnemigo?.nDeck as number,
         barrera: Array(response.payload.jugadorEnemigo?.nBarrera).fill(true)
       },
-      botonera: botoneraEstado(response.payload.jugador?.enTurno as boolean)
+      botonera: botoneraEstado(response.payload.jugador?.enTurno as boolean),
+      gameInfo: { mostrar: false },
+      resultadoAtaque: { mostrar: false }
     }))
   }
 }))
