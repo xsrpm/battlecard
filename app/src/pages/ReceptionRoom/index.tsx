@@ -1,10 +1,9 @@
 import useSocketHandler from '../../hooks/useWebSocketActionHandler'
 import classes from './styles.module.css'
-import { useReceptionRoomStore } from '../../hooks/useReceptionRoomStore'
+import { useState } from 'react'
 
 export default function ReceptionRoom (): JSX.Element {
-  const submitDisabled = useReceptionRoomStore(state => state.submitDisabled)
-  const setSubmitDisabled = useReceptionRoomStore(state => state.setSubmitDisabled)
+  const [submitDisabled, setSubmitDisabled] = useState(false)
   const { unirASalaSocket } = useSocketHandler()
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {

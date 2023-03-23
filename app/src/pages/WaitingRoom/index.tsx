@@ -5,9 +5,7 @@ import { iniciarJuego } from '../../modules/socket-messages'
 import classes from './styles.module.css'
 
 export default function WaitingRoom (): JSX.Element {
-  console.log('render WaitingRoom')
   const playerId = useAppStore(state => state.playerId)
-  console.log('🚀 ~ file: index.tsx:9 ~ WaitingRoom ~ playerId:', playerId)
   const players = useWaitingRoomStore(state => state.players)
   const start = useWaitingRoomStore(state => state.start)
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
