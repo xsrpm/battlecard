@@ -1,20 +1,28 @@
-import { resultadoAtaque } from './../components/resultado-ataque2'
 import { create } from 'zustand'
-import { type IniciarJuegoResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse } from '../../../api/src/response'
 import { PosBatalla } from '../constants/celdabatalla'
 import { type KeyPadState } from '../types/KeyPadState'
 import { type PlayerState } from '../types/PlayerState'
+import { STEP_ACTION } from '../constants/stepAction'
+import { ResultadoColocarCarta } from '../constants/jugador'
 
-interface GameRoomStore {
+interface GameStore {
   jugador: PlayerState
   jugadorEnemigo: PlayerState
   botonera: KeyPadState
   gameInfo: GameInfoState
   resultadoAtaque: ResultadoAtaqueState
+  stepAction: string
+  playerId?: string
+  setPlayerId: (playerId: string) => void
+  setStepAction: (stepAction: string) => void
+  juegoFinalizado: boolean
+  seleccionarCartaEnMano: (idCartaEnMano: number) => void
   iniciarJuego: (response: IniciarJuegoResponse) => void
+  updateBotoneraBySelectCartaEnMano: (response: SeleccionarManoResponse) => void
 }
 
-export const useGameRoomStore = create<GameRoomStore>((set, get) => ({
+export const useGameStore = create<GameStore>((set, get) => ({
   jugador: {
     zonaBatalla: [{}, {}, {}],
     barrera: [true, true, true, true, true],
@@ -49,7 +57,26 @@ export const useGameRoomStore = create<GameRoomStore>((set, get) => ({
   resultadoAtaque: {
     mostrar: false
   },
-  iniciarJuego: (response: IniciarJuegoResponse) => {
+  stepAction: STEP_ACTION.STAND_BY,
+  setStepAction: (stepAction) => {
+    set({ stepAction })
+  },
+  setPlayerId: (playerId) => {
+    set({ playerId })
+  },
+  juegoFinalizado: false,
+  seleccionarCartaEnMano: (idCartaEnMano) => {
+    const manoUpdated = get().jugador.mano.map((cartaEnMano, id) => {
+      return { carta: cartaEnMano.carta, selected: id === idCartaEnMano }
+    })
+    set({
+      jugador: {
+        ...get().jugador,
+        mano: manoUpdated
+      }
+    })
+  },
+  iniciarJuego: (response) => {
     const manoJugador = get().jugador.mano.map((_, id) => {
       return { carta: response.payload.jugador?.mano[id] }
     })
@@ -90,5 +117,32 @@ export const useGameRoomStore = create<GameRoomStore>((set, get) => ({
       gameInfo: { mostrar: false },
       resultadoAtaque: { mostrar: false }
     }))
+  },
+  updateBotoneraBySelectCartaEnMano: (response) => {
+    const { existeCarta, puedeColocarCarta } = response.payload
+    const botoneraUpdated = () => {
+      if (puedeColocarCarta === ResultadoColocarCarta.POSIBLE) {
+        return {
+          buttons: {
+            terminarTurno: true,
+            colocarEnAtaque: true,
+            colocarEnDefensa: true
+          },
+          message: 'Colocar carta en posición...'
+        }
+      } else {
+        return {
+          buttons: {
+            terminarTurno: true
+          },
+          message: puedeColocarCarta
+        }
+      }
+    }
+    if (existeCarta) {
+      set(() => ({
+        botonera: botoneraUpdated()
+      }))
+    }
   }
 }))

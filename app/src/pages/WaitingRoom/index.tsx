@@ -1,11 +1,11 @@
 
-import { useAppStore } from '../../hooks/useAppStore'
+import { useGameStore } from '../../hooks/useGameStore'
 import { useWaitingRoomStore } from '../../hooks/useWaitingRoomStore'
 import { iniciarJuego } from '../../modules/socket-messages'
 import classes from './styles.module.css'
 
 export default function WaitingRoom (): JSX.Element {
-  const playerId = useAppStore(state => state.playerId)
+  const playerId = useGameStore(state => state.playerId)
   const players = useWaitingRoomStore(state => state.players)
   const start = useWaitingRoomStore(state => state.start)
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {

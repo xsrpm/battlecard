@@ -1,17 +1,18 @@
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
-import { type IniciarJuegoResponse, type UnirASalaResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse } from '../../../api/src/response'
 import { unirASala } from '../modules/socket-messages'
 import { encuentraError, initSocket } from '../modules/socket'
 import { useAppStore } from './useAppStore'
 import { Page } from '../constants/juego'
 import { useWaitingRoomStore } from './useWaitingRoomStore'
-import { useGameRoomStore } from './useGameRoomStore'
+import { useGameStore } from './useGameStore'
 
 function useSocketHandler () {
   console.log('useSocketHandler')
   const changeActualPage = useAppStore(state => state.changeActualPage)
-  const iniciarJuego = useGameRoomStore(state => state.iniciarJuego)
-  const setPlayerId = useAppStore(state => state.setPlayerId)
+  const iniciarJuego = useGameStore(state => state.iniciarJuego)
+  const updateBotoneraBySelectCartaEnMano = useGameStore(state => state.updateBotoneraBySelectCartaEnMano)
+  const setPlayerId = useGameStore(state => state.setPlayerId)
   const setPlayers = useWaitingRoomStore(state => state.setPlayers)
   const setStart = useWaitingRoomStore(state => state.setStart)
 
@@ -25,6 +26,9 @@ function useSocketHandler () {
         break
       case WebsocketEventTitle.INICIAR_JUEGO:
         iniciarJuegoResponse(message as IniciarJuegoResponse)
+        break
+      case WebsocketEventTitle.SELECCIONAR_MANO:
+        seleccionarManoResponse(message as SeleccionarManoResponse)
         break
     }
   }
@@ -61,7 +65,12 @@ function useSocketHandler () {
     changeActualPage(Page.GAME_ROOM)
   }
 
-  return { unirASalaSocket, iniciarJuegoResponse }
+  function seleccionarManoResponse (message: SeleccionarManoResponse) {
+    if (encuentraError(message)) return
+    updateBotoneraBySelectCartaEnMano(message)
+  }
+
+  return { unirASalaSocket }
 }
 
 export default useSocketHandler

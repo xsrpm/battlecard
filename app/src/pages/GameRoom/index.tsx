@@ -5,11 +5,14 @@ import Player from '../../components/Player'
 import PlayerBoard from '../../components/PlayerBoard'
 import PlayerDashboard from '../../components/PlayerDashboard'
 import ResultAttack from '../../components/ResultAttack'
-import { useGameRoomStore } from '../../hooks/useGameRoomStore'
+import { useGameStore } from '../../hooks/useGameStore'
 import classes from './styles.module.css'
 
 export default function GameRoom (): JSX.Element {
-  const { jugador, jugadorEnemigo, botonera, gameInfo, resultadoAtaque } = useGameRoomStore()
+  const jugador = useGameStore(state => state.jugador)
+  const jugadorEnemigo = useGameStore(state => state.jugadorEnemigo)
+  const gameInfo = useGameStore(state => state.gameInfo)
+  const resultadoAtaque = useGameStore(state => state.resultadoAtaque)
   return (
     <article className={classes.juego}>
       <Board>
@@ -21,7 +24,7 @@ export default function GameRoom (): JSX.Element {
                 nDeckCards={jugadorEnemigo.nCardsInDeck}
                 enTurno={jugadorEnemigo.enTurno}
               />
-              <PlayerBoard reverseBoard={true} zonaBatalla={jugadorEnemigo.zonaBatalla} barrera={jugadorEnemigo.barrera} mano={jugadorEnemigo.mano}/>
+              <PlayerBoard reverseBoard zonaBatalla={jugadorEnemigo.zonaBatalla} barrera={jugadorEnemigo.barrera} mano={jugadorEnemigo.mano} enTurno={jugadorEnemigo.enTurno} jugadorEnemigo />
             </>
           </Player>
           <Player>
@@ -31,12 +34,12 @@ export default function GameRoom (): JSX.Element {
                 nDeckCards={jugador.nCardsInDeck}
                 enTurno={jugador.enTurno}
               />
-              <PlayerBoard zonaBatalla={jugador.zonaBatalla} barrera={jugador.barrera} mano={jugador.mano}/>
+              <PlayerBoard zonaBatalla={jugador.zonaBatalla} barrera={jugador.barrera} mano={jugador.mano} enTurno={jugador.enTurno} />
             </>
           </Player>
         </>
       </Board>
-      <KeyPad buttons={botonera.buttons} message={botonera.message}/>
+      <KeyPad />
       { resultadoAtaque.mostrar && <ResultAttack />}
       { gameInfo.mostrar && <GameInfo />}
     </article>

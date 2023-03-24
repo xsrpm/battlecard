@@ -1,6 +1,6 @@
 
 import { STEP_ACTION } from '../constants/stepAction'
-import { PosBatalla } from './../constants/celdabatalla'
+import { type PosBatalla } from './../constants/celdabatalla'
 
 export let nombreJugadorVictorioso = ''
 export let nombreJugadorDerrotado = ''

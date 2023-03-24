@@ -1,19 +1,8 @@
+import { useGameStore } from '../../hooks/useGameStore'
 import classes from './styles.module.css'
 
-interface Props {
-  buttons: {
-    colocarEnAtaque?: boolean
-    colocarEnDefensa?: boolean
-    atacarCarta?: boolean
-    atacarBarrera?: boolean
-    cambiarPosicion?: boolean
-    terminarTurno?: boolean
-    finDeTurno?: boolean
-  }
-  message?: string
-}
-
-export default function KeyPad ({ buttons, message }: Props) {
+export default function KeyPad () {
+  const { buttons, message } = useGameStore(state => state.botonera)
   return (
     <article className={classes.keyPad}>
       <p id="mensajeBotones">{message}</p>
