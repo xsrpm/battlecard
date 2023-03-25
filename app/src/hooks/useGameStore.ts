@@ -1,3 +1,4 @@
+import { posicionBatalla } from './../modules/estadoGlobal'
 import { create } from 'zustand'
 import { type SeleccionarManoResponse, type IniciarJuegoResponse } from '../../../api/src/response'
 import { PosBatalla } from '../constants/celdabatalla'
@@ -17,9 +18,12 @@ interface GameStore {
   setPlayerId: (playerId: string) => void
   setStepAction: (stepAction: string) => void
   juegoFinalizado: boolean
+  posicionBatalla?: PosBatalla
+  setPosicionBatalla: (posicionBatalla: PosBatalla) => void
   seleccionarCartaEnMano: (idCartaEnMano: number) => void
   iniciarJuego: (response: IniciarJuegoResponse) => void
   updateBotoneraBySelectCartaEnMano: (response: SeleccionarManoResponse) => void
+  colocarCartaClick: (posicionBatalla: PosBatalla) => void
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -65,6 +69,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set({ playerId })
   },
   juegoFinalizado: false,
+  setPosicionBatalla: (posicionBatalla) => {
+    set({ posicionBatalla })
+  },
   seleccionarCartaEnMano: (idCartaEnMano) => {
     const manoUpdated = get().jugador.mano.map((cartaEnMano, id) => {
       return { carta: cartaEnMano.carta, selected: id === idCartaEnMano }
@@ -142,6 +149,27 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (existeCarta) {
       set(() => ({
         botonera: botoneraUpdated()
+      }))
+    }
+  },
+  colocarCartaClick: (posicionBatalla: PosBatalla) => {
+    if (get().stepAction === STEP_ACTION.SELECCIONAR_MANO) {
+      console.log('stepAccion: ' + STEP_ACTION.COLOCAR_CARTA)
+      console.log('posicionBatalla: ' + posicionBatalla)
+      const seleccionarCeldasNoOcupadas = get().jugador.zonaBatalla.map((celda) => {
+        return { selected: !(celda.posicionBatalla === PosBatalla.ATAQUE || celda.posicionBatalla === PosBatalla.DEF_ABAJO || celda.posicionBatalla === PosBatalla.DEF_ARRIBA) }
+      })
+      set(() => ({
+        botonera: {
+          buttons: { terminarTurno: true },
+          message: 'Seleccione ubicación en zona de batalla...'
+        },
+        posicionBatalla,
+        stepAction: STEP_ACTION.COLOCAR_SELECCIONAR_ZONA_BATALLA,
+        jugador: {
+          ...get().jugador,
+          zonaBatalla: seleccionarCeldasNoOcupadas
+        }
       }))
     }
   }
