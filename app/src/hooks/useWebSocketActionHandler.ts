@@ -1,5 +1,5 @@
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
-import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse } from '../../../api/src/response'
 import { unirASala } from '../modules/socket-messages'
 import { encuentraError, initSocket } from '../modules/socket'
 import { useAppStore } from './useAppStore'
@@ -12,6 +12,9 @@ function useSocketHandler () {
   const changeActualPage = useAppStore(state => state.changeActualPage)
   const iniciarJuego = useGameStore(state => state.iniciarJuego)
   const updateBotoneraBySelectCartaEnMano = useGameStore(state => state.updateBotoneraBySelectCartaEnMano)
+  const colocarCarta = useGameStore(state => state.colocarCarta)
+  const colocarCartaOtroJugador = useGameStore(state => state.colocarCartaOtroJugador)
+  const seleccionarZonaBatalla = useGameStore(state => state.seleccionarZonaBatalla)
   const setPlayerId = useGameStore(state => state.setPlayerId)
   const setPlayers = useWaitingRoomStore(state => state.setPlayers)
   const setStart = useWaitingRoomStore(state => state.setStart)
@@ -30,7 +33,31 @@ function useSocketHandler () {
       case WebsocketEventTitle.SELECCIONAR_MANO:
         seleccionarManoResponse(message as SeleccionarManoResponse)
         break
+      case WebsocketEventTitle.COLOCAR_CARTA:
+        colocarCartaResponse(message as ColocarCartaResponse)
+        break
+      case WebsocketEventTitle.SELECCIONAR_ZONA_BATALLA:
+        seleccionarZonaBatallaResponse(message as SeleccionarZonaBatallaResponse)
+        break
+      case WebsocketEventTitle.COLOCAR_CARTA_OTRO_JUGADOR:
+        colocaCartaOtroJugadorResponse(message as ColocarCartaOtroJugadorResponse)
+        break
     }
+  }
+
+  function seleccionarZonaBatallaResponse (message: SeleccionarZonaBatallaResponse) {
+    if (encuentraError(message)) return
+    seleccionarZonaBatalla(message)
+  }
+
+  function colocarCartaResponse (message: ColocarCartaResponse) {
+    if (encuentraError(message)) return
+    colocarCarta(message)
+  }
+
+  function colocaCartaOtroJugadorResponse (message: ColocarCartaOtroJugadorResponse) {
+    if (encuentraError(message)) return
+    colocarCartaOtroJugador(message)
   }
 
   function unirASalaSocket (nombreJugador: string, onErrorCallback: () => void): void {

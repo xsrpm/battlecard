@@ -1,11 +1,11 @@
-import { posicionBatalla } from './../modules/estadoGlobal'
+
 import { create } from 'zustand'
-import { type SeleccionarManoResponse, type IniciarJuegoResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse } from '../../../api/src/response'
 import { PosBatalla } from '../constants/celdabatalla'
 import { type KeyPadState } from '../types/KeyPadState'
 import { type PlayerState } from '../types/PlayerState'
 import { STEP_ACTION } from '../constants/stepAction'
-import { ResultadoColocarCarta } from '../constants/jugador'
+import { ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, ResultadoColocarCarta } from '../constants/jugador'
 
 interface GameStore {
   jugador: PlayerState
@@ -20,10 +20,16 @@ interface GameStore {
   juegoFinalizado: boolean
   posicionBatalla?: PosBatalla
   setPosicionBatalla: (posicionBatalla: PosBatalla) => void
+  idCartaZBSeleccionada?: number
+  setIdCartaZBSeleccionada: (idCartaZBSeleccionada: number) => void
+  idCartaManoSeleccionada?: number
   seleccionarCartaEnMano: (idCartaEnMano: number) => void
   iniciarJuego: (response: IniciarJuegoResponse) => void
   updateBotoneraBySelectCartaEnMano: (response: SeleccionarManoResponse) => void
   colocarCartaClick: (posicionBatalla: PosBatalla) => void
+  colocarCarta: (message: ColocarCartaResponse) => void
+  seleccionarZonaBatalla: (message: SeleccionarZonaBatallaResponse) => void
+  colocarCartaOtroJugador: (message: ColocarCartaOtroJugadorResponse) => void
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -72,15 +78,23 @@ export const useGameStore = create<GameStore>((set, get) => ({
   setPosicionBatalla: (posicionBatalla) => {
     set({ posicionBatalla })
   },
+  setIdCartaZBSeleccionada: (idCartaZBSeleccionada) => {
+    set({ idCartaZBSeleccionada })
+  },
   seleccionarCartaEnMano: (idCartaEnMano) => {
     const manoUpdated = get().jugador.mano.map((cartaEnMano, id) => {
       return { carta: cartaEnMano.carta, selected: id === idCartaEnMano }
     })
+    const zonaBatallaNoSelected = get().jugador.zonaBatalla.map((celdabatalla) => {
+      return { ...celdabatalla, selected: false }
+    })
     set({
       jugador: {
         ...get().jugador,
-        mano: manoUpdated
-      }
+        mano: manoUpdated,
+        zonaBatalla: zonaBatallaNoSelected
+      },
+      idCartaManoSeleccionada: idCartaEnMano
     })
   },
   iniciarJuego: (response) => {
@@ -155,7 +169,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   colocarCartaClick: (posicionBatalla: PosBatalla) => {
     if (get().stepAction === STEP_ACTION.SELECCIONAR_MANO) {
       console.log('stepAccion: ' + STEP_ACTION.COLOCAR_CARTA)
-      console.log('posicionBatalla: ' + posicionBatalla)
+      console.log(posicionBatalla)
       const seleccionarCeldasNoOcupadas = get().jugador.zonaBatalla.map((celda) => {
         return { selected: !(celda.posicionBatalla === PosBatalla.ATAQUE || celda.posicionBatalla === PosBatalla.DEF_ABAJO || celda.posicionBatalla === PosBatalla.DEF_ARRIBA) }
       })
@@ -171,6 +185,86 @@ export const useGameStore = create<GameStore>((set, get) => ({
           zonaBatalla: seleccionarCeldasNoOcupadas
         }
       }))
+    }
+  },
+  colocarCarta: (message: ColocarCartaResponse) => {
+    const { resultado, mano } = message.payload
+    if (resultado === ResultadoColocarCarta.CARTA_COLOCADA) {
+      const cartaPorColocar = get().jugador.mano.find((cartaEnMano) => {
+        return cartaEnMano.selected
+      })?.carta
+      const updatedMano = get().jugador.mano.map((_, id) => {
+        return { carta: mano[id], selected: false }
+      })
+      const zonaBatallaUpdated = get().jugador.zonaBatalla.map((celdabatalla, id) => {
+        return { ...celdabatalla, selected: false, carta: id === get().idCartaZBSeleccionada ? cartaPorColocar : undefined, posicionBatalla: id === get().idCartaZBSeleccionada ? get().posicionBatalla : undefined }
+      })
+      set({
+        jugador: {
+          ...get().jugador,
+          mano: updatedMano,
+          zonaBatalla: zonaBatallaUpdated
+        },
+        botonera: {
+          buttons: { terminarTurno: true },
+          message: ''
+        },
+        stepAction: STEP_ACTION.STAND_BY
+      })
+      console.log('CARTA COLOCADA')
+    }
+  },
+  seleccionarZonaBatalla: (message: SeleccionarZonaBatallaResponse) => {
+    const {
+      existeCarta,
+      puedeAtacarCarta,
+      puedeAtacarBarrera,
+      puedeCambiarPosicion
+    } = message.payload
+    if (existeCarta) {
+      const zonaBatallaUpdated = get().jugador.zonaBatalla.map((celdabatalla, id) => {
+        return { ...celdabatalla, selected: get().idCartaZBSeleccionada === id }
+      })
+      const manoUpdated = get().jugador.mano.map((cartaEnMano) => {
+        return { ...cartaEnMano, selected: false }
+      })
+      const updateBotonera = {
+        buttons: { terminarTurno: true, atacarCarta: puedeAtacarCarta === ResultadoAtacarCarta.POSIBLE, atacarBarrera: puedeAtacarBarrera === ResultadoAtacarBarrera.POSIBLE, cambiarPosicion: puedeCambiarPosicion === ResultadoCambiarPosicion.POSIBLE },
+        message: puedeAtacarCarta === ResultadoAtacarCarta.POSIBLE ||
+          puedeAtacarBarrera === ResultadoAtacarBarrera.POSIBLE ||
+          puedeCambiarPosicion === ResultadoCambiarPosicion.POSIBLE
+          ? 'Seleccione acción'
+          : 'No acciones disponibles'
+      }
+
+      set({
+        jugador: {
+          ...get().jugador,
+          zonaBatalla: zonaBatallaUpdated,
+          mano: manoUpdated
+        },
+        botonera: updateBotonera
+      })
+    }
+  },
+  colocarCartaOtroJugador: (message: ColocarCartaOtroJugadorResponse) => {
+    const { posicion, idZonaBatalla, idMano, resultado, carta } = message.payload
+    if (resultado === ResultadoColocarCarta.CARTA_COLOCADA) {
+      const zonaBatallaUpdated = get().jugadorEnemigo.zonaBatalla.map((celdabatalla, id) => {
+        return { ...celdabatalla, carta: idZonaBatalla === id ? carta : undefined, posicionBatalla: idZonaBatalla === id ? posicion as PosBatalla : undefined }
+      })
+      const updateManoEnemigo = get().jugadorEnemigo.mano.map((cartaEnMano, id) => {
+        return { ...cartaEnMano, hidden: id !== idMano }
+      })
+      set({
+        jugadorEnemigo: {
+          ...get().jugadorEnemigo,
+          mano: updateManoEnemigo,
+          zonaBatalla: zonaBatallaUpdated
+        },
+        stepAction: STEP_ACTION.STAND_BY
+      })
+      console.log('CARTA COLOCADA POR ENEMIGO')
     }
   }
 }))
