@@ -1,3 +1,4 @@
+
 export interface KeyPadState {
   buttons: {
     colocarEnAtaque?: boolean
@@ -6,7 +7,7 @@ export interface KeyPadState {
     atacarBarrera?: boolean
     cambiarPosicion?: boolean
     terminarTurno?: boolean
-    finDeTurno?: boolean
+    finDeJuego?: boolean
   }
   message?: string
 }

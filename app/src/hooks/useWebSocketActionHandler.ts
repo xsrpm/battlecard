@@ -1,11 +1,12 @@
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
-import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse } from '../../../api/src/response'
 import { unirASala } from '../modules/socket-messages'
 import { encuentraError, initSocket } from '../modules/socket'
 import { useAppStore } from './useAppStore'
 import { Page } from '../constants/juego'
 import { useWaitingRoomStore } from './useWaitingRoomStore'
 import { useGameStore } from './useGameStore'
+import { ResultadoCogerCarta } from '../constants/jugador'
 
 function useSocketHandler () {
   console.log('useSocketHandler')
@@ -15,6 +16,9 @@ function useSocketHandler () {
   const colocarCarta = useGameStore(state => state.colocarCarta)
   const colocarCartaOtroJugador = useGameStore(state => state.colocarCartaOtroJugador)
   const seleccionarZonaBatalla = useGameStore(state => state.seleccionarZonaBatalla)
+  const agregarCartaRecogida = useGameStore(state => state.agregarCartaRecogida)
+  const terminarTurno = useGameStore(state => state.terminarTurno)
+  const terminarJuego = useGameStore(state => state.terminarJuego)
   const setPlayerId = useGameStore(state => state.setPlayerId)
   const setPlayers = useWaitingRoomStore(state => state.setPlayers)
   const setStart = useWaitingRoomStore(state => state.setStart)
@@ -41,6 +45,9 @@ function useSocketHandler () {
         break
       case WebsocketEventTitle.COLOCAR_CARTA_OTRO_JUGADOR:
         colocaCartaOtroJugadorResponse(message as ColocarCartaOtroJugadorResponse)
+        break
+      case WebsocketEventTitle.TERMINAR_TURNO:
+        terminarTurnoResponse(message as TerminarTurnoResponse)
         break
     }
   }
@@ -95,6 +102,19 @@ function useSocketHandler () {
   function seleccionarManoResponse (message: SeleccionarManoResponse) {
     if (encuentraError(message)) return
     updateBotoneraBySelectCartaEnMano(message)
+  }
+
+  function terminarTurnoResponse (message: TerminarTurnoResponse) {
+    if (encuentraError(message)) return
+    terminarTurno(message)
+    const { resultado } = message.payload
+    if (resultado === ResultadoCogerCarta.EXITO) {
+      agregarCartaRecogida(message)
+    } else if (resultado === ResultadoCogerCarta.DECK_VACIO) {
+      terminarJuego(message)
+    } else {
+      console.log('MANO LLENA')
+    }
   }
 
   return { unirASalaSocket }

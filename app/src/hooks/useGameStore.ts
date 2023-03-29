@@ -1,11 +1,12 @@
+import { posicionBatalla } from './../modules/estadoGlobal'
 
 import { create } from 'zustand'
-import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse } from '../../../api/src/response'
 import { PosBatalla } from '../constants/celdabatalla'
 import { type KeyPadState } from '../types/KeyPadState'
 import { type PlayerState } from '../types/PlayerState'
 import { STEP_ACTION } from '../constants/stepAction'
-import { ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, ResultadoColocarCarta } from '../constants/jugador'
+import { ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, ResultadoCogerCarta, ResultadoColocarCarta } from '../constants/jugador'
 
 interface GameStore {
   jugador: PlayerState
@@ -30,6 +31,11 @@ interface GameStore {
   colocarCarta: (message: ColocarCartaResponse) => void
   seleccionarZonaBatalla: (message: SeleccionarZonaBatallaResponse) => void
   colocarCartaOtroJugador: (message: ColocarCartaOtroJugadorResponse) => void
+  terminarTurno: (message: TerminarTurnoResponse) => void
+  agregarCartaRecogida: (message: TerminarTurnoResponse) => void
+  terminarJuego: (message: TerminarTurnoResponse) => void
+  nombreJugadorDerrotado?: string
+  nombreJugadorVictorioso?: string
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -171,7 +177,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       console.log('stepAccion: ' + STEP_ACTION.COLOCAR_CARTA)
       console.log(posicionBatalla)
       const seleccionarCeldasNoOcupadas = get().jugador.zonaBatalla.map((celda) => {
-        return { selected: !(celda.posicionBatalla === PosBatalla.ATAQUE || celda.posicionBatalla === PosBatalla.DEF_ABAJO || celda.posicionBatalla === PosBatalla.DEF_ARRIBA) }
+        return { ...celda, selected: !(celda.posicionBatalla === PosBatalla.ATAQUE || celda.posicionBatalla === PosBatalla.DEF_ABAJO || celda.posicionBatalla === PosBatalla.DEF_ARRIBA) }
       })
       set(() => ({
         botonera: {
@@ -197,7 +203,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
         return { carta: mano[id], selected: false }
       })
       const zonaBatallaUpdated = get().jugador.zonaBatalla.map((celdabatalla, id) => {
-        return { ...celdabatalla, selected: false, carta: id === get().idCartaZBSeleccionada ? cartaPorColocar : undefined, posicionBatalla: id === get().idCartaZBSeleccionada ? get().posicionBatalla : undefined }
+        const newCelda = { ...celdabatalla, selected: false }
+        if (id === get().idCartaZBSeleccionada) {
+          newCelda.carta = cartaPorColocar
+          newCelda.posicionBatalla = get().posicionBatalla
+        }
+        return newCelda
       })
       set({
         jugador: {
@@ -251,7 +262,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const { posicion, idZonaBatalla, idMano, resultado, carta } = message.payload
     if (resultado === ResultadoColocarCarta.CARTA_COLOCADA) {
       const zonaBatallaUpdated = get().jugadorEnemigo.zonaBatalla.map((celdabatalla, id) => {
-        return { ...celdabatalla, carta: idZonaBatalla === id ? carta : undefined, posicionBatalla: idZonaBatalla === id ? posicion as PosBatalla : undefined }
+        const newCelda = { ...celdabatalla }
+        if (id === idZonaBatalla) {
+          newCelda.carta = carta
+          newCelda.posicionBatalla = posicion as PosBatalla
+        }
+        return newCelda
       })
       const updateManoEnemigo = get().jugadorEnemigo.mano.map((cartaEnMano, id) => {
         return { ...cartaEnMano, hidden: id !== idMano }
@@ -266,5 +282,80 @@ export const useGameStore = create<GameStore>((set, get) => ({
       })
       console.log('CARTA COLOCADA POR ENEMIGO')
     }
+  },
+  terminarTurno: (message: TerminarTurnoResponse) => {
+    const { jugador, jugadorEnemigo } = message.payload
+    const botoneraEstado = (enTurno: boolean) => {
+      if (enTurno) {
+        return {
+          buttons: { terminarTurno: true }
+        }
+      }
+      return {
+        buttons: {}
+      }
+    }
+    const zonaBatallaUpdated = get().jugador.zonaBatalla.map((celdabatalla) => {
+      return { ...celdabatalla, selected: false }
+    })
+    const manoUpdated = get().jugador.mano.map((cartaEnMano) => {
+      return { ...cartaEnMano, selected: false }
+    })
+    set({
+      jugador: {
+        ...get().jugador,
+        enTurno: jugador.enTurno,
+        nCardsInDeck: jugador.nDeck,
+        zonaBatalla: zonaBatallaUpdated,
+        mano: manoUpdated
+      },
+      jugadorEnemigo: {
+        ...get().jugadorEnemigo,
+        enTurno: jugadorEnemigo.enTurno,
+        nCardsInDeck: jugadorEnemigo.nDeck
+      },
+      botonera: botoneraEstado(jugador.enTurno)
+    })
+  },
+  agregarCartaRecogida: (message: TerminarTurnoResponse) => {
+    const { carta } = message.payload
+    const manoEnemigo = [...get().jugadorEnemigo.mano]
+    const manoJugador = [...get().jugador.mano]
+    if (typeof carta !== 'undefined') {
+      manoJugador[4] = { carta, selected: false }
+    } else {
+      manoEnemigo[4] = { selected: false, hidden: true }
+    }
+    set({
+      jugador: {
+        ...get().jugador,
+        mano: manoJugador
+      },
+      jugadorEnemigo: {
+        ...get().jugadorEnemigo,
+        mano: manoEnemigo
+      }
+    })
+  },
+  terminarJuego: (message: TerminarTurnoResponse) => {
+    const { resultado, nombreJugadorDerrotado, nombreJugadorVictorioso } = message.payload
+    const customMessage = (resultado: string) => {
+      switch (resultado) {
+        case ResultadoCogerCarta.DECK_VACIO: return `${nombreJugadorDerrotado as string} se ha quedado sin cartas para tomar del deck`
+        default: return 'CASO POR DEFECTO'
+      }
+    }
+    set({
+      nombreJugadorDerrotado: nombreJugadorDerrotado as string,
+      nombreJugadorVictorioso: nombreJugadorVictorioso as string,
+      botonera: {
+        buttons: { finDeJuego: true }
+      },
+      gameInfo: {
+        mostrar: true,
+        message: customMessage(resultado as string)
+      }
+    })
   }
+
 }))

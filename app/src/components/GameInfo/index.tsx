@@ -1,7 +1,13 @@
-export default function GameInfo () {
+import classes from './styles.module.css'
+
+interface Props {
+  message: string
+}
+
+export default function GameInfo ({ message }: Props) {
   return (
-    <div className="info">
-    <h1></h1>
+    <div className={classes.info}>
+    <h1>{message}</h1>
     </div>
   )
 }

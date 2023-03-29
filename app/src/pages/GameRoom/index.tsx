@@ -41,7 +41,7 @@ export default function GameRoom (): JSX.Element {
       </Board>
       <KeyPad />
       { resultadoAtaque.mostrar && <ResultAttack />}
-      { gameInfo.mostrar && <GameInfo />}
+      { gameInfo.mostrar && <GameInfo message={gameInfo.message as string} />}
     </article>
   )
 }
