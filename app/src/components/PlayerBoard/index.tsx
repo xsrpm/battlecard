@@ -51,7 +51,6 @@ export default function PlayerBoard ({ reverseBoard = false, zonaBatalla, barrer
     while (!target.classList.contains(classes.slot)) target = target.parentElement as HTMLElement
     if (target.classList.contains(classes.mano)) {
       const idCartaManoSeleccionada = Number(target.getAttribute('data-id'))
-      // cartaManoSeleccionada = target
       setStepAction(STEP_ACTION.SELECCIONAR_MANO)
       seleccionarCartaEnMano(idCartaManoSeleccionada)
       console.log('stepAccion: ' + STEP_ACTION.SELECCIONAR_MANO)
@@ -62,11 +61,12 @@ export default function PlayerBoard ({ reverseBoard = false, zonaBatalla, barrer
     if (juegoFinalizado) return
     if (!enTurno) return
     let target = e.target as HTMLElement
-    // while (!target.classList.contains(classes.slot) && target.id !== zonaBatallaYo.getAttribute('id')) target = target.parentElement as HTMLElement
-    while (!target.classList.contains(classes.slot)) target = target.parentElement as HTMLElement
+    while (!target.classList.contains(classes.slot)) {
+      if (target.getAttribute('data-section') === 'zonaBatalla') break
+      target = target.parentElement as HTMLElement
+    }
     const idCartaZBSeleccionada = Number(target.getAttribute('data-id'))
     setIdCartaZBSeleccionada(Number(target.getAttribute('data-id')))
-    // cartaZBSeleccionada = target
     if (stepAction === STEP_ACTION.COLOCAR_SELECCIONAR_ZONA_BATALLA) {
       if (
         !(
@@ -95,7 +95,7 @@ export default function PlayerBoard ({ reverseBoard = false, zonaBatalla, barrer
 
   return (
     <article className={`${reverseBoard ? classes.rotar180 : ''}`}>
-        <div className={classes.row} id="zonaBatalla" onClick={handleClickZonaBatalla}>
+        <section className={classes.row} data-section="zonaBatalla" onClick={handleClickZonaBatalla}>
           {
             zonaBatalla.map((celdaBatalla, id) => {
               return (
@@ -106,8 +106,8 @@ export default function PlayerBoard ({ reverseBoard = false, zonaBatalla, barrer
               )
             })
           }
-        </div>
-        <div className={classes.row} id="barrera">
+        </section>
+        <section className={classes.row} data-section="barrera">
           {
             barrera.map((carta, id) => {
               return (
@@ -115,8 +115,8 @@ export default function PlayerBoard ({ reverseBoard = false, zonaBatalla, barrer
               )
             })
           }
-        </div>
-        <div className={classes.row} id="mano" onClick={handleClickMano}>
+        </section>
+        <section className={classes.row} data-section="mano" onClick={handleClickMano}>
           {
             mano.map((cartaEnMano, id) => {
               return (
@@ -127,7 +127,7 @@ export default function PlayerBoard ({ reverseBoard = false, zonaBatalla, barrer
               )
             })
           }
-        </div>
+        </section>
     </article>
   )
 }

@@ -1,10 +1,10 @@
 import { create } from 'zustand'
-import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse } from '../../../api/src/response'
 import { PosBatalla } from '../constants/celdabatalla'
 import { type KeyPadState } from '../types/KeyPadState'
 import { type PlayerState } from '../types/PlayerState'
 import { STEP_ACTION } from '../constants/stepAction'
-import { ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, ResultadoCogerCarta, ResultadoColocarCarta } from '../constants/jugador'
+import { EstadoCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, ResultadoCogerCarta, ResultadoColocarCarta } from '../constants/jugador'
 import { type Carta } from '../../../api/src/types'
 
 interface GameStore {
@@ -38,6 +38,10 @@ interface GameStore {
   cambiarPosicionClick: () => void
   cambiarPosicion: (message: CambiarPosicionResponse) => void
   cambiarPosicionEnemigo: (message: CambiarPosicionResponse) => void
+  atacarBarrera: (message: AtacarBarreraResponse) => void
+  sinBarreras?: boolean
+  atacanTuBarrera: (message: AtacarBarreraResponse) => void
+  ocultarGameInfo: () => void
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -397,6 +401,97 @@ export const useGameStore = create<GameStore>((set, get) => ({
         }
       })
     }
+  },
+  atacarBarrera: (message: AtacarBarreraResponse) => {
+    const { estadoBarrera, idBarreraEliminada, nombreJugadorDerrotado, nombreJugadorVictorioso, sinBarreras } = message.payload
+    if (estadoBarrera === EstadoCarta.DESTRUIDA) {
+      const updatedZonaBatalla = get().jugador.zonaBatalla.map(celdaBatalla => {
+        return { ...celdaBatalla, selected: false }
+      })
+      const updatedBarrera = get().jugadorEnemigo.barrera.map((cartaBarrera, id) => {
+        return id === idBarreraEliminada ? false : cartaBarrera
+      })
+      const updatedGameInfo: GameInfoState = {
+        mostrar: true
+      }
+      const updatedBotonera: KeyPadState = {
+        buttons: { terminarTurno: true }
+      }
+      let updatedJuegoFinalizado = false
+      let updatedNombreJugadorDerrotado = ''
+      let updatedNombreJugadorVictorioso = ''
+      if (sinBarreras as boolean) {
+        updatedNombreJugadorDerrotado = nombreJugadorDerrotado as string
+        updatedNombreJugadorVictorioso = nombreJugadorVictorioso as string
+        updatedGameInfo.message = `${nombreJugadorDerrotado as string} se ha queda sin barreras`
+        updatedJuegoFinalizado = true
+        updatedBotonera.buttons.finDeJuego = true
+        updatedBotonera.buttons.terminarTurno = false
+      } else {
+        updatedGameInfo.message = 'Barrera destruida'
+      }
+      set({
+        sinBarreras,
+        botonera: updatedBotonera,
+        jugador: {
+          ...get().jugador,
+          zonaBatalla: updatedZonaBatalla
+        },
+        jugadorEnemigo: {
+          ...get().jugadorEnemigo,
+          barrera: updatedBarrera
+        },
+        gameInfo: updatedGameInfo,
+        juegoFinalizado: updatedJuegoFinalizado,
+        nombreJugadorDerrotado: updatedNombreJugadorDerrotado,
+        nombreJugadorVictorioso: updatedNombreJugadorVictorioso
+      })
+    }
+  },
+  atacanTuBarrera: (message: AtacarBarreraResponse) => {
+    const { estadoBarrera, idBarreraEliminada, sinBarreras, nombreJugadorDerrotado, nombreJugadorVictorioso } = message.payload
+    if (estadoBarrera === EstadoCarta.DESTRUIDA) {
+      const updatedBarrera = get().jugador.barrera.map((cartaBarrera, id) => {
+        return id === idBarreraEliminada ? false : cartaBarrera
+      })
+      const updatedGameInfo: GameInfoState = {
+        mostrar: true
+      }
+      let updatedNombreJugadorDerrotado = ''
+      let updatedNombreJugadorVictorioso = ''
+      const updatedBotonera: KeyPadState = {
+        buttons: { }
+      }
+      let updatedJuegoFinalizado = false
+      if (sinBarreras as boolean) {
+        updatedNombreJugadorDerrotado = nombreJugadorDerrotado as string
+        updatedNombreJugadorVictorioso = nombreJugadorVictorioso as string
+        updatedGameInfo.message = `${nombreJugadorDerrotado as string} se ha queda sin barreras`
+        updatedBotonera.buttons.finDeJuego = true
+        updatedJuegoFinalizado = true
+      } else {
+        updatedGameInfo.message = 'Barrera destruida'
+      }
+      set({
+        jugador: {
+          ...get().jugador,
+          barrera: updatedBarrera
+        },
+        sinBarreras,
+        gameInfo: updatedGameInfo,
+        nombreJugadorDerrotado: updatedNombreJugadorDerrotado,
+        nombreJugadorVictorioso: updatedNombreJugadorVictorioso,
+        juegoFinalizado: updatedJuegoFinalizado
+      })
+    }
+  },
+  ocultarGameInfo: () => {
+    set({
+      gameInfo: {
+        mostrar: false,
+        message: ''
+      }
+    })
   }
 
 }))
