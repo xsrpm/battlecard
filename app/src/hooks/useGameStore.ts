@@ -1,12 +1,11 @@
-import { posicionBatalla } from './../modules/estadoGlobal'
-
 import { create } from 'zustand'
-import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse } from '../../../api/src/response'
 import { PosBatalla } from '../constants/celdabatalla'
 import { type KeyPadState } from '../types/KeyPadState'
 import { type PlayerState } from '../types/PlayerState'
 import { STEP_ACTION } from '../constants/stepAction'
 import { ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, ResultadoCogerCarta, ResultadoColocarCarta } from '../constants/jugador'
+import { type Carta } from '../../../api/src/types'
 
 interface GameStore {
   jugador: PlayerState
@@ -36,6 +35,9 @@ interface GameStore {
   terminarJuego: (message: TerminarTurnoResponse) => void
   nombreJugadorDerrotado?: string
   nombreJugadorVictorioso?: string
+  cambiarPosicionClick: () => void
+  cambiarPosicion: (message: CambiarPosicionResponse) => void
+  cambiarPosicionEnemigo: (message: CambiarPosicionResponse) => void
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -356,6 +358,45 @@ export const useGameStore = create<GameStore>((set, get) => ({
         message: customMessage(resultado as string)
       }
     })
+  },
+  cambiarPosicionClick: () => {
+    set({
+      stepAction: STEP_ACTION.CAMBIAR_POSICION,
+      botonera: {
+        buttons: { terminarTurno: true }
+      }
+    })
+    console.log(STEP_ACTION.CAMBIAR_POSICION)
+  },
+  cambiarPosicion: (message: CambiarPosicionResponse) => {
+    const { respuesta, posBatalla } = message.payload
+    if (get().stepAction === STEP_ACTION.CAMBIAR_POSICION) {
+      if (respuesta === ResultadoCambiarPosicion.POSICION_CAMBIADA) {
+        const updatedZonaBatalla = get().jugador.zonaBatalla.map((celdaBatalla, id) => {
+          return { ...celdaBatalla, posicionBatalla: id === get().idCartaZBSeleccionada ? posBatalla as PosBatalla : celdaBatalla.posicionBatalla }
+        })
+        set({
+          jugador: {
+            ...get().jugador,
+            zonaBatalla: updatedZonaBatalla
+          }
+        })
+      }
+    }
+  },
+  cambiarPosicionEnemigo: (message: CambiarPosicionResponse) => {
+    const { respuesta, posBatalla, idZonaBatalla, carta } = message.payload
+    if (respuesta === ResultadoCambiarPosicion.POSICION_CAMBIADA) {
+      const updatedZonaBatalla = get().jugadorEnemigo.zonaBatalla.map((celdaBatalla, id) => {
+        return { ...celdaBatalla, carta: id === idZonaBatalla ? carta as Carta : celdaBatalla.carta, posicionBatalla: id === idZonaBatalla ? posBatalla as PosBatalla : celdaBatalla.posicionBatalla }
+      })
+      set({
+        jugadorEnemigo: {
+          ...get().jugadorEnemigo,
+          zonaBatalla: updatedZonaBatalla
+        }
+      })
+    }
   }
 
 }))

@@ -1,5 +1,5 @@
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
-import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse } from '../../../api/src/response'
 import { unirASala } from '../modules/socket-messages'
 import { encuentraError, initSocket } from '../modules/socket'
 import { useAppStore } from './useAppStore'
@@ -19,6 +19,8 @@ function useSocketHandler () {
   const agregarCartaRecogida = useGameStore(state => state.agregarCartaRecogida)
   const terminarTurno = useGameStore(state => state.terminarTurno)
   const terminarJuego = useGameStore(state => state.terminarJuego)
+  const cambiarPosicion = useGameStore(state => state.cambiarPosicion)
+  const cambiarPosicionEnemigo = useGameStore(state => state.cambiarPosicionEnemigo)
   const setPlayerId = useGameStore(state => state.setPlayerId)
   const setPlayers = useWaitingRoomStore(state => state.setPlayers)
   const setStart = useWaitingRoomStore(state => state.setStart)
@@ -48,6 +50,12 @@ function useSocketHandler () {
         break
       case WebsocketEventTitle.TERMINAR_TURNO:
         terminarTurnoResponse(message as TerminarTurnoResponse)
+        break
+      case WebsocketEventTitle.CAMBIAR_POSICION:
+        cambiarPosicionResponse(message as CambiarPosicionResponse)
+        break
+      case WebsocketEventTitle.CAMBIA_POSICION_ENEMIGO:
+        cambiaPosicionEnemigoResponse(message as CambiarPosicionResponse)
         break
     }
   }
@@ -115,6 +123,16 @@ function useSocketHandler () {
     } else {
       console.log('MANO LLENA')
     }
+  }
+
+  function cambiarPosicionResponse (message: CambiarPosicionResponse) {
+    if (encuentraError(message)) return
+    cambiarPosicion(message)
+  }
+
+  function cambiaPosicionEnemigoResponse (message: CambiarPosicionResponse) {
+    if (encuentraError(message)) return
+    cambiarPosicionEnemigo(message)
   }
 
   return { unirASalaSocket }
