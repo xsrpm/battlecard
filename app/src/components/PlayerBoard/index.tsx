@@ -4,7 +4,7 @@ import { STEP_ACTION } from '../../constants/stepAction'
 import { type CartaEnMano } from '../../types/CartaEnMano'
 import { type CeldaBatalla } from '../../types/CeldaBatalla'
 import classes from './styles.module.css'
-import { seleccionarMano, colocarCartaEnZonaBatallaDesdeMano, seleccionarCeldaEnZonaBatalla } from '../../modules/socket-messages'
+import { seleccionarMano, colocarCartaEnZonaBatallaDesdeMano, seleccionarCeldaEnZonaBatalla, atacarCarta } from '../../modules/socket-messages'
 import { useGameStore } from '../../hooks/useGameStore'
 
 interface Props {
@@ -22,10 +22,12 @@ export default function PlayerBoard ({ reverseBoard = false, zonaBatalla, barrer
   const stepAction = useGameStore(state => state.stepAction)
   const setStepAction = useGameStore(state => state.setStepAction)
   const setIdCartaZBSeleccionada = useGameStore(state => state.setIdCartaZBSeleccionada)
+  const setIdCartaZBEnemigaSeleccionada = useGameStore(state => state.setIdCartaZBEnemigaSeleccionada)
   const playerId = useGameStore(state => state.playerId)
   const seleccionarCartaEnMano = useGameStore(state => state.seleccionarCartaEnMano)
   const posicionBatalla = useGameStore(state => state.posicionBatalla)
   const idCartaManoSeleccionada = useGameStore(state => state.idCartaManoSeleccionada)
+  const idCartaZBSeleccionada = useGameStore(state => state.idCartaZBSeleccionada)
 
   const additionalPosBatallaClasses = (posicionBatalla: PosBatalla, jugadorEnemigo: boolean) => {
     switch (posicionBatalla) {
@@ -59,36 +61,53 @@ export default function PlayerBoard ({ reverseBoard = false, zonaBatalla, barrer
   }
   const handleClickZonaBatalla: React.MouseEventHandler<HTMLDivElement> = (e) => {
     if (juegoFinalizado) return
-    if (!enTurno) return
+    // if (!enTurno) return
     let target = e.target as HTMLElement
     while (!target.classList.contains(classes.slot)) {
       if (target.getAttribute('data-section') === 'zonaBatalla') break
       target = target.parentElement as HTMLElement
     }
-    const idCartaZBSeleccionada = Number(target.getAttribute('data-id'))
-    setIdCartaZBSeleccionada(Number(target.getAttribute('data-id')))
-    if (stepAction === STEP_ACTION.COLOCAR_SELECCIONAR_ZONA_BATALLA) {
-      if (
-        !(
+
+    if (jugadorEnemigo) {
+      if (stepAction === STEP_ACTION.ATACAR_CARTA_SELECCIONAR_ZB_ENEMIGA) {
+        if (
           target.classList.contains(classes.ataque) ||
-            target.classList.contains(classes.defensa) ||
-            target.classList.contains(classes.oculto)
-        )
-      ) {
-        console.log('stepAccion: ' + stepAction)
-        console.log(target)
-        colocarCartaEnZonaBatallaDesdeMano(playerId as string, posicionBatalla as PosBatalla, idCartaZBSeleccionada, idCartaManoSeleccionada as number)
+          target.classList.contains(classes.defensa) ||
+          target.classList.contains(classes.oculto)
+        ) {
+          console.log('stepAccion: ' + stepAction)
+          console.log('target: ', target)
+          const idCartaZBEnemigaSeleccionada = Number(target.getAttribute('data-id'))
+          setIdCartaZBEnemigaSeleccionada(Number(target.getAttribute('data-id')))
+          atacarCarta(playerId as string, idCartaZBSeleccionada as number, idCartaZBEnemigaSeleccionada)
+        }
       }
     } else {
-      if (
-        target.classList.contains(classes.ataque) ||
-        target.classList.contains(classes.defensa) ||
-        target.classList.contains(classes.oculto)
-      ) {
-        setStepAction(STEP_ACTION.SELECCIONAR_ZONA_BATALLA)
-        console.log('stepAccion: ' + stepAction)
-        console.log(target)
-        seleccionarCeldaEnZonaBatalla(playerId as string, idCartaZBSeleccionada)
+      const idCartaZBSeleccionada = Number(target.getAttribute('data-id'))
+      setIdCartaZBSeleccionada(Number(target.getAttribute('data-id')))
+      if (stepAction === STEP_ACTION.COLOCAR_SELECCIONAR_ZONA_BATALLA) {
+        if (
+          !(
+            target.classList.contains(classes.ataque) ||
+              target.classList.contains(classes.defensa) ||
+              target.classList.contains(classes.oculto)
+          )
+        ) {
+          console.log('stepAccion: ' + stepAction)
+          console.log(target)
+          colocarCartaEnZonaBatallaDesdeMano(playerId as string, posicionBatalla as PosBatalla, idCartaZBSeleccionada, idCartaManoSeleccionada as number)
+        }
+      } else {
+        if (
+          target.classList.contains(classes.ataque) ||
+          target.classList.contains(classes.defensa) ||
+          target.classList.contains(classes.oculto)
+        ) {
+          setStepAction(STEP_ACTION.SELECCIONAR_ZONA_BATALLA)
+          console.log('stepAccion: ' + stepAction)
+          console.log(target)
+          seleccionarCeldaEnZonaBatalla(playerId as string, idCartaZBSeleccionada)
+        }
       }
     }
   }

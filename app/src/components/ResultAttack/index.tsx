@@ -1,36 +1,54 @@
+import { type Carta } from '../../../../api/src/types'
+import { useGameStore } from '../../hooks/useGameStore'
 import classes from './styles.module.css'
 
-export default function ResultAttack () {
+interface Props {
+  cartaAtacante: Carta
+  bonusAtacante: string
+  cartaAtacada: Carta
+  bonusAtacada: string
+  veredicto: string
+  detalleVeredicto: string
+}
+
+export default function ResultAttack ({ cartaAtacante, bonusAtacante, cartaAtacada, bonusAtacada, veredicto, detalleVeredicto }: Props) {
+  const ocultarResultadoAtaque = useGameStore(state => state.ocultarResultadoAtaque)
+  const convertUnicode = (unicode: string) => {
+    return unicode.replace(/0x([0-9]{4})/g, (a, b) => String.fromCharCode(parseInt(b, 16)))
+  }
+  const resultadoAtaqueHandleClick = () => {
+    ocultarResultadoAtaque()
+  }
   return (
-    <div className={classes.resultadoAtaque}>
-      <div className="atacante">
-        <slot name="nombre-atacante"></slot>
+    <div className={classes.resultadoAtaque} onClick={resultadoAtaqueHandleClick}>
+      <div className={classes.atacante}>
+        Atacante
       </div>
-      <div id="cartaAtacante" className="carta">
-        <slot name="valor-atacante"></slot>
-        <slot name="elemento-atacante"></slot>
+      <div className={classes.carta}>
+        <slot>{cartaAtacante.valor}</slot>
+        <slot>{convertUnicode(cartaAtacante.elemento)}</slot>
       </div>
-      <div className="bonusAtacante">
-        <slot name="bonus-atacante"></slot>
+      <div className={classes.bonusAtacante}>
+        <slot>{bonusAtacante}</slot>
       </div>
-      <div className="vs">
+      <div className={classes.vs}>
         <span>VS</span>
       </div>
-      <div className="resultado">
-        <slot name="resultado"></slot>
+      <div className={classes.resultado}>
+        <slot>{veredicto}</slot>
       </div>
-      <div className="detalleResultado">
-        <slot name="detalle-resultado"></slot>
+      <div className={classes.detalleResultado}>
+        <slot>{detalleVeredicto}</slot>
       </div>
-      <div className="atacado">
-        <slot name="nombre-atacado"></slot>
+      <div className={classes.atacado}>
+        Atacado
       </div>
-      <div id="cartaAtacada" className="carta">
-        <slot name="valor-atacado"></slot>
-        <slot name="elemento-atacado"></slot>
+      <div className={classes.carta}>
+        <slot>{cartaAtacada.valor}</slot>
+        <slot>{convertUnicode(cartaAtacada.elemento)}</slot>
       </div>
-      <div className="bonusAtacado">
-        <slot name="bonus-atacado"></slot>
+      <div className={classes.bonusAtacado}>
+        <slot>{bonusAtacada}</slot>
       </div>
     </div>
   )

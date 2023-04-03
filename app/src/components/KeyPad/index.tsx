@@ -11,6 +11,7 @@ export default function KeyPad () {
   const cambiarPosicionClick = useGameStore(state => state.cambiarPosicionClick)
   const idCartaZBSeleccionada = useGameStore(state => state.idCartaZBSeleccionada)
   const colocarCartaClick = useGameStore(state => state.colocarCartaClick)
+  const atacarCartaClick = useGameStore(state => state.atacarCartaClick)
   const colocarEnAtaqueHandleClick = () => {
     colocarCartaClick(PosBatalla.ATAQUE)
   }
@@ -29,12 +30,15 @@ export default function KeyPad () {
   const atacarBarreraHandleClick = () => {
     atacarBarreraDesdeZonaBatallaSeleccionada(playerId as string, idCartaZBSeleccionada as number)
   }
+  const atacarCartaHandleClick = () => {
+    atacarCartaClick()
+  }
   return (
     <article className={classes.keyPad}>
       <p id="mensajeBotones">{message}</p>
       {buttons.colocarEnAtaque as boolean && <button id="btnColocarEnAtaque" className="btnColocarEnAtaque" onClick={colocarEnAtaqueHandleClick}>de ataque</button>}
       {buttons.colocarEnDefensa as boolean && <button id="btnColocarEnDefensa" className="btnColocarEnDefensa" onClick={colocarEnDefensaHandleClick}>de defensa</button>}
-      {buttons.atacarCarta as boolean && <button id="btnAtacarCarta">Atacar carta</button>}
+      {buttons.atacarCarta as boolean && <button id="btnAtacarCarta" onClick={atacarCartaHandleClick}>Atacar carta</button>}
       {buttons.atacarBarrera as boolean && <button id="btnAtacarBarrera" className="btnAtacarBarrera" onClick={atacarBarreraHandleClick}>Atacar barrera</button>}
       {buttons.cambiarPosicion as boolean && <button id="btnCambiarPosicion" onClick={cambiarPosicionHandleClick}>Cambiar posición</button>}
       {buttons.terminarTurno as boolean && <button id="btnTerminarTurno" onClick={terminarTurnoHandleClick}>Terminar turno</button>}

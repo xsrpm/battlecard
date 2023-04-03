@@ -1,3 +1,4 @@
+import { type Carta } from '../../../../api/src/types'
 import Board from '../../components/Board'
 import GameInfo from '../../components/GameInfo'
 import KeyPad from '../../components/KeyPad'
@@ -40,7 +41,7 @@ export default function GameRoom (): JSX.Element {
         </>
       </Board>
       <KeyPad />
-      { resultadoAtaque.mostrar && <ResultAttack />}
+      { resultadoAtaque.mostrar && <ResultAttack cartaAtacante={resultadoAtaque.atacante?.carta as Carta} cartaAtacada={resultadoAtaque.atacado?.carta as Carta} bonusAtacante={resultadoAtaque.atacante?.bonus as string} bonusAtacada={resultadoAtaque.atacado?.bonus as string} veredicto={resultadoAtaque.veredicto as string} detalleVeredicto={resultadoAtaque.detalleVeredicto as string}/>}
       { gameInfo.mostrar && <GameInfo message={gameInfo.message as string} />}
     </article>
   )

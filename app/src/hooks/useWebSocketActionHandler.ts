@@ -1,5 +1,5 @@
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
-import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse, type AtacarCartaResponse } from '../../../api/src/response'
 import { unirASala } from '../modules/socket-messages'
 import { encuentraError, initSocket } from '../modules/socket'
 import { useAppStore } from './useAppStore'
@@ -23,6 +23,8 @@ function useSocketHandler () {
   const cambiarPosicionEnemigo = useGameStore(state => state.cambiarPosicionEnemigo)
   const atacarBarrera = useGameStore(state => state.atacarBarrera)
   const atacanTuBarrera = useGameStore(state => state.atacanTuBarrera)
+  const atacarCarta = useGameStore(state => state.atacarCarta)
+  const atacanTuCarta = useGameStore(state => state.atacanTuCarta)
   const setPlayerId = useGameStore(state => state.setPlayerId)
   const setPlayers = useWaitingRoomStore(state => state.setPlayers)
   const setStart = useWaitingRoomStore(state => state.setStart)
@@ -64,6 +66,12 @@ function useSocketHandler () {
         break
       case WebsocketEventTitle.ATACAN_TU_BARRERA:
         atacanTuBarreraResponse(message as AtacarBarreraResponse)
+        break
+      case WebsocketEventTitle.ATACAR_CARTA:
+        atacarCartaResponse(message as AtacarCartaResponse)
+        break
+      case WebsocketEventTitle.ATACAN_TU_CARTA:
+        atacanTuCartaResponse(message as AtacarCartaResponse)
         break
     }
   }
@@ -151,6 +159,16 @@ function useSocketHandler () {
   function atacanTuBarreraResponse (message: AtacarBarreraResponse) {
     if (encuentraError(message)) return
     atacanTuBarrera(message)
+  }
+
+  function atacarCartaResponse (message: AtacarCartaResponse) {
+    if (encuentraError(message)) return
+    atacarCarta(message)
+  }
+
+  function atacanTuCartaResponse (message: AtacarCartaResponse) {
+    if (encuentraError(message)) return
+    atacanTuCarta(message)
   }
 
   return { unirASalaSocket }

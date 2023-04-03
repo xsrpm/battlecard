@@ -1,11 +1,12 @@
 import { create } from 'zustand'
-import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse, type AtacarCartaResponse } from '../../../api/src/response'
 import { PosBatalla } from '../constants/celdabatalla'
 import { type KeyPadState } from '../types/KeyPadState'
 import { type PlayerState } from '../types/PlayerState'
 import { STEP_ACTION } from '../constants/stepAction'
 import { EstadoCarta, ResultadoAtacarBarrera, ResultadoAtacarCarta, ResultadoCambiarPosicion, ResultadoCogerCarta, ResultadoColocarCarta } from '../constants/jugador'
 import { type Carta } from '../../../api/src/types'
+import { type ResultadoAtaqueState } from '../types/ResultadoAtaqueState'
 
 interface GameStore {
   jugador: PlayerState
@@ -21,7 +22,9 @@ interface GameStore {
   posicionBatalla?: PosBatalla
   setPosicionBatalla: (posicionBatalla: PosBatalla) => void
   idCartaZBSeleccionada?: number
+  idCartaZBEnemigaSeleccionada?: number
   setIdCartaZBSeleccionada: (idCartaZBSeleccionada: number) => void
+  setIdCartaZBEnemigaSeleccionada: (idCartaZBEnemigaSeleccionada: number) => void
   idCartaManoSeleccionada?: number
   seleccionarCartaEnMano: (idCartaEnMano: number) => void
   iniciarJuego: (response: IniciarJuegoResponse) => void
@@ -42,6 +45,10 @@ interface GameStore {
   sinBarreras?: boolean
   atacanTuBarrera: (message: AtacarBarreraResponse) => void
   ocultarGameInfo: () => void
+  atacarCartaClick: () => void
+  atacarCarta: (message: AtacarCartaResponse) => void
+  atacanTuCarta: (message: AtacarCartaResponse) => void
+  ocultarResultadoAtaque: () => void
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -92,6 +99,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
   },
   setIdCartaZBSeleccionada: (idCartaZBSeleccionada) => {
     set({ idCartaZBSeleccionada })
+  },
+  setIdCartaZBEnemigaSeleccionada: (idCartaZBEnemigaSeleccionada: number) => {
+    set({ idCartaZBEnemigaSeleccionada })
   },
   seleccionarCartaEnMano: (idCartaEnMano) => {
     const manoUpdated = get().jugador.mano.map((cartaEnMano, id) => {
@@ -490,6 +500,171 @@ export const useGameStore = create<GameStore>((set, get) => ({
       gameInfo: {
         mostrar: false,
         message: ''
+      }
+    })
+  },
+  atacarCartaClick: () => {
+    if (get().stepAction === STEP_ACTION.SELECCIONAR_ZONA_BATALLA) {
+      console.log(STEP_ACTION.ATACAR_CARTA)
+      set({
+        stepAction: STEP_ACTION.ATACAR_CARTA_SELECCIONAR_ZB_ENEMIGA,
+        botonera: {
+          buttons: {
+            terminarTurno: true
+          },
+          message: 'Seleccione objetivo...'
+        }
+      })
+    }
+  },
+  atacarCarta: (message: AtacarCartaResponse) => {
+    const {
+      estadoAtaque,
+      cartaAtacante,
+      cartaAtacada,
+      veredicto,
+      estadoCartaAtacante,
+      estadoCartaAtacada,
+      estadoBarrera,
+      idBarreraEliminada,
+      bonifCartaAtacante,
+      bonifCartaAtacada,
+      sinBarreras,
+      nombreJugadorDerrotado,
+      nombreJugadorVictorioso
+    } = message.payload
+
+    const updateState: GameStore = {
+      ...get(),
+      resultadoAtaque: {
+        mostrar: true,
+        atacante: {
+          carta: cartaAtacante as Carta,
+          bonus: (bonifCartaAtacante as unknown) as string
+        },
+        atacado: {
+          carta: cartaAtacada as Carta,
+          bonus: (bonifCartaAtacada as unknown) as string
+        },
+        veredicto,
+        detalleVeredicto: ''
+      },
+      botonera: {
+        buttons: {
+          terminarTurno: true
+        },
+        message: ''
+      },
+      sinBarreras,
+      jugador: {
+        ...get().jugador,
+        zonaBatalla: get().jugador.zonaBatalla.map((celdaBatalla, id) => {
+          return { ...celdaBatalla, selected: id === get().idCartaZBSeleccionada ? false : celdaBatalla.selected }
+        })
+      }
+    }
+
+    if (estadoAtaque === ResultadoAtacarCarta.POSIBLE) {
+      if (estadoBarrera === EstadoCarta.DESTRUIDA) {
+        updateState.resultadoAtaque.detalleVeredicto = 'Barrera destruida'
+        updateState.jugadorEnemigo.barrera = get().jugadorEnemigo.barrera.map((cartaBarrera, id) => {
+          return id === idBarreraEliminada ? false : cartaBarrera
+        })
+        if (sinBarreras as boolean) {
+          updateState.nombreJugadorDerrotado = nombreJugadorDerrotado
+          updateState.nombreJugadorVictorioso = nombreJugadorVictorioso
+          updateState.gameInfo.message = `${nombreJugadorDerrotado as string} se ha queda sin barreras`
+          updateState.gameInfo.mostrar = true
+          updateState.botonera.buttons = { finDeJuego: true }
+          updateState.juegoFinalizado = true
+        }
+      }
+
+      if (estadoCartaAtacante === EstadoCarta.DESTRUIDA) {
+        updateState.jugador.zonaBatalla[get().idCartaZBSeleccionada as number] = { posicionBatalla: PosBatalla.NO_HAY_CARTA }
+      }
+      if (estadoCartaAtacada === EstadoCarta.DESTRUIDA) {
+        updateState.jugadorEnemigo.zonaBatalla[get().idCartaZBEnemigaSeleccionada as number] = { posicionBatalla: PosBatalla.NO_HAY_CARTA }
+      } else {
+        if (get().jugadorEnemigo.zonaBatalla[get().idCartaZBEnemigaSeleccionada as number].posicionBatalla === PosBatalla.DEF_ABAJO) {
+          updateState.jugadorEnemigo.zonaBatalla[get().idCartaZBEnemigaSeleccionada as number] = {
+            posicionBatalla: PosBatalla.DEF_ARRIBA,
+            carta: cartaAtacada
+          }
+        }
+      }
+
+      set(updateState)
+    }
+  },
+  atacanTuCarta: (message: AtacarCartaResponse) => {
+    const {
+      estadoAtaque,
+      cartaAtacante,
+      cartaAtacada,
+      veredicto,
+      estadoCartaAtacante,
+      estadoCartaAtacada,
+      estadoBarrera,
+      idBarreraEliminada,
+      idCartaAtacante,
+      idCartaAtacada,
+      bonifCartaAtacante,
+      bonifCartaAtacada,
+      sinBarreras,
+      nombreJugadorDerrotado,
+      nombreJugadorVictorioso
+    } = message.payload
+
+    if (estadoAtaque === ResultadoAtacarCarta.POSIBLE) {
+      const updateState: GameStore = {
+        ...get(),
+        resultadoAtaque: {
+          mostrar: true,
+          atacante: {
+            carta: cartaAtacante as Carta,
+            bonus: (bonifCartaAtacante as unknown) as string
+          },
+          atacado: {
+            carta: cartaAtacada as Carta,
+            bonus: (bonifCartaAtacada as unknown) as string
+          },
+          veredicto,
+          detalleVeredicto: ''
+        },
+        sinBarreras
+      }
+
+      if (estadoBarrera === EstadoCarta.DESTRUIDA) {
+        updateState.resultadoAtaque.detalleVeredicto = 'Barrera destruida'
+        updateState.jugador.barrera = get().jugador.barrera.map((cartaBarrera, id) => {
+          return id === idBarreraEliminada ? false : cartaBarrera
+        })
+        if (sinBarreras as boolean) {
+          updateState.nombreJugadorDerrotado = nombreJugadorDerrotado
+          updateState.nombreJugadorVictorioso = nombreJugadorVictorioso
+          updateState.gameInfo.message = `${nombreJugadorDerrotado as string} se ha queda sin barreras`
+          updateState.gameInfo.mostrar = true
+          updateState.botonera.buttons = { terminarTurno: true }
+          updateState.juegoFinalizado = true
+        }
+      }
+
+      if (estadoCartaAtacante === EstadoCarta.DESTRUIDA) {
+        updateState.jugadorEnemigo.zonaBatalla[idCartaAtacante as number] = { posicionBatalla: PosBatalla.NO_HAY_CARTA }
+      }
+      if (estadoCartaAtacada === EstadoCarta.DESTRUIDA) {
+        updateState.jugador.zonaBatalla[idCartaAtacada as number] = { posicionBatalla: PosBatalla.NO_HAY_CARTA }
+      }
+
+      set(updateState)
+    }
+  },
+  ocultarResultadoAtaque: () => {
+    set({
+      resultadoAtaque: {
+        ...get().resultadoAtaque,
+        mostrar: false
       }
     })
   }
