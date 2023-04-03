@@ -1,5 +1,5 @@
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
-import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse, type AtacarCartaResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse, type AtacarCartaResponse, type EnemigoDesconectadoResponse } from '../../../api/src/response'
 import { unirASala } from '../modules/socket-messages'
 import { encuentraError, initSocket } from '../modules/socket'
 import { useAppStore } from './useAppStore'
@@ -25,6 +25,7 @@ function useSocketHandler () {
   const atacanTuBarrera = useGameStore(state => state.atacanTuBarrera)
   const atacarCarta = useGameStore(state => state.atacarCarta)
   const atacanTuCarta = useGameStore(state => state.atacanTuCarta)
+  const enemigoDesconectadoDeJuego = useGameStore(state => state.enemigoDesconectadoDeJuego)
   const setPlayerId = useGameStore(state => state.setPlayerId)
   const setPlayers = useWaitingRoomStore(state => state.setPlayers)
   const setStart = useWaitingRoomStore(state => state.setStart)
@@ -72,6 +73,9 @@ function useSocketHandler () {
         break
       case WebsocketEventTitle.ATACAN_TU_CARTA:
         atacanTuCartaResponse(message as AtacarCartaResponse)
+        break
+      case WebsocketEventTitle.ENEMIGO_DESCONECTADO:
+        enemigoDesconectadoResponse(message as EnemigoDesconectadoResponse)
         break
     }
   }
@@ -169,6 +173,11 @@ function useSocketHandler () {
   function atacanTuCartaResponse (message: AtacarCartaResponse) {
     if (encuentraError(message)) return
     atacanTuCarta(message)
+  }
+
+  function enemigoDesconectadoResponse (message: EnemigoDesconectadoResponse) {
+    if (encuentraError(message)) return
+    enemigoDesconectadoDeJuego(message)
   }
 
   return { unirASalaSocket }

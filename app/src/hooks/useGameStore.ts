@@ -1,6 +1,6 @@
-import { finDeJuego } from './../pages/fin-de-juego'
+
 import { create } from 'zustand'
-import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse, type AtacarCartaResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse, type AtacarCartaResponse, type EnemigoDesconectadoResponse } from '../../../api/src/response'
 import { PosBatalla } from '../constants/celdabatalla'
 import { type KeyPadState } from '../types/KeyPadState'
 import { type PlayerState } from '../types/PlayerState'
@@ -50,6 +50,7 @@ interface GameStore {
   atacarCarta: (message: AtacarCartaResponse) => void
   atacanTuCarta: (message: AtacarCartaResponse) => void
   ocultarResultadoAtaque: () => void
+  enemigoDesconectadoDeJuego: (message: EnemigoDesconectadoResponse) => void
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -668,6 +669,21 @@ export const useGameStore = create<GameStore>((set, get) => ({
         ...get().resultadoAtaque,
         mostrar: false
       }
+    })
+  },
+  enemigoDesconectadoDeJuego: (message: EnemigoDesconectadoResponse) => {
+    const { nombreJugadorVictorioso, nombreJugadorDerrotado, resultado } = message.payload
+    set({
+      nombreJugadorDerrotado,
+      nombreJugadorVictorioso,
+      gameInfo: {
+        message: resultado,
+        mostrar: true
+      },
+      botonera: {
+        buttons: { finDeJuego: true }
+      },
+      juegoFinalizado: true
     })
   }
 
