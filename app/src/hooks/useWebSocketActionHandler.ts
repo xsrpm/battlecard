@@ -1,5 +1,5 @@
 import { WebsocketEventTitle } from '../constants/websocket-event-title'
-import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse, type AtacarCartaResponse, type EnemigoDesconectadoResponse } from '../../../api/src/response'
+import { type SeleccionarManoResponse, type IniciarJuegoResponse, type UnirASalaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse, type AtacarCartaResponse, type EnemigoDesconectadoResponse, type JugadorDesconectadoResponse } from '../../../api/src/response'
 import { unirASala } from '../modules/socket-messages'
 import { encuentraError, initSocket } from '../modules/socket'
 import { useAppStore } from './useAppStore'
@@ -29,6 +29,7 @@ function useSocketHandler () {
   const setPlayerId = useGameStore(state => state.setPlayerId)
   const setPlayers = useWaitingRoomStore(state => state.setPlayers)
   const setStart = useWaitingRoomStore(state => state.setStart)
+  const salirDeSala = useWaitingRoomStore(state => state.salirDeSala)
 
   const handleMessageSocket = (e: any): void => {
     console.log('received:')
@@ -76,6 +77,9 @@ function useSocketHandler () {
         break
       case WebsocketEventTitle.ENEMIGO_DESCONECTADO:
         enemigoDesconectadoResponse(message as EnemigoDesconectadoResponse)
+        break
+      case WebsocketEventTitle.JUGADOR_DESCONECTADO:
+        jugadorDesconectadoResponse(message as JugadorDesconectadoResponse)
         break
     }
   }
@@ -178,6 +182,11 @@ function useSocketHandler () {
   function enemigoDesconectadoResponse (message: EnemigoDesconectadoResponse) {
     if (encuentraError(message)) return
     enemigoDesconectadoDeJuego(message)
+  }
+
+  function jugadorDesconectadoResponse (message: JugadorDesconectadoResponse): void {
+    if (encuentraError(message)) return
+    salirDeSala(message)
   }
 
   return { unirASalaSocket }
