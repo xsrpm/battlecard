@@ -1,3 +1,4 @@
+import { finDeJuego } from './../pages/fin-de-juego'
 import { create } from 'zustand'
 import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse, type AtacarCartaResponse } from '../../../api/src/response'
 import { PosBatalla } from '../constants/celdabatalla'
@@ -491,7 +492,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
         gameInfo: updatedGameInfo,
         nombreJugadorDerrotado: updatedNombreJugadorDerrotado,
         nombreJugadorVictorioso: updatedNombreJugadorVictorioso,
-        juegoFinalizado: updatedJuegoFinalizado
+        juegoFinalizado: updatedJuegoFinalizado,
+        botonera: updatedBotonera
       })
     }
   },
@@ -645,7 +647,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
           updateState.nombreJugadorVictorioso = nombreJugadorVictorioso
           updateState.gameInfo.message = `${nombreJugadorDerrotado as string} se ha queda sin barreras`
           updateState.gameInfo.mostrar = true
-          updateState.botonera.buttons = { terminarTurno: true }
+          updateState.botonera.buttons = { finDeJuego: true }
           updateState.juegoFinalizado = true
         }
       }

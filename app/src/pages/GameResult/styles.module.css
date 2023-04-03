@@ -1,0 +1,35 @@
+.finDeJuego {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    background-color: rgb(19, 192, 149);
+  }
+  
+  .finDeJuego .victoria {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    background-color: red;
+    width: 100vw;
+    height: 47.5vh;
+  }
+  
+  .finDeJuego .derrota {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    background-color: rgb(255, 196, 0);
+    width: 100vw;
+    height: 47.5vh;
+  }
+  
+  .finDeJuego .btnVolverInicio {
+    display: grid;
+    justify-items: center;
+    align-items: center;
+    width: 100vw;
+    height: 5vh;
+  }

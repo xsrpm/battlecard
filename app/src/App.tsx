@@ -6,6 +6,7 @@ import Welcome from './pages/Welcome'
 import ReceptionRoom from './pages/ReceptionRoom'
 import WaitingRoom from './pages/WaitingRoom'
 import GameRoom from './pages/GameRoom'
+import GameResult from './pages/GameResult'
 
 function App (): JSX.Element {
   const actualPage = useAppStore((state) => state.actualPage)
@@ -15,6 +16,7 @@ function App (): JSX.Element {
       { actualPage === Page.RECEPTION_ROOM && <ReceptionRoom />}
       { actualPage === Page.WAITING_ROOM && <WaitingRoom />}
       { actualPage === Page.GAME_ROOM && <GameRoom />}
+      { actualPage === Page.GAME_RESULT && <GameResult />}
     </div>
   )
 }
