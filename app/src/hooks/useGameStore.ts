@@ -1,3 +1,4 @@
+import { juegoFinalizado } from './../modules/estadoGlobal'
 
 import { create } from 'zustand'
 import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse, type AtacarCartaResponse, type EnemigoDesconectadoResponse } from '../../../api/src/response'
@@ -53,13 +54,13 @@ interface GameStore {
   enemigoDesconectadoDeJuego: (message: EnemigoDesconectadoResponse) => void
 }
 
-export const useGameStore = create<GameStore>((set, get) => ({
+const defaultProperties = {
   jugador: {
     zonaBatalla: [{}, {}, {}],
     barrera: [true, true, true, true, true],
     mano: [{}, {}, {}, {}, {}],
     enTurno: true,
-    nCardsInDeck: 20,
+    nCardsInDeck: 42,
     nombre: ''
   },
   jugadorEnemigo: {
@@ -67,18 +68,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
     barrera: [true, true, true, true, true],
     mano: [{}, {}, {}, {}, {}],
     enTurno: false,
-    nCardsInDeck: 20,
+    nCardsInDeck: 42,
     nombre: ''
   },
   botonera: {
     buttons: {
-      colocarEnAtaque: false,
-      colocarEnDefensa: false,
-      atacarCarta: false,
-      atacarBarrera: false,
-      cambiarPosicion: false,
-      terminarTurno: false,
-      finDeTurno: false
     },
     message: ''
   },
@@ -88,14 +82,18 @@ export const useGameStore = create<GameStore>((set, get) => ({
   resultadoAtaque: {
     mostrar: false
   },
-  stepAction: STEP_ACTION.STAND_BY,
+  juegoFinalizado: false,
+  stepAction: STEP_ACTION.STAND_BY
+}
+
+export const useGameStore = create<GameStore>((set, get) => ({
+  ...defaultProperties,
   setStepAction: (stepAction) => {
     set({ stepAction })
   },
   setPlayerId: (playerId) => {
     set({ playerId })
   },
-  juegoFinalizado: false,
   setPosicionBatalla: (posicionBatalla) => {
     set({ posicionBatalla })
   },
@@ -142,6 +140,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       }
     }
     set(() => ({
+      ...defaultProperties,
       jugador: {
         zonaBatalla: zonaBatallaJugador,
         mano: manoJugador,
@@ -158,9 +157,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         nCardsInDeck: response.payload.jugadorEnemigo?.nDeck as number,
         barrera: Array(response.payload.jugadorEnemigo?.nBarrera).fill(true)
       },
-      botonera: botoneraEstado(response.payload.jugador?.enTurno as boolean),
-      gameInfo: { mostrar: false },
-      resultadoAtaque: { mostrar: false }
+      botonera: botoneraEstado(response.payload.jugador?.enTurno as boolean)
     }))
   },
   updateBotoneraBySelectCartaEnMano: (response) => {
