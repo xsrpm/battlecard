@@ -4,11 +4,26 @@ Juego de cartas usando barajas inglesas. Para 2 jugadores en tiempo real.
 
 ## Table of Contents
 1. [El juego](#el-juego)
+    - [Pantalla inicial](#pantalla-inicial)
+    - [Ingreso a sala](#ingreso-a-sala)
+    - [Sala de espera](#sala-de-espera)
+    - [Interfaz de juego](#interfaz-de-juego)
+    - [Sección de jugadores](#sección-de-jugadores)
+    - [Zona de juego](#zona-de-juego)
+    - [Zona de botones](#zona-de-botones)
+    - [Inicio de juego](#inicio-del-juego)
+    - [Turno de juego](#turno-de-juego)
+    - [Colocar carta en zona de batalla](#colocar-carta-en-tu-zona-de-batalla)
+    - [Atacar carta enemiga](#atacar-carta-en-zona-de-batalla-enemiga)
+    - [Cambiar Posición de carta](#cambiar-posición-de-una-carta-en-tu-zona-de-batalla)
+    - [Terminar turno](#terminar-turno)
+    - [Atacar Barreras](#atacar-barreras)
+    - [Fin de juego](#fin-de-juego)
 2. [Desarrollo](#desarrollo)
 3. [Referencia](#referencia)
 
 
-## El juego <a name="el-juego"></a>
+## El juego
 
 Se requiere de 2 jugadores ingresando a la url para iniciar el juego. En distintos dispositivos ó pestañas de navegador.
 ### Pantalla Inicial
@@ -18,7 +33,7 @@ Se requiere de 2 jugadores ingresando a la url para iniciar el juego
 ![Ingreso a sala](https://raw.githubusercontent.com/xsrpm/battlecard/master/app/images/pant2.png)
 
 ### Sala de espera
-![Sala a la espera](https://raw.githubusercontent.com/xsrpm/battlecard/master/app/images/pant3.png)
+![Sala de espera](https://raw.githubusercontent.com/xsrpm/battlecard/master/app/images/pant3.png)
 
 ### Interfaz de juego
 ![Interfaz de juego](https://raw.githubusercontent.com/xsrpm/battlecard/master/app/images/pant4.png)
@@ -55,13 +70,15 @@ En esta sección se mostrarán botones para atacar, defender, colocar,�
 
 Antes de realizar alguna acción si el jugador tiene un espacio vacio en su mano recibirá una carta de su baraja siempre y cuando queden cartas en la baraja.
 
-Durante cada turno el jugador puede colocar cartas en zona de batalla (para defender o atacar), atacar cartas de su contrincante, cambiar la posición de batalla de una de sus cartas (ataque o defensa)
+Durante cada turno el jugador puede colocar cartas en zona de batalla (para defender o atacar), atacar cartas de su contrincante, cambiar la posición de batalla de alguna de sus cartas (ataque o defensa)
 
 ### Colocar carta en tu zona de batalla
 
 - Seleccionar una carta de tu mano.
 - Click en el botón "de ataque" ó "de defensa" de la zona de botones, segun se coloque la carta en ataque o defensa.
 - Seleccionar una posición vacia en tu zona de batalla.
+
+![Colocar cartas](https://github.com/xsrpm/battlecard/blob/master/app/images/pant5.png?raw=true)
 
 ### Atacar carta en zona de batalla enemiga
 
@@ -70,9 +87,10 @@ Durante cada turno el jugador puede colocar cartas en zona de batalla
 - Seleccionar una carta en la zona de batalla enemiga.
 - Se visualizará el resultado del ataque. Indicando el ganador, el bonus de ataque/defensa y si se destruye una barrera como producto del ataque.
 
-![Gana atacante](https://github.com/xsrpm/battlecard/blob/master/app/images/pant10.png?raw=true)
+![Atacar carta enemiga](https://github.com/xsrpm/battlecard/blob/master/app/images/pant6.png?raw=true)
 
 **Bonificación de ataque/defensa**
+![Bonificacion de ataque / defensa](https://github.com/xsrpm/battlecard/blob/master/app/images/pant10.png?raw=true)
 
 Bajo cada carta, tanto de atacante como atacado se visualizará una bonificación que afecta a las cartas segun los palos de la baraja que se enfrenten.
 
@@ -87,9 +105,8 @@ El grafico siguiente resume todas las posibilidades de bonificación de
 - Seleccionar una carta en tu zona de batalla.
 - Click en el botón "Cambiar posición" de la zona de botones.
 - La carta cambiará a posición de ataque o defensa segun la posición previa.
-- ***Cuando el jugador contrario coloca una carta en posicion de defensa tu veras la carta oculta (de color negra y no sabrás el valor ni palo de la carta). Cuando esta carta es ataca o el dueño cambia su posición a ataque podras ver la información de la carta****
+- ***Cuando el jugador contrario coloca una carta en posicion de defensa tu veras la carta oculta (de color negra y no sabrás el valor ni palo de la carta). Cuando esta carta es atacada o el dueño cambia su posición a ataque podras ver la información de la carta****
 
-![Terminar juego](https://github.com/xsrpm/battlecard/blob/master/app/images/pant7.png?raw=true)
 
 ### Terminar Turno
 
@@ -101,6 +118,9 @@ Permite atacar barreras directamente cuando no se tienen cartas enemigas en su z
 
 - Seleccionar una carta en tu zona de batalla
 - Click en el boton "Atacar barrera"
+
+![Barrera destriuda](https://github.com/xsrpm/battlecard/blob/master/app/images/pant7.png?raw=true)
+
 
 ### Fin de juego
 
@@ -114,28 +134,17 @@ El juego termina bajo cualquiera de las siguientes condiciones:
 
 
 
-## Desarrollo <a name="desarrollo"></a>
+## Desarrollo
 
-- Este proyecto web hace uso de Node.js y estandares web.
-
-- Implementa [Web Components](https://developer.mozilla.org/es/docs/Web/Web_Components) en algunos componentes.
+- Este proyecto web hace uso de Node.js, express y React.
 
 - Implementa [websockets](https://developer.mozilla.org/es/docs/Web/API/WebSockets_API) para comunicarse en tiempo real.
 
-- El proyecto es un monorepo multipaquete.
 
+## Referencia
 
-
-
-## Referencia <a name="referencia"></a>
-
-- https://stackoverflow.com/questions/1425892/how-do-you-merge-two-git-repositories
-- https://github.com/facebook/create-react-app/issues/8094
-- https://create-react-app.dev/docs/proxying-api-requests-in-development/
 - https://masteringjs.io/tutorials/express/websockets
 - https://en.wikipedia.org/wiki/Yu-Gi-Oh!_Trading_Card_Game
 - https://developers.refinitiv.com/en/article-catalog/article/how-to-implement-elektron-websocket-api-javascript-application-typescript
-- [Monorepo multipaquete con NPM Workspaces](https://www.youtube.com/watch?v=KEkRy4q_0oI)
-- [Crea un monorepositorio multipaquete con npm workspaces y releases de paquetes](https://www.youtube.com/watch?v=2QSBXhuqSlI)
 - https://vitejs.dev/config/#environment-variables
 - https://vitejs.dev/guide/env-and-mode.html

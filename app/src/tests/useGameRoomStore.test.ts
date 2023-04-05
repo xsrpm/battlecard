@@ -111,7 +111,7 @@ describe('useGameRoomStore', () => {
     const botoneraExpected = {
       buttons: { terminarTurno: true }
     }
-    console.log(result.current)
+    // console.log(result.current)
     expect(result.current.jugador).toEqual(jugadorExpected)
     expect(result.current.jugadorEnemigo).toEqual(jugadorEnemigoExpected)
     expect(result.current.botonera).toEqual(botoneraExpected)
@@ -159,6 +159,6 @@ describe('useGameRoomStore', () => {
       result.current.updateBotoneraBySelectCartaEnMano(seleccionarManoResponse)
     })
 
-    console.log(JSON.stringify(result.current, null, ' '))
+    // console.log(JSON.stringify(result.current, null, ' '))
   })
 })

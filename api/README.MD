@@ -1,7 +1,19 @@
 
-# Apuntes de desarrollo
+# Backend
 
-## Jest
+## Requerimientos para ejecutar el proyecto
+    -  Node.js v16.13.1 o más
+    - Paquetes de npm declarados en sección dependencies en package.json
+
+## Requerimientos para el desarrollo/actualización del proyecto
+    - Visual Studio Code (editor recomendado)
+    -   Extensiones recomendadas para visual studio code en .vscode/extensions.json
+    - Node.js v16.13.1 o más
+    - Paquetes de npm declarados en sección devDependencies en package.json
+
+## Apendice
+
+### Jest
 https://jestjs.io/docs/
 
 Issue con reporte html de coverage y warnings en consola al correr 'npm run test:coverage' con version de "jest": "^22.4.3", y su solucion es añadir como dev dependency: "handlebars": "~4.5.3"
@@ -18,7 +30,7 @@ https://github.com/kulshekhar/ts-jest
 https://jestjs.io/docs/api
 - [Tests con websockets ](https://www.npmjs.com/package/superwstest)
 
-## Nodemon
+### Nodemon
 
 Inicia y autodespliega servidor luego de cambios en el codigo fuente.
 
@@ -29,39 +41,7 @@ para instalaciones globales:
 
     nodemon --exec "npm start"
  
- Validating & Structuring JSON over WebSockets - JavaScript Tutorial
- https://www.youtube.com/watch?v=mmZmtOUIBsg
-
-## API
-
-### Unir a Sala
-Request1
-
-    {
-        "event": "Unir a sala",
-        "payload": {
-            "nombreJugador": "cesar"
-        }
-    }
-
-Response1
-
-    {
-        "event":"Unir a sala",
-        "payload":{
-            "resultado":"Exito",
-            "jugadores":["cesar"],
-            "iniciar":false
-        }
-    }
-
-Request2
-
-    { "event": "Unir a sala", "payload": { "nombreJugador": "krister" } }
-
-Response2
-
-    {"event":"Unir a sala","payload":{"resultado":"Exito","jugadores":["cesar","krister"],"iniciar":true}}
-
-- https://github.com/colinhacks/zod
-- https://zod.dev/
+### Zod
+    - https://github.com/colinhacks/zod
+    - https://zod.dev/
+    - [Validating & Structuring JSON over WebSockets - JavaScript Tutorial](https://www.youtube.com/watch?v=mmZmtOUIBsg)
