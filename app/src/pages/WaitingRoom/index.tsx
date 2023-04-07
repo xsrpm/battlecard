@@ -22,7 +22,7 @@ export default function WaitingRoom (): JSX.Element {
         <h2>{ players[1] ?? '(Sin Jugador)' }</h2>
       </div>
       <form onSubmit={handleSubmit}>
-        <input type="submit" value="Iniciar Juego" disabled={!start} />
+        <input type="submit" value="Iniciar Juego" disabled={!start} autoFocus/>
       </form>
     </article>
   )

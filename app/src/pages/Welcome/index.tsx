@@ -10,7 +10,7 @@ export default function Welcome (): JSX.Element {
         event.preventDefault()
         changeActualPage(Page.RECEPTION_ROOM)
       }}>
-      <button id="btnJugar">Jugar</button>
+      <button id="btnJugar" autoFocus>Jugar</button>
       </form>
     </article>
   )

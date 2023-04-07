@@ -24,7 +24,7 @@ export default function ReceptionRoom (): JSX.Element {
     <article className={classes.receptionRoom}>
       <h1>Ingrese su nombre/nick</h1>
       <form onSubmit={handleSubmit}>
-        <input id="inputNombreJugador" />
+        <input id="inputNombreJugador" autoFocus />
         <input type="submit" value="Unirse a la Sala" disabled={ submitDisabled}/>
       </form>
     </article>

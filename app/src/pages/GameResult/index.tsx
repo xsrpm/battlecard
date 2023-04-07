@@ -20,7 +20,7 @@ export default function GameResult (): JSX.Element {
         <h1>Derrota</h1>
         <p>{nombreJugadorDerrotado}</p>
       </div>
-      <button id="btnVolverInicio" className={classes.btnVolverInicio} onClick={volverAInicioHandleClick}>
+      <button id="btnVolverInicio" className={classes.btnVolverInicio} onClick={volverAInicioHandleClick} autoFocus>
         Volver a la pantalla inicial
       </button>
     </article>
