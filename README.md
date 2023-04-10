@@ -140,6 +140,10 @@ El juego termina bajo cualquiera de las siguientes condiciones:
 
 - Implementa [websockets](https://developer.mozilla.org/es/docs/Web/API/WebSockets_API) para comunicarse en tiempo real.
 
+- [Desarrollo de frontend](/app#frontend)
+
+- [Desarrollo de backend](/api#backend)
+
 
 ## Referencia
 
