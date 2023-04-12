@@ -1,5 +1,3 @@
-import { juegoFinalizado } from './../modules/estadoGlobal'
-
 import { create } from 'zustand'
 import { type SeleccionarManoResponse, type IniciarJuegoResponse, type ColocarCartaResponse, type SeleccionarZonaBatallaResponse, type ColocarCartaOtroJugadorResponse, type TerminarTurnoResponse, type CambiarPosicionResponse, type AtacarBarreraResponse, type AtacarCartaResponse, type EnemigoDesconectadoResponse } from '../../../api/src/response'
 import { PosBatalla } from '../constants/celdabatalla'

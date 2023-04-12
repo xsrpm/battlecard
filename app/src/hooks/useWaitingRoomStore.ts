@@ -1,25 +1,18 @@
 import { create } from 'zustand'
-import { type JugadorDesconectadoResponse } from '../../../api/src/response'
 
 interface WaitingRoomStore {
   players: string[]
   start: boolean
-  setPlayers: (players: string[]) => void
-  setStart: (start: boolean) => void
-  salirDeSala: (message: JugadorDesconectadoResponse) => void
+  updateSala: (jugadores: string[], start: boolean) => void
 }
 
 export const useWaitingRoomStore = create<WaitingRoomStore>((set) => ({
   players: [],
   start: false,
-  setPlayers: (players) => { set({ players }) },
-  setStart: (start) => { set({ start }) },
-  salirDeSala: (message: JugadorDesconectadoResponse) => {
-    const { resultado, jugadores, iniciar } = message.payload
-    console.log(resultado)
+  updateSala: (players: string[], start: boolean) => {
     set({
-      players: jugadores,
-      start: iniciar
+      players,
+      start
     })
   }
 }))

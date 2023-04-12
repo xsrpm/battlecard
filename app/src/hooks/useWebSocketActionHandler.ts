@@ -9,7 +9,6 @@ import { useGameStore } from './useGameStore'
 import { ResultadoCogerCarta } from '../constants/jugador'
 
 function useSocketHandler () {
-  console.log('useSocketHandler')
   const changeActualPage = useAppStore(state => state.changeActualPage)
   const iniciarJuego = useGameStore(state => state.iniciarJuego)
   const updateBotoneraBySelectCartaEnMano = useGameStore(state => state.updateBotoneraBySelectCartaEnMano)
@@ -27,9 +26,7 @@ function useSocketHandler () {
   const atacanTuCarta = useGameStore(state => state.atacanTuCarta)
   const enemigoDesconectadoDeJuego = useGameStore(state => state.enemigoDesconectadoDeJuego)
   const setPlayerId = useGameStore(state => state.setPlayerId)
-  const setPlayers = useWaitingRoomStore(state => state.setPlayers)
-  const setStart = useWaitingRoomStore(state => state.setStart)
-  const salirDeSala = useWaitingRoomStore(state => state.salirDeSala)
+  const updateSala = useWaitingRoomStore(state => state.updateSala)
 
   const handleMessageSocket = (e: any): void => {
     console.log('received:')
@@ -117,8 +114,7 @@ function useSocketHandler () {
   function unirASalaResponse (message: UnirASalaResponse): void {
     if (encuentraError(message)) return
     const { jugadores, iniciar, jugadorId } = message.payload
-    setPlayers(jugadores)
-    setStart(iniciar)
+    updateSala(jugadores, iniciar)
     if (typeof jugadorId !== 'undefined') {
       setPlayerId(jugadorId)
       changeActualPage(Page.WAITING_ROOM)
@@ -186,7 +182,9 @@ function useSocketHandler () {
 
   function jugadorDesconectadoResponse (message: JugadorDesconectadoResponse): void {
     if (encuentraError(message)) return
-    salirDeSala(message)
+    const { resultado, jugadores, iniciar } = message.payload
+    console.log(resultado)
+    updateSala(jugadores, iniciar)
   }
 
   return { unirASalaSocket }
