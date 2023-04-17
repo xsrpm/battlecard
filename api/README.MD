@@ -45,6 +45,6 @@ para instalaciones globales:
 
 ### Zod
 
-    - https://github.com/colinhacks/zod
-    - https://zod.dev/
-    - [Validating & Structuring JSON over WebSockets - JavaScript Tutorial](https://www.youtube.com/watch?v=mmZmtOUIBsg)
+- https://github.com/colinhacks/zod
+- https://zod.dev/
+- [Validating & Structuring JSON over WebSockets - JavaScript Tutorial](https://www.youtube.com/watch?v=mmZmtOUIBsg)
