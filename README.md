@@ -90,6 +90,7 @@ Durante cada turno el jugador puede colocar cartas en zona de batalla
 ![Atacar carta enemiga](https://github.com/xsrpm/battlecard/blob/master/app/images/pant6.png?raw=true)
 
 **Bonificación de ataque/defensa**
+
 ![Bonificacion de ataque / defensa](https://github.com/xsrpm/battlecard/blob/master/app/images/pant10.png?raw=true)
 
 Bajo cada carta, tanto de atacante como atacado se visualizará una bonificación que afecta a las cartas segun los palos de la baraja que se enfrenten.
