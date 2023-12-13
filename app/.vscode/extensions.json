@@ -2,6 +2,14 @@
   "recommendations": [
     "ms-playwright.playwright",
     "dsznajder.es7-react-js-snippets",
-    "firsttris.vscode-jest-runner"
+    "firsttris.vscode-jest-runner",
+    "steoates.autoimport",
+    "streetsidesoftware.code-spell-checker",
+    "naumovs.color-highlight",
+    "wallabyjs.console-ninja",
+    "christian-kohler.npm-intellisense",
+    "yoavbls.pretty-ts-errors",
+    "streetsidesoftware.code-spell-checker-spanish",
+    "chakrounanas.turbo-console-log"
   ]
 }
